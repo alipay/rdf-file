@@ -1,0 +1,2 @@
+protocol=com.alipay.rdf.file.common.ProtocolFileWriter
+raw=com.alipay.rdf.file.common.RawFileWriter

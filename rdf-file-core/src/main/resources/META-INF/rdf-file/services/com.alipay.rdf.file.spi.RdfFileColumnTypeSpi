@@ -1,0 +1,9 @@
+String,string=com.alipay.rdf.file.type.StringType
+Long,long=com.alipay.rdf.file.type.LongType
+Integer,integer=com.alipay.rdf.file.type.IntegerType
+Float,float=com.alipay.rdf.file.type.FloatType
+Double,double=com.alipay.rdf.file.type.DoubleType
+Date,date=com.alipay.rdf.file.type.DateType
+Boolean,boolean=com.alipay.rdf.file.type.BooleanType
+BigDecimal,bigDecimal,bigdecimal=com.alipay.rdf.file.type.BigDecimalType
+DigitalChar,digitalChar,digitalchar=com.alipay.rdf.file.type.DigitalCharType

@@ -1,0 +1,5 @@
+md5OSSReadValidator=com.alipay.rdf.file.processor.MD5OSSReadValidator
+md5OSSWriteValidator=com.alipay.rdf.file.processor.MD5OSSWriteValidator
+uploadOSSAfterWriteClose=com.alipay.rdf.file.processor.UploadOSSAfterWriteClose
+beforeCreateOssWriter=com.alipay.rdf.file.processor.BeforeCreateOssWriter
+ossBeforeReadRow=com.alipay.rdf.file.processor.OssBeforeReadRowProcessor

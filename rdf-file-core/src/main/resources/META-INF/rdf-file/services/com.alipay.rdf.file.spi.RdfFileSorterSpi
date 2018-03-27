@@ -1,0 +1,3 @@
+protocol=com.alipay.rdf.file.common.ProtocolFileSorter
+raw=com.alipay.rdf.file.common.SplitFileSorter
+protocol_multiFile=com.alipay.rdf.file.common.ProtocolMultiFileSorter

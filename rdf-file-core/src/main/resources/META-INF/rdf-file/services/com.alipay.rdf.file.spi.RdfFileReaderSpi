@@ -1,0 +1,3 @@
+protocol=com.alipay.rdf.file.common.ProtocolFileReader
+protocol_multiFile=com.alipay.rdf.file.common.ProtocolFilesSortedReader
+raw=com.alipay.rdf.file.common.RawFileReader

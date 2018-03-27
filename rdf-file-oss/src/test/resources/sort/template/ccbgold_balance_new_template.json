@@ -1,0 +1,13 @@
+{
+  "body":[
+    "userId|用户ID|required",
+    "contractNo|支付宝签约关联号|required",
+    "outContractNo|对方支付宝签约关联号",
+    "productNo|产品编码|required",
+    "balance|个人账户贵金属可用持仓重量|BigDecimal"
+  ],
+  "protocol":"DE",
+  "lineBreak":"\r\n",
+  "columnSplit":"|@|",
+  "endWithSplit":"body"
+}

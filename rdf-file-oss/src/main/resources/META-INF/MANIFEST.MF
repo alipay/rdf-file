@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Alipay rdf file oss
+Bundle-SymbolicName: com.alipay.rdf.file
+Bundle-Version: 1.0.0
+Bundle-Vendor: Alipay

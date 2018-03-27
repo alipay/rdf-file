@@ -1,0 +1,21 @@
+{
+    "head":[
+        "recordId",
+        "acctRef|测试"
+    ],
+    "body":[
+        "dbNo",
+        "contractNo|支付宝签约协议号",
+        "mfundAccountNo|货币基金份额账户|BigDecimal",
+        "date|日期类型|Date:yyyy-MM-dd HH:mm:ss",
+        "count|金额|BigDecimal|[10,2]",
+        "name|姓名|REQUIRED|DEFAULT:jack"
+        "test|所有|REQUIRED:false|DEFAULT:jack|String|[20,23]"
+    ],
+    "totalCountKey": "totalCountKeyTest",
+    "summaryColumnPairs": [
+    	"recordId|contractNo",
+    	"acctRef|name"
+    ],
+    "protocol":"DE"
+}

@@ -1,0 +1,3 @@
+processor1=com.alipay.rdf.file.test.Processor1
+processor2=com.alipay.rdf.file.test.Processor2
+processor3=com.alipay.rdf.file.test.Processor3

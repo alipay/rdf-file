@@ -1,0 +1,51 @@
+OFDCFDAT
+20  
+42       
+305      
+20170315
+999
+02
+42      
+305     
+027
+AppSheetSerialNo
+TransactionCfmDate
+ReturnCode
+TransactionAccountID
+DistributorCode
+BusinessCode
+TAAccountID
+MultiAcctFlag
+TASerialNO
+TransactionDate
+TransactionTime
+BranchCode
+FromTAFlag
+CertificateType
+CertificateNo
+InvestorName
+IndividualOrInstitution
+AccountAbbr
+AccountCardID
+RegionCode
+TargetTransactionAccountID
+NetNo
+Specification
+CustomerNo
+FrozenCause
+FreezingDeadline
+ErrorDetail
+00000004
+201703103600004341135   20170315000036000936700000991305      101831776073031 2017031540387509    20160413093000305      00652927197008177462            B7W39A94                                                                                                                1                                         0002                                                                 000000003501                                                                     
+201703106800004341136   20170315000168000968700000981305      101110390654813 2017031540387615    20160413093000305      00652927197008177462            B7W39A94                                                                                                                1                                         0002                                                                 000000003501                                                                     
+201703107200004341137   20170315000072000972700001012305      108507263620297 2017031540387707    20160413093000305      00652927197008177462            B7W39A94                                                                                                                1                                         0002                                                                 000000003501                                                                     
+201703105900004341138   20170315000159000959700000961305      108231268932671 2017031540387799    20160413093000305      00652927197008177462            B7W39A94                                                                                                                1                                         0002                                                                 000000003501                                                                     
+OFDCFEND
+
+
+
+
+
+
+
+

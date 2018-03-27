@@ -1,0 +1,5 @@
+A=com.alipay.rdf.file.format.AColumnFormat
+C=com.alipay.rdf.file.format.CColumnFormat
+N=com.alipay.rdf.file.format.NColumnFormat
+raw=com.alipay.rdf.file.format.RawFormat
+CIfDefined=com.alipay.rdf.file.format.CIfDefinedColumnFormat
