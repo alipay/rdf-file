@@ -1,0 +1,2 @@
+oss=com.alipay.rdf.file.resource.OssFileResource
+ossdir=com.alipay.rdf.file.resource.OssDirFileResource

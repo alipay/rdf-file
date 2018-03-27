@@ -1,0 +1,7 @@
+{
+    "body":[
+        "testLong|基金可用份数|Long|[4,0]",
+        "testInteger|基金可用份数|Integer|[3,0]",
+    ],
+    "protocol":"fund"
+}

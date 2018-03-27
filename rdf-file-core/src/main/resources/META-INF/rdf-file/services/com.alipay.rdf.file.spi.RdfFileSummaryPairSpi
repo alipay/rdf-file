@@ -1,0 +1,5 @@
+Long,long=com.alipay.rdf.file.summary.LongSummaryPair
+Integer,integer=com.alipay.rdf.file.summary.IntegerSummaryPair
+Float,float=com.alipay.rdf.file.summary.FloatSummaryPair
+Double,double=com.alipay.rdf.file.summary.DoubleSummaryPair
+BigDecimal,bigDecimal,bigdecimal=com.alipay.rdf.file.summary.BigDecimalSummaryPair

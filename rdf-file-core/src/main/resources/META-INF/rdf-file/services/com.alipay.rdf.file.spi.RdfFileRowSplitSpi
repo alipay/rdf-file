@@ -1,0 +1,2 @@
+rowSplitBySeparator=com.alipay.rdf.file.split.RowSplitBySeparator
+rowSplitByFixedlLength=com.alipay.rdf.file.split.RowSplitByFixedlLength

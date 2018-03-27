@@ -1,0 +1,28 @@
+{
+  "head": [
+    "totalCount|总笔数|Required|Integer",
+    "totalAmount|总金额|Required|BigDecimal",
+    "totalShare|总份额|Required| BigDecimal"
+  ],
+  "body": [
+    "OrderId|销售机构订单号|Required",
+    "AppSheetSerialNo|申请单编号|Required",
+    "TransactionAccountID|交易账号|Required",
+    "FundCode|基金代码|Required",
+    "DistributorCode|机构代码|Required",
+    "BizType|业务类型|Required",
+    "ProfitType|收益归属标识",
+    "TargetTransactionAccountID|目标交易账号",
+    "TargetDistributorCode|目标机构代码",
+    "TransactionDate|交易申请所属交易日|Required|Date:yyyyMMdd",
+    "TransactionTime|交易时间|Required|Date:yyyyMMddHHmmss",
+    "ApplicationVol|申请份额|BigDecimal",
+    "ApplicationAmount|申请金额|BigDecimal",
+    "IndividualOrInstitution|个人/机构标识|Required",
+    "Remarks|备注"
+  ],
+  "fileEncoding": "GBK",
+  "protocol": "DE",
+  "columnSplit":"|",
+  "lineBreak": "\n"
+}

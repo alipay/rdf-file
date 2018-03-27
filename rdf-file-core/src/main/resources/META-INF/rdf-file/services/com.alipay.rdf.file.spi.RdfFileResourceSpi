@@ -1,0 +1,3 @@
+classpath=com.alipay.rdf.file.resource.ClasspathRdfResource
+file=com.alipay.rdf.file.resource.FileRdfResource
+classpath*=com.alipay.rdf.file.resource.ClasspathDirRdfResouces

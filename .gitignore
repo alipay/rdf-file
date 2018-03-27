@@ -1,0 +1,27 @@
+*.project
+/.DS_Store
+**/.settings
+
+# Eclipse Core
+.project
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
+
+# PDT-specific (PHP Development Tools)
+.buildpath
+
+# sbteclipse plugin
+.target
+
+
+# idea file
+.idea/
+*.iml
+
+*_res.yaml
+
+
