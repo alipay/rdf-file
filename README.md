@@ -7,16 +7,17 @@ Features
 * Personalization file parameter configuration
 * File read
 * File write
-* File segment
+* File Split
 * File merge
 * File multi storage operate
 * File validate
 * File sort
 * File multi protocol (format) define
+* Automatic type conversion
 
 Documentation
 -------------
-
+https://github.com/alibaba/rdf-file/wiki
 
 Contact
 -------------
