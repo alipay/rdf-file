@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.alipay.rdf.file</groupId>
+		<artifactId>rdf-file</artifactId>
+		<version>2.0.0</version>
+	</parent>
+	<artifactId>rdf-file-core</artifactId>
+	<version>${rdf.file.core.version}</version>
+	<name>RDF FILE CORE</name>
+	<url>http://maven.apache.org</url>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.26</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+
+						<configuration>
+							<relocations>
+								<relocation>
+									<pattern>com.alibaba.fastjson</pattern>
+									<shadedPattern>com.aliplay.rdf.file.fastjson</shadedPattern>
+								</relocation>
+							</relocations>
+							<filters>
+								<filter>
+									<artifact>com.alibaba:fastjson</artifact>
+									<excludes>
+										<exclude>META-INF/*</exclude>
+										<exclude>META-INF/maven/com.alibaba/fastjson/*</exclude>
+										<exclude>META-INF/services/*</exclude>
+									</excludes>
+								</filter>
+							</filters>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
