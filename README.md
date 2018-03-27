@@ -7,7 +7,7 @@ Features
 * Personalization file parameter configuration
 * File read
 * File write
-* File Split
+* File split
 * File merge
 * File multi storage operate
 * File validate
