@@ -45,7 +45,7 @@
 							<relocations>
 								<relocation>
 									<pattern>com.alibaba.fastjson</pattern>
-									<shadedPattern>com.aliplay.rdf.file.fastjson</shadedPattern>
+									<shadedPattern>com.alipay.rdf.file.fastjson</shadedPattern>
 								</relocation>
 							</relocations>
 							<filters>
