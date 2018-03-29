@@ -1,6 +1,6 @@
 Introduction
 ------------
-Rdf-File is a tool for processing structured text files. It can read, write, segment, merge, sort, validate, and it can operate different distributed file systems (nas/oss ...).  Standards or non-standard files can be handled efficiently in a single or distributed environment.
+Rdf-File is a tool for processing structured text files. It can read, write, segment, split, sort, validate, and it can operate different distributed file systems (nas/oss ...).  Standards or non-standard files can be handled efficiently in a single or distributed environment.
 
 Features
 --------
