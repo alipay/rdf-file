@@ -69,6 +69,16 @@ public class TemplateLoader {
     }
 
     /**
+     * 移除缓存
+     * 
+     * @param templatePath
+     * @return
+     */
+    public static FileMeta removeCache(String templatePath) {
+        return CACHE.remove(templatePath);
+    }
+
+    /**
      * 加载模板
      * 
      * @param template
