@@ -17,7 +17,7 @@ Features
 
 Documentation
 -------------
-https://github.com/alibaba/rdf-file/wiki
+https://github.com/alipay/rdf-file/wiki
 
 Contact
 -------------
