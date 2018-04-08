@@ -17,7 +17,7 @@ public interface FileStorage {
      * 创建一个空文件
      * <li>不能创建文件夹
      * <li>如果创建文件前文件已存在则覆盖原文件
-     * <li>如果创建文件失败抛出RuntimeException
+     * <li>如果创建文件失败抛出RdfFileException
      * 
      * @param filePath
      * @throws IOException  
@@ -111,7 +111,7 @@ public interface FileStorage {
     /**
      * 删除文件
      * <li>可以删除文件或文件夹
-     * <li>如果删除失败抛出RuntimeException
+     * <li>如果删除失败抛出RdfFileException
      * 
      * @param fullPath
      */

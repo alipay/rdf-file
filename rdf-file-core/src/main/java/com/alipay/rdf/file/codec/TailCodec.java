@@ -3,6 +3,8 @@ package com.alipay.rdf.file.codec;
 import java.util.List;
 import java.util.Map;
 
+import com.alipay.rdf.file.exception.RdfErrorEnum;
+import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.interfaces.FileReader;
 import com.alipay.rdf.file.interfaces.FileWriter;
 import com.alipay.rdf.file.loader.ProtocolLoader;
@@ -35,14 +37,18 @@ public class TailCodec implements FileCodec {
         List<FileColumnMeta> columnMetas = fileMeta.getTailColumns();
 
         if (columnMetas.size() == 0) {
-            throw new RuntimeException("模板中没有配置文件体，不支持此操作");
+            throw new RdfFileException("rdf-file#TailCodec.serialize 数据模板templatePath="
+                                       + fileConfig.getTemplatePath() + " 中没有配置文件体，不支持此操作",
+                RdfErrorEnum.TAIL_NOT_DEFINED);
         }
 
         ProtocolDefinition pd = ProtocolLoader.loadProtocol(fileMeta.getProtocol());
         List<RowDefinition> rds = pd.getTails();
 
         if (rds.size() == 0) {
-            throw new RuntimeException("协议中没有定义文件体");
+            throw new RdfFileException(
+                "rdf-file#TailCodec.serialize 协议模板protocol=" + pd.getName() + " 中没有配置文件体，不支持此操作",
+                RdfErrorEnum.TAIL_NOT_DEFINED);
         }
 
         RowsCodec.serialize(bean, fileConfig, writer, processors, FileDataTypeEnum.TAIL);
@@ -58,14 +64,14 @@ public class TailCodec implements FileCodec {
         List<FileColumnMeta> columnMetas = fileMeta.getTailColumns();
 
         if (columnMetas.size() == 0) {
-            throw new RuntimeException("模板中没有配置文件体，不支持此操作");
+            return null;
         }
 
         ProtocolDefinition pd = ProtocolLoader.loadProtocol(fileMeta.getProtocol());
         List<RowDefinition> rds = pd.getTails();
 
         if (rds.size() == 0) {
-            throw new RuntimeException("协议中没有定义文件体");
+            return null;
         }
 
         return RowsCodec.deserialize(clazz, fileConfig, reader, processors, FileDataTypeEnum.TAIL);

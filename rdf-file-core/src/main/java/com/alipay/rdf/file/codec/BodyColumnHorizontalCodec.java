@@ -73,7 +73,8 @@ public class BodyColumnHorizontalCodec {
             : splitLength;
 
         if (splitLength != columns.length) {
-            throw new RuntimeException("文件=" + config.getFilePath() + "头部第二行line=" + line + "");
+            throw new RdfFileException("文件=" + config.getFilePath() + "头部第二行line=" + line,
+                RdfErrorEnum.DESERIALIZE_ERROR);
         }
 
         int statIndex = fileMeta.isStartWithSplit(FileDataTypeEnum.HEAD) ? 1 : 0;
