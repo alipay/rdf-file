@@ -88,9 +88,10 @@ public class ProtocolFileReader implements RdfFileReaderSpi {
         if (null == headCache) {
             if (fileMeta.getHeadColumns().isEmpty()) {
                 if (RdfFileLogUtil.common.isWarn()) {
-                    RdfFileLogUtil.common.warn("rdf-file#ProtocolFileReader.readHead filePath="
-                                               + fileConfig.getFilePath() + ", tempaltePath="
-                                               + fileConfig.getTemplateEncoding());
+                    RdfFileLogUtil.common
+                        .warn("rdf-file#ProtocolFileReader.readHead 数据定义模板没有定义头 filePath="
+                              + fileConfig.getFilePath() + ", tempaltePath="
+                              + fileConfig.getTemplateEncoding());
                 }
                 return null;
             }
@@ -176,6 +177,16 @@ public class ProtocolFileReader implements RdfFileReaderSpi {
         }
 
         if (tailCache == null) {
+            if (fileMeta.getTailColumns().isEmpty()) {
+                if (RdfFileLogUtil.common.isWarn()) {
+                    RdfFileLogUtil.common
+                        .warn("rdf-file#ProtocolFileReader.readTail 数据定义模板没有定义尾 filePath="
+                              + fileConfig.getFilePath() + ", tempaltePath="
+                              + fileConfig.getTemplateEncoding());
+                }
+                return null;
+            }
+
             try {
                 ensureTailOpen();
                 tailCache = TailCodec.instance.deserialize(requiredType, fileConfig, this,
