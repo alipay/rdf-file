@@ -50,6 +50,8 @@ public class FileReaderDeTest {
 
         FileReader fileReader = FileFactory.createReader(config);
 
+        Assert.assertNull(fileReader.readTail(HashMap.class));
+
         Map<String, Object> head = fileReader.readHead(HashMap.class);
         Assert.assertEquals(new Long(100), head.get("totalCount"));
         Assert.assertEquals(new BigDecimal("300.03"), head.get("totalAmount"));
@@ -86,6 +88,8 @@ public class FileReaderDeTest {
 
         row = fileReader.readRow(HashMap.class);
         Assert.assertNull(row);
+
+        Assert.assertNull(fileReader.readTail(HashMap.class));
 
         fileReader.close();
     }
