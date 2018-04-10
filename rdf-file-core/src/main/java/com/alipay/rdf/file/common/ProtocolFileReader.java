@@ -40,6 +40,7 @@ import com.alipay.rdf.file.util.RdfFileUtil;
 public class ProtocolFileReader implements RdfFileReaderSpi {
     private FileMeta                                          fileMeta;
     private FileConfig                                        fileConfig;
+    private FileConfig                                        bodyConfig;
     private RdfBufferedReader                                 reader;
     private Object                                            headCache;
     private Object                                            tailCache;
@@ -138,13 +139,15 @@ public class ProtocolFileReader implements RdfFileReaderSpi {
             return null;
         }
 
-        FileConfig bodyConfig = fileConfig;
-        if (FileDataTypeEnum.ALL.equals(bodyConfig.getFileDataType())) {
-            FileSplitter splitter = FileFactory.createSplitter(bodyConfig.getStorageConfig());
-            FileSlice bodySlice = splitter.getBodySlice(bodyConfig);
-            bodyConfig = bodyConfig.clone();
-            bodyConfig.setPartial(bodySlice.getStart(), bodySlice.getLength(),
-                bodySlice.getFileDataType());
+        if (null == bodyConfig) {
+            bodyConfig = fileConfig;
+            if (FileDataTypeEnum.ALL.equals(bodyConfig.getFileDataType())) {
+                FileSplitter splitter = FileFactory.createSplitter(bodyConfig.getStorageConfig());
+                FileSlice bodySlice = splitter.getBodySlice(bodyConfig);
+                bodyConfig = bodyConfig.clone();
+                bodyConfig.setPartial(bodySlice.getStart(), bodySlice.getLength(),
+                    bodySlice.getFileDataType());
+            }
         }
 
         // 返回空

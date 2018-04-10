@@ -62,8 +62,8 @@ public class FormatLoader {
             if (null == is || !is.hasNext()) {
                 typeFormatHolder = new RawTypeFormatHoler();
                 if (RdfFileLogUtil.common.isInfo()) {
-                    RdfFileLogUtil.common.info(
-                        "rdf-file#FormatLoader.loadMapping(protocol=" + protocolName + " 没有格式化配置");
+                    RdfFileLogUtil.common.info("rdf-file#FormatLoader.loadMapping(protocol="
+                                               + protocolName + " 没有绑定格式化配置)");
                 }
 
             } else {

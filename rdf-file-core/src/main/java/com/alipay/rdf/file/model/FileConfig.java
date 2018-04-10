@@ -115,7 +115,9 @@ public class FileConfig implements Cloneable {
     }
 
     public void addProcessorKey(String key) {
-        processorKeys.add(key);
+        if (!processorKeys.contains(key)) {
+            processorKeys.add(key);
+        }
     }
 
     public List<String> getProcessorKeys() {
