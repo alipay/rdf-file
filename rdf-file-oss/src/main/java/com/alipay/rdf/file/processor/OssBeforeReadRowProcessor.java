@@ -31,6 +31,10 @@ public class OssBeforeReadRowProcessor extends AbstractOssProcessor {
 
     @Override
     protected void doProcess(ProcessCotnext pc) {
+        if (null != pc.getFileConfig().getInputStream()) {
+            return;
+        }
+
         if (pc.getFileConfig().isPartial() && pc.getFileConfig().getLength() == 0) {
             if (RdfFileLogUtil.common.isInfo()) {
                 RdfFileLogUtil.common

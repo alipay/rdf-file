@@ -141,7 +141,8 @@ public class ProtocolFileReader implements RdfFileReaderSpi {
 
         if (null == bodyConfig) {
             bodyConfig = fileConfig;
-            if (FileDataTypeEnum.ALL.equals(bodyConfig.getFileDataType())) {
+            if (null == bodyConfig.getInputStream()
+                && FileDataTypeEnum.ALL.equals(bodyConfig.getFileDataType())) {
                 FileSplitter splitter = FileFactory.createSplitter(bodyConfig.getStorageConfig());
                 FileSlice bodySlice = splitter.getBodySlice(bodyConfig);
                 bodyConfig = bodyConfig.clone();
