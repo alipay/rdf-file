@@ -20,7 +20,8 @@ public class RdfFileConstants {
     /**默认水平输出*/
     public static final ColumnLayoutEnum DEFAULT_COLUMN_LAYOUT = ColumnLayoutEnum.horizontal;
 
-    //========================processor 传递的一些key==========================
+    //========================processor 传递参数的一些key==========================
     public static final String           DATA                  = "data";
     public static final String           ROW_TYPE              = "rowType";
+    public static final String           SUMMARY               = "summary";
 }

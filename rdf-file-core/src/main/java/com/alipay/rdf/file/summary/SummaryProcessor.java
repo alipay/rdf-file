@@ -12,6 +12,7 @@ import com.alipay.rdf.file.processor.ProcessorTypeEnum;
 import com.alipay.rdf.file.spi.RdfFileProcessorSpi;
 import com.alipay.rdf.file.spi.RdfFileSummaryPairSpi;
 import com.alipay.rdf.file.util.BeanMapWrapper;
+import com.alipay.rdf.file.util.RdfFileConstants;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
@@ -38,8 +39,8 @@ public class SummaryProcessor implements RdfFileProcessorSpi {
     public void process(ProcessCotnext pc) {
         ProcessorTypeEnum processorType = pc.getProcessorType();
 
-        Summary summary = (Summary) pc.getBizData("summary");
-        Object data = pc.getBizData("data");
+        Summary summary = (Summary) pc.getBizData(RdfFileConstants.SUMMARY);
+        Object data = pc.getBizData(RdfFileConstants.DATA);
 
         if (null == data) {
             return;
