@@ -6,6 +6,7 @@ import java.util.Map;
 import com.alipay.rdf.file.codec.RowColumnHorizontalCodec;
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
+import com.alipay.rdf.file.interfaces.FileCoreProcessorConstants;
 import com.alipay.rdf.file.interfaces.FileCoreToolContants;
 import com.alipay.rdf.file.interfaces.FileFactory;
 import com.alipay.rdf.file.interfaces.FileReader;
@@ -30,6 +31,7 @@ import com.alipay.rdf.file.sort.SortedFileGroupReader;
 import com.alipay.rdf.file.spi.RdfFileProcessorSpi;
 import com.alipay.rdf.file.spi.RdfFileReaderSpi;
 import com.alipay.rdf.file.util.BeanMapWrapper;
+import com.alipay.rdf.file.util.RdfFileConstants;
 import com.alipay.rdf.file.util.RdfFileLogUtil;
 import com.alipay.rdf.file.util.RdfFileUtil;
 
@@ -63,7 +65,7 @@ public class ProtocolFilesSortedReader implements RdfFileReaderSpi, FileSorter {
         this.fileMeta = TemplateLoader.load(templatePath, fileConfig.getTemplateEncoding());
         if (fileConfig.isSummaryEnable()) {
             summary = SummaryLoader.getNewSummary(fileMeta);
-            fileConfig.addProcessorKey("summary");
+            fileConfig.addProcessorKey(FileCoreProcessorConstants.SUMMARY);
         }
 
         // 加载定义的文件协议
@@ -114,8 +116,8 @@ public class ProtocolFilesSortedReader implements RdfFileReaderSpi, FileSorter {
 
                 if (null != headCache) {
                     ProcessExecutor.execute(ProcessorTypeEnum.AFTER_READ_HEAD, processors,
-                        fileConfig, new BizData("summary", summary),
-                        new BizData("data", headCache));
+                        fileConfig, new BizData(RdfFileConstants.SUMMARY, summary),
+                        new BizData(RdfFileConstants.DATA, headCache));
                 }
             } finally {
                 if (null != headReader) {
@@ -165,7 +167,7 @@ public class ProtocolFilesSortedReader implements RdfFileReaderSpi, FileSorter {
         }
 
         ProcessExecutor.execute(ProcessorTypeEnum.AFTER_READ_ROW, processors, fileConfig,
-            new BizData("summary", summary), new BizData("data", t));
+            new BizData(RdfFileConstants.SUMMARY, summary), new BizData(RdfFileConstants.DATA, t));
 
         return t;
     }
@@ -197,8 +199,8 @@ public class ProtocolFilesSortedReader implements RdfFileReaderSpi, FileSorter {
 
                 if (null != tailCache) {
                     ProcessExecutor.execute(ProcessorTypeEnum.AFTER_READ_TAIL, processors,
-                        fileConfig, new BizData("summary", summary),
-                        new BizData("data", tailCache));
+                        fileConfig, new BizData(RdfFileConstants.SUMMARY, summary),
+                        new BizData(RdfFileConstants.DATA, tailCache));
                 }
             } finally {
                 if (null != tailReader) {

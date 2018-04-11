@@ -1,10 +1,12 @@
 package com.aplipay.rdf.file;
 
 import com.alipay.rdf.file.interfaces.FileCoreManualProcessorConstants;
+import com.alipay.rdf.file.interfaces.FileCoreProcessorConstants;
 import com.alipay.rdf.file.interfaces.FileCoreResourcesConstants;
 import com.alipay.rdf.file.interfaces.FileCoreStorageContants;
 import com.alipay.rdf.file.interfaces.FileCoreToolContants;
 import com.alipay.rdf.file.interfaces.FileOssManualProcessorConstants;
+import com.alipay.rdf.file.interfaces.FileOssProcessorConstants;
 import com.alipay.rdf.file.interfaces.FileOssResourcesConstants;
 import com.alipay.rdf.file.interfaces.FileOssStorageContants;
 
@@ -19,6 +21,7 @@ import com.alipay.rdf.file.interfaces.FileOssStorageContants;
 public interface RdfFileConstants extends FileCoreManualProcessorConstants,
                                   FileCoreResourcesConstants, FileCoreStorageContants,
                                   FileCoreToolContants, FileOssManualProcessorConstants,
-                                  FileOssResourcesConstants, FileOssStorageContants {
+                                  FileCoreProcessorConstants, FileOssResourcesConstants,
+                                  FileOssStorageContants, FileOssProcessorConstants {
 
 }

@@ -9,6 +9,7 @@ import com.alipay.rdf.file.codec.HeaderCodec;
 import com.alipay.rdf.file.codec.TailCodec;
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
+import com.alipay.rdf.file.interfaces.FileCoreProcessorConstants;
 import com.alipay.rdf.file.loader.ProcessorLoader;
 import com.alipay.rdf.file.loader.ProtocolLoader;
 import com.alipay.rdf.file.loader.SummaryLoader;
@@ -21,6 +22,7 @@ import com.alipay.rdf.file.processor.ProcessExecutor.BizData;
 import com.alipay.rdf.file.processor.ProcessorTypeEnum;
 import com.alipay.rdf.file.spi.RdfFileProcessorSpi;
 import com.alipay.rdf.file.spi.RdfFileWriterSpi;
+import com.alipay.rdf.file.util.RdfFileConstants;
 import com.alipay.rdf.file.util.RdfFileLogUtil;
 import com.alipay.rdf.file.util.RdfFileUtil;
 
@@ -45,7 +47,7 @@ public class ProtocolFileWriter implements RdfFileWriterSpi {
 
         if (fileConfig.isSummaryEnable()) {
             summary = SummaryLoader.getNewSummary(fileMeta);
-            fileConfig.addProcessorKey("summary");
+            fileConfig.addProcessorKey(FileCoreProcessorConstants.SUMMARY);
         }
 
         ProtocolLoader.loadProtocol(fileMeta.getProtocol());
@@ -70,7 +72,8 @@ public class ProtocolFileWriter implements RdfFileWriterSpi {
         HeaderCodec.instance.serialize(headBean, fileConfig, this, processors);
 
         ProcessExecutor.execute(ProcessorTypeEnum.AFTER_WRITE_HEAD, processors, fileConfig,
-            new BizData("summary", summary), new BizData("data", headBean));
+            new BizData(RdfFileConstants.SUMMARY, summary),
+            new BizData(RdfFileConstants.DATA, headBean));
     }
 
     /** 
@@ -85,7 +88,8 @@ public class ProtocolFileWriter implements RdfFileWriterSpi {
         BodyCodec.instance.serialize(rowBean, fileConfig, this, processors);
 
         ProcessExecutor.execute(ProcessorTypeEnum.AFTER_WRITE_ROW, processors, fileConfig,
-            new BizData("summary", summary), new BizData("data", rowBean));
+            new BizData(RdfFileConstants.SUMMARY, summary),
+            new BizData(RdfFileConstants.DATA, rowBean));
     }
 
     /** 
@@ -97,7 +101,8 @@ public class ProtocolFileWriter implements RdfFileWriterSpi {
         TailCodec.instance.serialize(tailBean, fileConfig, this, processors);
 
         ProcessExecutor.execute(ProcessorTypeEnum.AFTER_WRITE_TAIL, processors, fileConfig,
-            new BizData("summary", summary), new BizData("data", tailBean));
+            new BizData(RdfFileConstants.SUMMARY, summary),
+            new BizData(RdfFileConstants.DATA, tailBean));
     }
 
     /** 
