@@ -279,6 +279,11 @@ public class OssFileSliceSplitter implements RdfFileSplitterSpi {
                 .debug("rdf-file#OssFileSliceSplitter.getHeadSlice fileSize=" + fileInfo.getSize());
         }
 
+        if (fileConfig.getFileDataType() == FileDataTypeEnum.BODY
+            || fileConfig.getFileDataType() == FileDataTypeEnum.TAIL) {
+            return new FileSlice(fileConfig.getFilePath(), FileDataTypeEnum.HEAD, 0, 0);
+        }
+
         FileMeta fileMeta = TemplateLoader.load(fileConfig.getTemplatePath(),
             fileConfig.getTemplateEncoding());
         if (!fileMeta.hasHead()) {
@@ -559,6 +564,11 @@ public class OssFileSliceSplitter implements RdfFileSplitterSpi {
         } else if (RdfFileLogUtil.common.isDebug()) {
             RdfFileLogUtil.common
                 .debug("rdf-file#OssFileSliceSplitter.getTailSlice file size=" + length);
+        }
+
+        if (fileConfig.getFileDataType() == FileDataTypeEnum.BODY
+            || fileConfig.getFileDataType() == FileDataTypeEnum.HEAD) {
+            return new FileSlice(fileConfig.getFilePath(), FileDataTypeEnum.TAIL, length, length);
         }
 
         FileMeta fileMeta = TemplateLoader.load(fileConfig.getTemplatePath(),
