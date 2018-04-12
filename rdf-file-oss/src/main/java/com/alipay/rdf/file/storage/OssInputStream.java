@@ -71,8 +71,6 @@ public class OssInputStream extends InputStream {
      */
     @Override
     public void close() throws IOException {
-        is.close();
-
         //低版本没有这个方法
         try {
             Method forcedClose = OSSObject.class.getDeclaredMethod("forcedClose");
@@ -87,6 +85,8 @@ public class OssInputStream extends InputStream {
                 "rdf-file#OssInputStream.close()  OssInputStream.ossObject forcedClose 失败 ", e,
                 RdfErrorEnum.IO_ERROR);
         }
+        
+        is.close();
     }
 
     /** 
