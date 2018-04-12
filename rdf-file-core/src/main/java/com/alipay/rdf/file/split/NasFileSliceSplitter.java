@@ -167,8 +167,8 @@ public class NasFileSliceSplitter implements RdfFileSplitterSpi {
                 .debug("rdf-file#NasFileSliceSplitter.getHeadSlice fileSize=" + length);
         }
 
-        if (fileConfig.getFileDataType() == FileDataTypeEnum.BODY
-            || fileConfig.getFileDataType() == FileDataTypeEnum.TAIL) {
+        if (!fileConfig.isPartial() && (fileConfig.getFileDataType() == FileDataTypeEnum.BODY
+                                        || fileConfig.getFileDataType() == FileDataTypeEnum.TAIL)) {
             return new FileSlice(fileConfig.getFilePath(), FileDataTypeEnum.HEAD, 0, 0);
         }
 
@@ -369,8 +369,8 @@ public class NasFileSliceSplitter implements RdfFileSplitterSpi {
                 .debug("rdf-file#NasFileSliceSplitter.getTailSlice file size=" + length);
         }
 
-        if (fileConfig.getFileDataType() == FileDataTypeEnum.BODY
-            || fileConfig.getFileDataType() == FileDataTypeEnum.HEAD) {
+        if (!fileConfig.isPartial() && (fileConfig.getFileDataType() == FileDataTypeEnum.BODY
+                                        || fileConfig.getFileDataType() == FileDataTypeEnum.HEAD)) {
             return new FileSlice(fileConfig.getFilePath(), FileDataTypeEnum.TAIL, length, length);
         }
 
