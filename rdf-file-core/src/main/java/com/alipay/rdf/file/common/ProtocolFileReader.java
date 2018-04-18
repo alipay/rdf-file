@@ -235,13 +235,16 @@ public class ProtocolFileReader implements RdfFileReaderSpi {
 
     @Override
     public String readBodyLine() {
-        FileConfig bodyConfig = fileConfig;
-        if (FileDataTypeEnum.ALL.equals(bodyConfig.getFileDataType())) {
-            FileSplitter splitter = FileFactory.createSplitter(bodyConfig.getStorageConfig());
-            FileSlice bodySlice = splitter.getBodySlice(bodyConfig);
-            bodyConfig = bodyConfig.clone();
-            bodyConfig.setPartial(bodySlice.getStart(), bodySlice.getLength(),
-                bodySlice.getFileDataType());
+        if (null == bodyConfig) {
+            bodyConfig = fileConfig;
+            if (null == bodyConfig.getInputStream()
+                && FileDataTypeEnum.ALL.equals(bodyConfig.getFileDataType())) {
+                FileSplitter splitter = FileFactory.createSplitter(bodyConfig.getStorageConfig());
+                FileSlice bodySlice = splitter.getBodySlice(bodyConfig);
+                bodyConfig = bodyConfig.clone();
+                bodyConfig.setPartial(bodySlice.getStart(), bodySlice.getLength(),
+                    bodySlice.getFileDataType());
+            }
         }
 
         ensureOpen(bodyConfig);
