@@ -27,13 +27,19 @@ import com.aliyun.oss.OSSErrorCode;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.AppendObjectRequest;
 import com.aliyun.oss.model.AppendObjectResult;
+import com.aliyun.oss.model.CompleteMultipartUploadRequest;
 import com.aliyun.oss.model.GetObjectRequest;
+import com.aliyun.oss.model.InitiateMultipartUploadRequest;
+import com.aliyun.oss.model.InitiateMultipartUploadResult;
 import com.aliyun.oss.model.ListObjectsRequest;
 import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.OSSObjectSummary;
 import com.aliyun.oss.model.ObjectListing;
 import com.aliyun.oss.model.ObjectMetadata;
+import com.aliyun.oss.model.PartETag;
 import com.aliyun.oss.model.UploadFileRequest;
+import com.aliyun.oss.model.UploadPartCopyRequest;
+import com.aliyun.oss.model.UploadPartCopyResult;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
@@ -343,11 +349,59 @@ public class FileOssStorage implements RdfFileStorageSpi {
      * @param toBucketName
      * @param toFile
      */
-    private void copy(String srcBucketName, String srcFile, String toBucketName, String toFile) {
+    public void copy(String srcBucketName, String srcFile, String toBucketName, String toFile) {
         srcFile = toOSSPath(srcFile);
         toFile = toOSSPath(toFile);
 
-        client.copyObject(srcBucketName, srcFile, toBucketName, toFile);
+        FileInfo fileInfo = getFileInfo(srcFile);
+        if (fileInfo.getSize() < ossConfig.getOssBigFileSize()) {
+            client.copyObject(srcBucketName, srcFile, toBucketName, toFile);
+        } else {
+            copyBigFile(srcBucketName, srcFile, toBucketName, toFile, fileInfo);
+        }
+    }
+
+    private void copyBigFile(String srcBucketName, String srcFile, String toBucketName,
+                             String toFile, FileInfo fileInfo) {
+        long contentLength = fileInfo.getSize();
+        // 分片大小，10MB
+        long partSize = 1024 * 1024 * 10;
+        // 计算分块数目
+        int partCount = (int) (contentLength / partSize);
+        if (contentLength % partSize != 0) {
+            partCount++;
+        }
+
+        // 初始化拷贝任务
+        InitiateMultipartUploadRequest initiateMultipartUploadRequest = new InitiateMultipartUploadRequest(
+            toBucketName, toFile);
+        InitiateMultipartUploadResult initiateMultipartUploadResult = client
+            .initiateMultipartUpload(initiateMultipartUploadRequest);
+        String uploadId = initiateMultipartUploadResult.getUploadId();
+
+        // 分片拷贝
+        List<PartETag> partETags = new ArrayList<PartETag>();
+        for (int i = 0; i < partCount; i++) {
+            // 计算每个分块的大小
+            long skipBytes = partSize * i;
+            long size = partSize < contentLength - skipBytes ? partSize : contentLength - skipBytes;
+            // 创建UploadPartCopyRequest
+            UploadPartCopyRequest uploadPartCopyRequest = new UploadPartCopyRequest(srcBucketName,
+                srcFile, toBucketName, toFile);
+            uploadPartCopyRequest.setUploadId(uploadId);
+            uploadPartCopyRequest.setPartSize(size);
+            uploadPartCopyRequest.setBeginIndex(skipBytes);
+            uploadPartCopyRequest.setPartNumber(i + 1);
+            UploadPartCopyResult uploadPartCopyResult = client
+                .uploadPartCopy(uploadPartCopyRequest);
+            // 将返回的PartETag保存到List中
+            partETags.add(uploadPartCopyResult.getPartETag());
+        }
+
+        // 提交分片拷贝任务
+        CompleteMultipartUploadRequest completeMultipartUploadRequest = new CompleteMultipartUploadRequest(
+            toBucketName, toFile, uploadId, partETags);
+        client.completeMultipartUpload(completeMultipartUploadRequest);
     }
 
     /**
