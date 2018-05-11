@@ -335,7 +335,15 @@ public class NasFileSliceSplitter implements RdfFileSplitterSpi {
                 RdfErrorEnum.NOT_EXSIT);
         }
 
-        return split(file, getBodySlice(fileConfig), sliceSize);
+        FileSlice slice = null;
+        if (fileConfig.isPartial()) {
+            slice = new FileSlice(filePath, fileConfig.getFileDataType(), fileConfig.getOffset(),
+                fileConfig.getOffset() + fileConfig.getLength());
+        } else {
+            slice = getBodySlice(fileConfig);
+        }
+
+        return split(file, slice, sliceSize);
     }
 
     /** 

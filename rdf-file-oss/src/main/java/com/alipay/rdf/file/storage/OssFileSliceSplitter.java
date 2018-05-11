@@ -537,7 +537,15 @@ public class OssFileSliceSplitter implements RdfFileSplitterSpi {
                 RdfErrorEnum.NOT_EXSIT);
         }
 
-        return split(fileInfo, getBodySlice(fileConfig), sliceSize);
+        FileSlice slice = null;
+        if (fileConfig.isPartial()) {
+            slice = new FileSlice(filePath, fileConfig.getFileDataType(), fileConfig.getOffset(),
+                fileConfig.getOffset() + fileConfig.getLength());
+        } else {
+            slice = getBodySlice(fileConfig);
+        }
+
+        return split(fileInfo, slice, sliceSize);
     }
 
     @Override
