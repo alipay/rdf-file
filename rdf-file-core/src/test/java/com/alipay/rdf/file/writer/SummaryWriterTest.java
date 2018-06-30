@@ -81,7 +81,7 @@ public class SummaryWriterTest {
         body.put("memo", "memo2");
         fileWriter.writeRow(body);
 
-        fileWriter.writeTail(fileWriter.geSummary().summaryTailToMap());
+        fileWriter.writeTail(fileWriter.getSummary().summaryTailToMap());
 
         fileWriter.close();
 

@@ -70,7 +70,7 @@ public class RawFileWriter implements RdfFileWriterSpi {
     }
 
     @Override
-    public Summary geSummary() {
+    public Summary getSummary() {
         throw new RdfFileException("rdf-file#RawFileWriter.geSummary 不支持操作",
             RdfErrorEnum.UNSUPPORTED_OPERATION);
     }

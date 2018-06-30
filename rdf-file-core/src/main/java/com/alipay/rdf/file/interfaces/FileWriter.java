@@ -41,7 +41,7 @@ public interface FileWriter {
      */
     void writeLine(String line);
 
-    Summary geSummary();
+    Summary getSummary();
 
     /**
      * 关闭流
