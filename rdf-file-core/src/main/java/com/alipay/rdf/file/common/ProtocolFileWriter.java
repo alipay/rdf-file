@@ -136,7 +136,7 @@ public class ProtocolFileWriter implements RdfFileWriterSpi {
     }
 
     @Override
-    public Summary geSummary() {
+    public Summary getSummary() {
         if (fileConfig.isSummaryEnable()) {
             return summary;
         } else {
