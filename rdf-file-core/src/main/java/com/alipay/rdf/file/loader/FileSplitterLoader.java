@@ -1,7 +1,7 @@
 package com.alipay.rdf.file.loader;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.WeakHashMap;
 
 import com.alipay.rdf.file.init.RdfInit;
 import com.alipay.rdf.file.interfaces.FileSplitter;
@@ -17,7 +17,7 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  * @version $Id: FileSplitterLoader.java, v 0.1 2018年3月12日 下午4:20:17 hongwei.quhw Exp $
  */
 public class FileSplitterLoader {
-    private static final Map<StorageConfig, FileSplitter> STORAGE_CACHE = new ConcurrentHashMap<StorageConfig, FileSplitter>();
+    private static final Map<StorageConfig, FileSplitter> STORAGE_CACHE = new WeakHashMap<StorageConfig, FileSplitter>();
 
     private static final Object                           LOCK          = new Object();
 
