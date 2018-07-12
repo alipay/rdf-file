@@ -122,4 +122,66 @@ public class OssConfig {
     public void setOssAppendSizeLimit(Long ossAppendSizeLimit) {
         this.ossAppendSizeLimit = ossAppendSizeLimit;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((accessKeyId == null) ? 0 : accessKeyId.hashCode());
+        result = prime * result + ((accessKeySecret == null) ? 0 : accessKeySecret.hashCode());
+        result = prime * result + ((bucketName == null) ? 0 : bucketName.hashCode());
+        result = prime * result + ((endpoint == null) ? 0 : endpoint.hashCode());
+        result = prime * result
+                 + ((ossAppendSizeLimit == null) ? 0 : ossAppendSizeLimit.hashCode());
+        result = prime * result + ((ossBigFileSize == null) ? 0 : ossBigFileSize.hashCode());
+        result = prime * result + ((ossTempRoot == null) ? 0 : ossTempRoot.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        OssConfig other = (OssConfig) obj;
+        if (accessKeyId == null) {
+            if (other.accessKeyId != null)
+                return false;
+        } else if (!accessKeyId.equals(other.accessKeyId))
+            return false;
+        if (accessKeySecret == null) {
+            if (other.accessKeySecret != null)
+                return false;
+        } else if (!accessKeySecret.equals(other.accessKeySecret))
+            return false;
+        if (bucketName == null) {
+            if (other.bucketName != null)
+                return false;
+        } else if (!bucketName.equals(other.bucketName))
+            return false;
+        if (endpoint == null) {
+            if (other.endpoint != null)
+                return false;
+        } else if (!endpoint.equals(other.endpoint))
+            return false;
+        if (ossAppendSizeLimit == null) {
+            if (other.ossAppendSizeLimit != null)
+                return false;
+        } else if (!ossAppendSizeLimit.equals(other.ossAppendSizeLimit))
+            return false;
+        if (ossBigFileSize == null) {
+            if (other.ossBigFileSize != null)
+                return false;
+        } else if (!ossBigFileSize.equals(other.ossBigFileSize))
+            return false;
+        if (ossTempRoot == null) {
+            if (other.ossTempRoot != null)
+                return false;
+        } else if (!ossTempRoot.equals(other.ossTempRoot))
+            return false;
+        return true;
+    }
 }
