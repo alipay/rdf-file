@@ -43,9 +43,9 @@ import com.alipay.rdf.file.util.RdfProfiler;
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ProtocolFileMerger implements RdfFileMergerSpi {
-    private FileConfig fileConfig;
-    private FileMeta   fileMeta;
-    private FileWriter fileWriter;
+    protected FileConfig fileConfig;
+    protected FileMeta   fileMeta;
+    protected FileWriter fileWriter;
 
     @Override
     public void init(FileConfig fileConfig) {
@@ -98,7 +98,7 @@ public class ProtocolFileMerger implements RdfFileMergerSpi {
             if (null == storageConfig) {
                 storageConfig = fileConfig.getStorageConfig();
             }
-            FileStorage storage = FileFactory.createStorage(fileConfig.getStorageConfig());
+            FileStorage storage = FileFactory.createStorage(storageConfig);
             if (!storage.getFileInfo(filePath.getFilePath()).isExists()) {
                 throw new RdfFileException(
                     "rdf-file#合并文件 filePath=【" + filePath.getFilePath() + "】不存在",
@@ -127,7 +127,7 @@ public class ProtocolFileMerger implements RdfFileMergerSpi {
         fileWriter.writeHead(head);
     }
 
-    private void mergeBody(MergerConfig config) {
+    protected void mergeBody(MergerConfig config) {
         if (config.isStreamAppend()) {
             RdfProfiler.enter("rdf-file#merge exist body start...");
             mergeBodyStream(config.getExistFilePaths(), true);
@@ -237,7 +237,7 @@ public class ProtocolFileMerger implements RdfFileMergerSpi {
         return tail;
     }
 
-    private void mergeBodyLines(List<PathHolder> bodyFilePaths, boolean existFile) {
+    protected void mergeBodyLines(List<PathHolder> bodyFilePaths, boolean existFile) {
         if (null == bodyFilePaths || 0 == bodyFilePaths.size()) {
             return;
         }
@@ -268,7 +268,7 @@ public class ProtocolFileMerger implements RdfFileMergerSpi {
         }
     }
 
-    private void mergeBodyStream(List<PathHolder> bodyFilePaths, boolean existFile) {
+    protected void mergeBodyStream(List<PathHolder> bodyFilePaths, boolean existFile) {
         if (null == bodyFilePaths || 0 == bodyFilePaths.size()) {
             return;
         }
