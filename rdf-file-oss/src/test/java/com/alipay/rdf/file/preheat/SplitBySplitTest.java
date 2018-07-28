@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.alipay.rdf.file.interfaces.FileFactory;
@@ -17,6 +18,7 @@ import com.alipay.rdf.file.util.OssTestUtil;
 import com.alipay.rdf.file.util.RdfFileUtil;
 import com.alipay.rdf.file.util.TemporaryFolderUtil;
 
+@Ignore
 public class SplitBySplitTest {
     private TemporaryFolderUtil        temporaryFolder = new TemporaryFolderUtil();
     private static final StorageConfig storageConfig   = OssTestUtil.geStorageConfig();

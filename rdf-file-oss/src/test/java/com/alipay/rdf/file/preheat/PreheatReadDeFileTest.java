@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.alipay.rdf.file.interfaces.FileFactory;
@@ -35,6 +36,7 @@ import junit.framework.Assert;
  * @author hongwei.quhw
  * @version $Id: PreheatReadTest.java, v 0.1 2017年7月17日 下午7:06:40 hongwei.quhw Exp $
  */
+@Ignore
 public class PreheatReadDeFileTest {
     private static final ThreadPoolExecutor executor        = new ThreadPoolExecutor(2, 4, 60,
         TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(10));
