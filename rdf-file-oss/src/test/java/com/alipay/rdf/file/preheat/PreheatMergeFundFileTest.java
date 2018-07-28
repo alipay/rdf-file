@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.alipay.rdf.file.interfaces.FileFactory;
@@ -36,6 +37,7 @@ import junit.framework.Assert;
  * @author hongwei.quhw
  * @version $Id: PreheatMergeFundFileTest.java, v 0.1 2018年4月17日 下午5:27:55 hongwei.quhw Exp $
  */
+@Ignore
 public class PreheatMergeFundFileTest {
     private TemporaryFolderUtil        temporaryFolder = new TemporaryFolderUtil();
     private static final StorageConfig storageConfig   = OssTestUtil.geStorageConfig();
