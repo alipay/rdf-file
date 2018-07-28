@@ -92,7 +92,7 @@ public class ProtocolFileReader implements RdfFileReaderSpi {
             if (fileMeta.getHeadColumns().isEmpty()) {
                 if (RdfFileLogUtil.common.isWarn()) {
                     RdfFileLogUtil.common
-                        .warn("rdf-file#ProtocolFileReader.readHead 数据定义模板没有定义头 filePath="
+                        .warn("rdf-file#ProtocolFileReader.readHead  数据定义模板没有定义头 filePath="
                               + fileConfig.getFilePath() + ", tempaltePath="
                               + fileConfig.getTemplateEncoding());
                 }
@@ -308,5 +308,9 @@ public class ProtocolFileReader implements RdfFileReaderSpi {
     private void ensureHeadOpen() {
         closeReader();
         reader = IOFactory.createReader(fileConfig, processors);
+    }
+
+    public void setSummary(Summary summary) {
+        this.summary = summary;
     }
 }
