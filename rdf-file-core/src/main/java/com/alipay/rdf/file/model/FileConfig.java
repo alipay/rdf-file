@@ -2,7 +2,9 @@ package com.alipay.rdf.file.model;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.interfaces.RowValidator;
@@ -18,43 +20,45 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  */
 public class FileConfig implements Cloneable {
     /**文件读写合并校验组件类型  默认 type=protocol */
-    private String             type             = "protocol";
+    private String              type             = "protocol";
     /** 文件路径*/
-    private String             filePath;
+    private String              filePath;
     /**文件数据类型*/
-    private FileDataTypeEnum   fileDataType     = FileDataTypeEnum.ALL;
+    private FileDataTypeEnum    fileDataType     = FileDataTypeEnum.ALL;
     /** 模板路径*/
-    private final String       templatePath;
+    private final String        templatePath;
     /** 定义的模板编码格式*/
-    private String             templateEncoding = FileDefaultConfig.DEFAULT_TEMPLATE_ENCONDIG;
+    private String              templateEncoding = FileDefaultConfig.DEFAULT_TEMPLATE_ENCONDIG;
     /** 读取或者生成文件的编码格式*/
-    private String             fileEncoding;
+    private String              fileEncoding;
     /** 写文件时换行符*/
-    private String             lineBreak;
+    private String              lineBreak;
 
-    private StorageConfig      storageConfig;
+    private StorageConfig       storageConfig;
 
-    private List<String>       processorKeys    = new ArrayList<String>();
+    private List<String>        processorKeys    = new ArrayList<String>();
 
-    private boolean            summaryEnable    = false;
+    private boolean             summaryEnable    = false;
 
-    private List<RowValidator> rowValidators    = new ArrayList<RowValidator>();
+    private List<RowValidator>  rowValidators    = new ArrayList<RowValidator>();
 
     /**此参数只有在type=raw时指定文件内容分隔符时有效*/
-    private String             columnSplit;
+    private String              columnSplit;
     //===================部分读属性==================
     /** 数据所在的偏移量*/
-    private long               offset;
+    private long                offset;
     /** 数据的长度*/
-    private long               length;
+    private long                length;
     /** 是否部分读取*/
-    private boolean            isPartial;
+    private boolean             isPartial;
 
     //=====================其他===================
     /** 写文件的时候是否在文件尾部追加*/
-    private boolean            isAppend         = false;
+    private boolean             isAppend         = false;
     /** 外部构建的输入流*/
-    private InputStream        is;
+    private InputStream         is;
+    /** 透传给插件的参数*/
+    private Map<String, Object> params           = new HashMap<String, Object>();
 
     /**
      * 构造方法
@@ -300,6 +304,14 @@ public class FileConfig implements Cloneable {
         this.columnSplit = columnSplit;
     }
 
+    public void addParam(String key, Object value) {
+        params.put(key, value);
+    }
+
+    public Object getParam(String key) {
+        return params.get(key);
+    }
+
     /**
      * 
      * @see java.lang.Object#clone()
@@ -326,6 +338,7 @@ public class FileConfig implements Cloneable {
         config.setRowValidators(rowValidators);
         config.setInputStream(is);
         config.setColumnSplit(columnSplit);
+        config.params = params;
 
         return config;
     }
