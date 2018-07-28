@@ -29,6 +29,10 @@ public class MergerConfig {
         this.headFilePaths = popluate(headFilePaths);
     }
 
+    public void setHeadFilePaths(List<String> headFilePaths, StorageConfig storageConfig) {
+        this.headFilePaths = popluate(headFilePaths, storageConfig);
+    }
+
     public void setHeadFilePathHolders(List<PathHolder> headFilePaths) {
         this.headFilePaths = headFilePaths;
     }
@@ -41,6 +45,10 @@ public class MergerConfig {
         this.bodyFilePaths = popluate(bodyFilePaths);
     }
 
+    public void setBodyFilePaths(List<String> bodyFilePaths, StorageConfig storageConfig) {
+        this.bodyFilePaths = popluate(bodyFilePaths, storageConfig);
+    }
+
     public void setBodyFilePathHolders(List<PathHolder> bodyFilePaths) {
         this.bodyFilePaths = bodyFilePaths;
     }
@@ -51,6 +59,10 @@ public class MergerConfig {
 
     public void setTailFilePaths(List<String> tailFilePaths) {
         this.tailFilePaths = popluate(tailFilePaths);
+    }
+
+    public void setTailFilePaths(List<String> tailFilePaths, StorageConfig storageConfig) {
+        this.tailFilePaths = popluate(tailFilePaths, storageConfig);
     }
 
     public void setTailFilePathHolders(List<PathHolder> tailFilePaths) {
@@ -78,13 +90,17 @@ public class MergerConfig {
     }
 
     private List<PathHolder> popluate(List<String> filePaths) {
+        return popluate(filePaths, null);
+    }
+
+    private List<PathHolder> popluate(List<String> filePaths, StorageConfig storageConfig) {
         if (null == filePaths || 0 == filePaths.size()) {
             return null;
         }
 
         List<PathHolder> holders = new ArrayList<PathHolder>();
         for (String path : filePaths) {
-            holders.add(new PathHolder(path, null));
+            holders.add(new PathHolder(path, storageConfig));
         }
 
         return holders;
@@ -103,7 +119,7 @@ public class MergerConfig {
         return buffer.toString();
     }
 
-    public class PathHolder {
+    public static final class PathHolder {
         private String        filePath;
         private StorageConfig storageConfig;
 
