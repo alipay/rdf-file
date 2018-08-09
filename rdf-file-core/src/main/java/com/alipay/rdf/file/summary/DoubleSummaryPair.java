@@ -13,4 +13,8 @@ public class DoubleSummaryPair extends AbstractSummaryPair<Double> {
         summaryValue = summaryValue + columnValue;
     }
 
+    @Override
+    protected Double initDefaultColumnValue() {
+        return new Double("0");
+    }
 }

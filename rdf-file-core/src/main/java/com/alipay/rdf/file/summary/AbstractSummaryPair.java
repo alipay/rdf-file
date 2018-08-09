@@ -119,6 +119,10 @@ public abstract class AbstractSummaryPair<T> implements RdfFileSummaryPairSpi<T>
             }
         }
 
+        if (null == summaryValue) {
+            summaryValue = initDefaultColumnValue();
+        }
+
         if (null != headValue) {
             return doIsSummaryEquals(headValue, summaryValue);
         } else {
@@ -127,9 +131,25 @@ public abstract class AbstractSummaryPair<T> implements RdfFileSummaryPairSpi<T>
 
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     protected boolean doIsSummaryEquals(T headOrtailValue, T summaryValue) {
-        return headOrtailValue == summaryValue;
+        if (headOrtailValue instanceof Comparable) {
+            if (((Comparable) headOrtailValue).compareTo((Comparable) summaryValue) == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        return headOrtailValue.equals(summaryValue);
     }
 
     protected abstract void doAddColValue(T columnValue);
+
+    /**
+     * body数据为空时初始化默认值
+     * 
+     * @return
+     */
+    protected abstract T initDefaultColumnValue();
 }

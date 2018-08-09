@@ -13,4 +13,8 @@ public class IntegerSummaryPair extends AbstractSummaryPair<Integer> {
         summaryValue = summaryValue + columnValue;
     }
 
+    @Override
+    protected Integer initDefaultColumnValue() {
+        return new Integer("0");
+    }
 }

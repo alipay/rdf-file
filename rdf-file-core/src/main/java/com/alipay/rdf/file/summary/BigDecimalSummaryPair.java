@@ -11,16 +11,12 @@ import java.math.BigDecimal;
 public class BigDecimalSummaryPair extends AbstractSummaryPair<BigDecimal> {
 
     @Override
-    protected boolean doIsSummaryEquals(BigDecimal headOrtailValue, BigDecimal summaryValue) {
-        if (headOrtailValue.compareTo(summaryValue) != 0) {
-            return false;
-        }
-
-        return true;
+    protected void doAddColValue(BigDecimal columnValue) {
+        summaryValue = summaryValue.add(columnValue);
     }
 
     @Override
-    protected void doAddColValue(BigDecimal columnValue) {
-        summaryValue = summaryValue.add(columnValue);
+    protected BigDecimal initDefaultColumnValue() {
+        return new BigDecimal("0");
     }
 }
