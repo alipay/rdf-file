@@ -13,4 +13,8 @@ public class FloatSummaryPair extends AbstractSummaryPair<Float> {
         summaryValue = summaryValue + columnValue;
     }
 
+    @Override
+    protected Float initDefaultColumnValue() {
+        return new Float("0");
+    }
 }
