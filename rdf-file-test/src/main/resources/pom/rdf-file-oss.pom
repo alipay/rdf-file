@@ -1,0 +1,31 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.alipay.rdf.file</groupId>
+	<artifactId>rdf-file-oss</artifactId>
+	<version>2.1.1</version>
+	<name><name>RDF FILE OSS</name></name>
+	<description>RDF FILE OSS</description>
+	<url>https://github.com/alipay/rdf-file</url>
+
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:git:git@github.com:alipay/rdf-file.git</connection>
+		<developerConnection>scm:git:ssh://github.com:alipay/rdf-file.git</developerConnection>
+		<url>https://github.com/alipay/rdf-file/tree/master</url>
+	</scm>
+	<developers>
+		<developer>
+			<id>zhanqiu</id>
+			<name>斩秋</name>
+			<email>hongwei.quhw@antfin.com 444846366@qq.com</email>
+		</developer>
+	</developers>
+
+</project> 
