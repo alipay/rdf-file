@@ -5,7 +5,7 @@
 	<groupId>com.alipay.rdf.file</groupId>
 	<artifactId>rdf-file-oss</artifactId>
 	<version>2.1.1</version>
-	<name><name>RDF FILE OSS</name></name>
+	<name>RDF FILE OSS</name>
 	<description>RDF FILE OSS</description>
 	<url>https://github.com/alipay/rdf-file</url>
 
@@ -24,7 +24,7 @@
 		<developer>
 			<id>zhanqiu</id>
 			<name>斩秋</name>
-			<email>hongwei.quhw@antfin.com 444846366@qq.com</email>
+			<email>hongwei.quhw@antfin.com</email>
 		</developer>
 	</developers>
 
