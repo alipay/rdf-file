@@ -312,6 +312,9 @@ public class FileOssStorage implements RdfFileStorageSpi {
             delete(toFile);
         }
         copy(srcFile, toFile);
+
+        // 删除原文件
+        delete(srcFile);
     }
 
     /** 
