@@ -362,4 +362,60 @@ public class PreheatMergeFundFileTest {
 
         mergedReader.close();
     }
+
+    @Test
+    public void testMergeNodata() throws Exception {
+        String ossPath = RdfFileUtil.combinePath(ossPathPrefix, "testMergeNodata");
+
+        String targetFilePath = RdfFileUtil.combinePath(ossPath, "testMergeNodata.txt");
+        // 目标文件删除
+        try {
+            fileStorage.delete(targetFilePath);
+        } catch (Exception e) {
+        }
+
+        FileStorage fileStorage = FileFactory.createStorage(storageConfig);
+
+        FileConfig preheatConfig = new FileConfig(targetFilePath,
+            "/preheat/template_batchPurchase.json", storageConfig);
+        preheatConfig.setFileEncoding("GBK");
+        preheatConfig.setSummaryEnable(true);
+        preheatConfig.setType(FileOssToolContants.OSS_PREHEAT_PROTOCOL_READER);
+
+        FileMerger fileMerger = FileFactory.createMerger(preheatConfig);
+        MergerConfig mergerConfig = new MergerConfig();
+        fileMerger.merge(mergerConfig);
+
+        Assert.assertFalse(fileStorage.getFileInfo(targetFilePath).isExists());
+
+    }
+
+    @Test
+    public void testMergeNodata2() throws Exception {
+        String ossPath = RdfFileUtil.combinePath(ossPathPrefix, "testMergeNodata2");
+
+        String targetFilePath = RdfFileUtil.combinePath(ossPath, "testMergeNodata2.txt");
+        // 目标文件删除
+        try {
+            fileStorage.delete(targetFilePath);
+        } catch (Exception e) {
+        }
+
+        FileStorage fileStorage = FileFactory.createStorage(storageConfig);
+
+        FileConfig preheatConfig = new FileConfig(targetFilePath,
+            "/preheat/template_batchPurchase.json", storageConfig);
+        preheatConfig.setFileEncoding("GBK");
+        preheatConfig.setSummaryEnable(true);
+        preheatConfig.setType(FileOssToolContants.OSS_PREHEAT_PROTOCOL_READER);
+        preheatConfig.setCreateEmptyFile(true);
+
+        FileMerger fileMerger = FileFactory.createMerger(preheatConfig);
+        MergerConfig mergerConfig = new MergerConfig();
+        fileMerger.merge(mergerConfig);
+
+        Assert.assertTrue(fileStorage.getFileInfo(targetFilePath).isExists());
+
+    }
+
 }
