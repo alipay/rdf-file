@@ -116,6 +116,10 @@ public class ProtocolFileMerger implements RdfFileMergerSpi {
             return;
         }
 
+        if (null == config.getExistFilePaths() && null == config.getHeadFilePaths()) {
+            return;
+        }
+
         // 保存头部的常量信息
         Map<String, Object> head = new HashMap<String, Object>();
         Summary summary = SummaryLoader.getNewSummary(fileMeta);
@@ -151,6 +155,10 @@ public class ProtocolFileMerger implements RdfFileMergerSpi {
                 RdfFileLogUtil.common
                     .info("rdf-file#mergeTail不执行 模板没有定义文件尾 fileConfig=" + fileConfig);
             }
+            return;
+        }
+
+        if (null == config.getExistFilePaths() && null == config.getTailFilePaths()) {
             return;
         }
 

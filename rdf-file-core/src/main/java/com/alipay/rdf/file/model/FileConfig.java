@@ -33,13 +33,15 @@ public class FileConfig implements Cloneable {
     private String              fileEncoding;
     /** 写文件时换行符*/
     private String              lineBreak;
-
+    /**存储配置*/
     private StorageConfig       storageConfig;
-
+    /**手动触发processor*/
     private List<String>        processorKeys    = new ArrayList<String>();
-
+    /**是否开启字段汇总功能*/
     private boolean             summaryEnable    = false;
-
+    /**写文件时，如果没有数据是否生成空文件*/
+    private boolean             createEmptyFile  = false;
+    /**传入行校验器*/
     private List<RowValidator>  rowValidators    = new ArrayList<RowValidator>();
 
     /**此参数只有在type=raw时指定文件内容分隔符时有效*/
@@ -312,6 +314,14 @@ public class FileConfig implements Cloneable {
         return params.get(key);
     }
 
+    public boolean isCreateEmptyFile() {
+        return createEmptyFile;
+    }
+
+    public void setCreateEmptyFile(boolean createEmptyFile) {
+        this.createEmptyFile = createEmptyFile;
+    }
+
     /**
      * 
      * @see java.lang.Object#clone()
@@ -334,6 +344,7 @@ public class FileConfig implements Cloneable {
         config.setFileEncoding(fileEncoding);
         config.setLineBreak(lineBreak);
         config.setSummaryEnable(summaryEnable);
+        config.setCreateEmptyFile(createEmptyFile);
         config.setFileDataType(fileDataType);
         config.setRowValidators(rowValidators);
         config.setInputStream(is);
@@ -378,6 +389,7 @@ public class FileConfig implements Cloneable {
             sb.append(",storageType=").append("null");
         }
         sb.append(",summaryEnable=").append(summaryEnable);
+        sb.append(",createEmptyFile=").append(createEmptyFile);
         if (isPartial) {
             sb.append(", offset=").append(offset);
             sb.append(",length=").append(length);

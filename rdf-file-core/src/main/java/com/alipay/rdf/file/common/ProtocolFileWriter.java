@@ -111,7 +111,11 @@ public class ProtocolFileWriter implements RdfFileWriterSpi {
     @Override
     public void close() {
         if (null == writer) {
-            return;
+            if (fileConfig.isCreateEmptyFile()) {
+                ensureOpen();
+            } else {
+                return;
+            }
         }
 
         try {

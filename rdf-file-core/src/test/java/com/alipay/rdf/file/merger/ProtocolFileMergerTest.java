@@ -18,6 +18,7 @@ import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.interfaces.FileFactory;
 import com.alipay.rdf.file.interfaces.FileMerger;
 import com.alipay.rdf.file.interfaces.FileReader;
+import com.alipay.rdf.file.interfaces.FileStorage;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.FileDefaultConfig;
 import com.alipay.rdf.file.model.MergerConfig;
@@ -246,6 +247,37 @@ public class ProtocolFileMergerTest {
         Assert.assertEquals("OFDCFEND", tail.get("fileEnd"));
         Assert.assertEquals("20131109", DateUtil.format((Date) tail.get("date"), "yyyyMMdd"));
         Assert.assertEquals(new BigDecimal("555"), tail.get("amount"));
+    }
+
+    @Test
+    public void testMerge4() {
+        String filePath = tf.getRoot().getAbsolutePath();
+        System.out.println(filePath);
+        FileConfig fileConfig = new FileConfig(
+            new File(filePath, "testEmpty.txt").getAbsolutePath(), "/meger/template/de3.json",
+            new StorageConfig("nas"));
+        FileMerger fileMerger = FileFactory.createMerger(fileConfig);
+        MergerConfig mergerConfig = new MergerConfig();
+        fileMerger.merge(mergerConfig);
+
+        FileStorage fileStorage = FileFactory.createStorage(new StorageConfig("nas"));
+        Assert.assertFalse(fileStorage.getFileInfo(fileConfig.getFilePath()).isExists());
+    }
+
+    @Test
+    public void testMerge5() {
+        String filePath = tf.getRoot().getAbsolutePath();
+        System.out.println(filePath);
+        FileConfig fileConfig = new FileConfig(
+            new File(filePath, "testEmpty.txt").getAbsolutePath(), "/meger/template/de3.json",
+            new StorageConfig("nas"));
+        fileConfig.setCreateEmptyFile(true);
+        FileMerger fileMerger = FileFactory.createMerger(fileConfig);
+        MergerConfig mergerConfig = new MergerConfig();
+        fileMerger.merge(mergerConfig);
+
+        FileStorage fileStorage = FileFactory.createStorage(new StorageConfig("nas"));
+        Assert.assertTrue(fileStorage.getFileInfo(fileConfig.getFilePath()).isExists());
     }
 
     @After
