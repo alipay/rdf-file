@@ -121,19 +121,22 @@ public class TemplateLoader {
                 int colIndex = 0;
                 //head
                 for (String head : templateConfig.getHead()) {
-                    fileMeta.addHeadColumn(parseFileColumn(head, colIndex++, fileMeta));
+                    fileMeta
+                        .addHeadColumn(parseFileColumn(templatePath, head, colIndex++, fileMeta));
                 }
 
                 colIndex = 0;
                 // body
                 for (String body : templateConfig.getBody()) {
-                    fileMeta.addBodyColumn(parseFileColumn(body, colIndex++, fileMeta));
+                    fileMeta
+                        .addBodyColumn(parseFileColumn(templatePath, body, colIndex++, fileMeta));
                 }
 
                 colIndex = 0;
                 //tail
                 for (String tail : templateConfig.getTail()) {
-                    fileMeta.addTailColumn(parseFileColumn(tail, colIndex++, fileMeta));
+                    fileMeta
+                        .addTailColumn(parseFileColumn(templatePath, tail, colIndex++, fileMeta));
                 }
 
                 //解析汇总字段
@@ -207,8 +210,8 @@ public class TemplateLoader {
         }
     }
 
-    private static FileColumnMeta parseFileColumn(String colConfig, int colIndex,
-                                                  FileMeta fileMeta) {
+    private static FileColumnMeta parseFileColumn(String tempaltePath, String colConfig,
+                                                  int colIndex, FileMeta fileMeta) {
         colConfig = RdfFileUtil.assertTrimNotBlank(colConfig, "字段为空 index=" + colIndex);
 
         String[] fields = colConfig.trim().split("\\|");
@@ -232,6 +235,11 @@ public class TemplateLoader {
                     extra = field.substring(semicolonIndex + 1);
                     field = field.substring(0, semicolonIndex);
                 }
+
+                field = RdfFileUtil.assertTrimNotBlank(field,
+                    "rdf-dal#TemplateLoader tempaltePath=" + tempaltePath + ", 字段定义[" + colConfig
+                                                              + "], index=" + colIndex
+                                                              + ", 为空请检查数据定义模板");
 
                 // 尝试解析类型属性
                 FileColumnTypeMeta typeMeta = FileColumnTypeMeta.tryValueOf(field, extra);

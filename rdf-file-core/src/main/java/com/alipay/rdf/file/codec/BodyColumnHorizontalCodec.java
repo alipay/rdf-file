@@ -84,8 +84,9 @@ public class BodyColumnHorizontalCodec {
         for (int i = statIndex; i < endIndex; i++) {
             FileColumnMeta colMeta = colMetas.get(i - statIndex);
             if (!getValue(colMeta, method).equals(columns[i])) {
-                throw new RdfFileException("文件头字段校验：文件模板定义的第" + i + "个column为"
-                                           + colMetas.get(i).getDesc() + ", 实际文件中为" + columns[i],
+                throw new RdfFileException(
+                    "文件头字段校验：文件模板定义的第" + i + "个column为[" + colMetas.get(i).getDesc() + "], 实际文件中为["
+                                           + columns[i] + "]",
                     RdfErrorEnum.DESERIALIZE_ERROR);
             }
         }
