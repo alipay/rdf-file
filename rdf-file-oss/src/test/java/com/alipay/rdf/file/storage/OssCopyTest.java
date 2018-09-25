@@ -51,7 +51,7 @@ public class OssCopyTest {
         fileStorage.upload(File.class.getResource("/osscopy/de1.txt").getPath(), sourceOssFile,
             true);
 
-        fileStorage.rename(sourceOssFile, targetOssFile);
+        fileStorage.copy(sourceOssFile, targetOssFile);
 
         FileConfig sourceConfig = new FileConfig(sourceOssFile, "/osscopy/de.json", storageConfig);
         FileReader sourceReader = FileFactory.createReader(sourceConfig);
