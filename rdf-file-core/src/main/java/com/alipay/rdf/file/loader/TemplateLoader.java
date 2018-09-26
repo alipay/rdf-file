@@ -75,6 +75,7 @@ public class TemplateLoader {
      * @return
      */
     public static FileMeta removeCache(String templatePath) {
+        ROW_LENGTH_CACHE.remove(templatePath);
         return CACHE.remove(templatePath);
     }
 
