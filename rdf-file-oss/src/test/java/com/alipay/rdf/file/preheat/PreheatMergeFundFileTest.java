@@ -152,6 +152,15 @@ public class PreheatMergeFundFileTest {
         });
         Collections.sort(bodyPath);
         System.out.println(bodyPath);
+        
+        List<String> tailPath = fileStorage.listAllFiles(ossPath, new FilePathFilter() {
+            @Override
+            public boolean accept(String file) {
+                return file.indexOf("tail") > 0;
+            }
+        });
+        Collections.sort(bodyPath);
+        System.out.println(bodyPath);
 
         FileConfig preheatConfig = new FileConfig(targetFilePath,
             "/preheat/template_batchPurchase.json", storageConfig);
@@ -163,6 +172,7 @@ public class PreheatMergeFundFileTest {
         MergerConfig mergerConfig = new MergerConfig();
         mergerConfig.setHeadFilePaths(headPath);
         mergerConfig.setBodyFilePaths(bodyPath);
+        mergerConfig.setTailFilePaths(tailPath);
         fileMerger.merge(mergerConfig);
 
         Assert.assertTrue(fileStorage.getFileInfo(targetFilePath).isExists());
