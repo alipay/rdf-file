@@ -31,13 +31,13 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  */
 public class ProtocolLoader {
 
-    private static final Map<String, List<String>>       PROTOCOL_PROCESSOR_CACHE = new ConcurrentHashMap<String, List<String>>();
+    public static final Map<String, List<String>>       PROTOCOL_PROCESSOR_CACHE = new ConcurrentHashMap<String, List<String>>();
 
-    private static final String                          RDF_PROTOCOL_SUBFIX      = ".xml";
+    public static final Map<String, ProtocolDefinition> PD_CACHE                 = new ConcurrentHashMap<String, ProtocolDefinition>();
 
-    private static final Object                          LOCK                     = new Object();
+    private static final String                         RDF_PROTOCOL_SUBFIX      = ".xml";
 
-    private static final Map<String, ProtocolDefinition> PD_CACHE                 = new ConcurrentHashMap<String, ProtocolDefinition>();
+    private static final Object                         LOCK                     = new Object();
 
     public static ProtocolDefinition loadProtocol(String protocolName) {
         protocolName = RdfFileUtil.assertTrimNotBlank(protocolName);

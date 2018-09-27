@@ -33,7 +33,7 @@ public class ProcessorLoader {
     private static final Object LOAD_DEFAULT_PROCESSOR_LOCK = new Object();
     private static final String DEFAULT_PROCESSOR_FILE_NAME = "default";
 
-    private static List<String> DEFAULT_PROCESSORS;
+    public static List<String>  DEFAULT_PROCESSORS;
 
     public static Map<ProcessorTypeEnum, List<RdfFileProcessorSpi>> loadByType(FileConfig fileConfig,
                                                                                ProcessorTypeEnum... processorTypes) {
@@ -156,7 +156,7 @@ public class ProcessorLoader {
                 }
             }
         }
-        
+
         return DEFAULT_PROCESSORS;
     }
 }

@@ -24,11 +24,11 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  */
 public class FormatLoader {
 
-    private static final String                        RDF_FORMAT_SUBFIX      = ".properties";
+    private static final String                       RDF_FORMAT_SUBFIX      = ".properties";
 
-    private static final Object                        LOCK                   = new Object();
+    private static final Object                       LOCK                   = new Object();
 
-    private static final Map<String, TypeFormatHolder> TYPEFORMATHOLDER_CACHE = new ConcurrentHashMap<String, TypeFormatHolder>();
+    public static final Map<String, TypeFormatHolder> TYPEFORMATHOLDER_CACHE = new ConcurrentHashMap<String, TypeFormatHolder>();
 
     public static RdfFileFormatSpi getColumnFormt(String protocolName, String columnType) {
 
