@@ -31,11 +31,11 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  * @version $Id: TemplateLoader.java, v 0.1 2016-12-20 下午5:21:48 hongwei.quhw Exp $
  */
 public class TemplateLoader {
-    private static final Map<String, FileMeta> CACHE            = new ConcurrentHashMap<String, FileMeta>();
+    public static final Map<String, FileMeta> CACHE            = new ConcurrentHashMap<String, FileMeta>();
 
-    private static final Map<String, Integer>  ROW_LENGTH_CACHE = new ConcurrentHashMap<String, Integer>();
+    public static final Map<String, Integer>  ROW_LENGTH_CACHE = new ConcurrentHashMap<String, Integer>();
 
-    private static final Object                LOCK             = new Object();
+    private static final Object               LOCK             = new Object();
 
     /**
      * 计算行总长度
@@ -66,17 +66,6 @@ public class TemplateLoader {
      */
     public static FileMeta load(FileConfig fileConfig) {
         return load(fileConfig.getTemplatePath(), fileConfig.getTemplateEncoding());
-    }
-
-    /**
-     * 移除缓存
-     * 
-     * @param templatePath
-     * @return
-     */
-    public static FileMeta removeCache(String templatePath) {
-        ROW_LENGTH_CACHE.remove(templatePath);
-        return CACHE.remove(templatePath);
     }
 
     /**
