@@ -2,7 +2,7 @@ package com.alipay.rdf.file.function;
 
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +29,7 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ColumnFunctionWrapper extends RdfFunction {
-    public static final Map<String, ColumnRegEx> columnRegExs = new WeakHashMap<String, ColumnRegEx>();
+    public static final Map<String, ColumnRegEx> columnRegExs = new ConcurrentHashMap<String, ColumnRegEx>();
 
     private List<RdfFileFunctionSpi> rdfFunctions;
 
