@@ -21,7 +21,7 @@ https://github.com/alipay/rdf-file/wiki
 
 Contact
 -------------
-斩秋 hongwei.quhw@antfin.com 
-重扬 haofan.whf@alibaba-inc.com
-镭光 alex.yk@antfin.com   
-闫钊 zhao.yan@alipay.com  
+斩秋 hongwei.quhw@antfin.com   
+重扬 haofan.whf@alibaba-inc.com  
+镭光 alex.yk@antfin.com     
+闫钊 zhao.yan@alipay.com    
