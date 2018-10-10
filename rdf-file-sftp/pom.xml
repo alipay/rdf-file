@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.alipay.rdf.file</groupId>
+		<artifactId>rdf-file</artifactId>
+		<version>2.0.0</version>
+	</parent>
+	<artifactId>rdf-file-sftp</artifactId>
+	<version>${rdf.file.oss.version}</version>
+	<name>RDF FILE SFTP</name>
+	<url>http://maven.apache.org</url>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.alipay.rdf.file</groupId>
+			<artifactId>rdf-file-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alipay.rdf.file</groupId>
+			<artifactId>rdf-file-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>jsch</groupId>
+			<artifactId>jsch</artifactId>
+			<version>0.1.54</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>
