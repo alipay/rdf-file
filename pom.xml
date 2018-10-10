@@ -90,7 +90,12 @@
 		<developer>
 			<id>zhanqiu</id>
 			<name>斩秋</name>
-			<email>hongwei.quhw@antfin.com  444846366@qq.com</email>
+			<email>hongwei.quhw@antfin.com</email>
+		</developer>
+		<developer>
+			<id>chongyang</id>
+			<name>重扬</name>
+			<email>haofan.whf@alibaba-inc.com</email>
 		</developer>
 	</developers>
 	
