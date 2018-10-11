@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,14 +17,13 @@ import com.alipay.rdf.file.interfaces.FileStorage.FilePathFilter;
 import com.alipay.rdf.file.model.FileInfo;
 import com.alipay.rdf.file.model.StorageConfig;
 import com.alipay.rdf.file.operation.AbstractSftpOperationTemplate;
+import com.alipay.rdf.file.operation.SftpOperationFactory;
 import com.alipay.rdf.file.operation.SftpOperationParamEnums;
 import com.alipay.rdf.file.operation.SftpOperationResponse;
+import com.alipay.rdf.file.operation.SftpOperationTypeEnums;
 import com.alipay.rdf.file.sftp.SftpTestUtil;
 import com.alipay.rdf.file.sftp.TestInitOperation;
 import com.alipay.rdf.file.util.RdfFileUtil;
-import com.alipay.rdf.file.util.SFTPHelper;
-
-import junit.framework.Assert;
 
 /**
  * 测试用例
@@ -73,6 +73,8 @@ public class FileSftpStorageTest {
     @Test
     public void testAll() throws Exception{
 
+        checkHealth();
+
         prepare();
 
         try{
@@ -82,14 +84,25 @@ public class FileSftpStorageTest {
         }
     }
 
+    private void checkHealth(){
+        AbstractSftpOperationTemplate<Boolean> healthCheckOperation
+                = SftpOperationFactory.getOperation(SftpOperationTypeEnums.HEALTH_CHECK);
+        FileSftpStorage fileSftpStorage = (FileSftpStorage)fileStorage;
+        SftpOperationResponse<Boolean> response = healthCheckOperation
+                .handle(fileSftpStorage.getUserInfo(), null);
+        Assert.assertTrue(response.isSuccess());
+        Assert.assertTrue(response.getData());
+    }
+
     private void prepare() throws Exception{
+
         try{
             fileStorage.listAllFiles(ROOT_PATH);
         }catch (Exception e){
             System.out.println("开始设置ROOT_PATH");
             FileSftpStorage sftpStorage = (FileSftpStorage)fileStorage;
-            Map<SftpOperationParamEnums, String> params = new HashMap<SftpOperationParamEnums, String>();
-            params.put(SftpOperationParamEnums.TARGET_DIR, buildPath("dummy.txt"));
+            Map<String, String> params = new HashMap<String, String>();
+            params.put(SftpOperationParamEnums.TARGET_DIR.toString(), buildPath("dummy.txt"));
             SftpOperationResponse<Boolean> response = initOperation.handle(sftpStorage.getUserInfo(), params);
             if(!response.isSuccess()){
                 throw new RuntimeException("设置ROOT_PATH失败,请尝试手动设置");

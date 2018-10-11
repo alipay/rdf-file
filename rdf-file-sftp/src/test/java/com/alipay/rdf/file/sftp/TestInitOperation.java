@@ -25,17 +25,17 @@ public class TestInitOperation extends AbstractSftpOperationTemplate<Boolean>{
 
     @Override
     protected SftpOperationResponse<Boolean> doBusiness(SFTPUserInfo user
-            , Map<SftpOperationParamEnums, String> params) throws Exception {
+            , Map<String, String> params) throws Exception {
         SftpOperationResponse<Boolean> response = new SftpOperationResponse<Boolean>();
         SFTPHelper.createFTPDirIfnotExist(SftpThreadContext.getChannelSftp()
-                , params.get(SftpOperationParamEnums.TARGET_DIR));
+                , params.get(SftpOperationParamEnums.TARGET_DIR.toString()));
         response.setData(true);
         response.setSuccess(true);
         return response;
     }
 
     @Override
-    protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<SftpOperationParamEnums, String> params) {
-        return params.containsKey(SftpOperationParamEnums.TARGET_DIR);
+    protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<String, String> params) {
+        return params.containsKey(SftpOperationParamEnums.TARGET_DIR.toString());
     }
 }

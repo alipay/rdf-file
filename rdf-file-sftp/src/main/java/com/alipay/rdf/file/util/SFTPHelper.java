@@ -11,12 +11,9 @@ import org.apache.commons.io.FilenameUtils;
 
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
-import com.alipay.rdf.file.interfaces.FileSftpStorageConstants;
 import com.alipay.rdf.file.operation.SftpFileEntry;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 
 /**
@@ -30,59 +27,6 @@ import com.jcraft.jsch.SftpException;
  * @version $Id: SFTPHelper.java, v 0.1 2018-10-4 下午20:04:06 haofan.whf Exp $
  */
 public class SFTPHelper {
-
-
-	/**
-	 * 关闭连接
-	 *
-	 * @param sftp
-	 * @param user
-	 */
-	public static void closeConnection(ChannelSftp sftp, SFTPUserInfo user) {
-		try {
-			sftp.disconnect();
-			if(sftp.getSession() != null){
-				sftp.getSession().disconnect();
-			}
-		} catch (Exception e) {
-			RdfFileLogUtil.common.warn("rdf-file#closeConnection fail"
-					+ ",user={" + user.toString(true, true) + "}", e);
-		}finally {
-			SftpThreadContext.clearChannelSftp();
-		}
-	}
-
-	/**
-	 * 根据SFTP配置打开SFTP通道
-	 * @param user
-	 * @return
-	 * @throws JSchException
-	 */
-	public static ChannelSftp openChannelSftp(SFTPUserInfo user) throws JSchException {
-
-		RdfFileLogUtil.common.debug("rdf-file#SFTPHelper.openChannelSftp request"
-				+ ",user={" + user.toString(true, false) + "}");
-		// 创建ssh会话
-		Session ssh = JschFactory.openConnection(user);
-
-		RdfFileLogUtil.common.debug("rdf-file#SFTPHelper.openChannelSftp create ssh success"
-				+ ",user={" + user.toString(true, false) + "}");
-
-		// 打开sftp连接
-		ChannelSftp channel = (ChannelSftp) ssh.openChannel(FileSftpStorageConstants.SFTP);
-
-		if(channel == null){
-			throw new RdfFileException("rdf-file#SFTPHelper.openChannelSftp get ChannelSftp fail.", RdfErrorEnum.UNKOWN);
-		}
-
-		SftpThreadContext.setChannelSftp(channel);
-
-		channel.connect();
-
-		RdfFileLogUtil.common.debug("rdf-file#SFTPHelper.openChannelSftp create channel success"
-				+ ",user={" + user.toString(true, false) + "}");
-		return channel;
-	}
 
 
 	/**
