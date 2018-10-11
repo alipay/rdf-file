@@ -28,6 +28,7 @@ import com.jcraft.jsch.SftpException;
  */
 public class SFTPHelper {
 
+
 	/**
 	 * 创建本地目录，如果目录不存在。
 	 * 
