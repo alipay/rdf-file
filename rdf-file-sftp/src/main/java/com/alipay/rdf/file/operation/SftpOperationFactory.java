@@ -14,6 +14,7 @@ import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.interfaces.FileSftpStorageConstants;
 import com.alipay.rdf.file.util.RdfFileLogUtil;
+import com.alipay.rdf.file.util.RdfFileUtil;
 import com.alipay.rdf.file.util.SFTPHelper;
 import com.alipay.rdf.file.util.SFTPLogMonitor;
 import com.alipay.rdf.file.util.SFTPUserInfo;
@@ -22,38 +23,59 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpATTRS;
 
 /**
- *
+ * sftp操作工厂
+ * 内部工厂,外部自定义的sftp操作可以忽略
  * @author haofan.whf
  * @version $Id: SftpOperationCollection.java, v 0.1 2018年10月06日 下午4:03 haofan.whf Exp $
  */
 public class SftpOperationFactory {
 
+    private static final Map<String, AbstractSftpOperationTemplate> operationMap
+             = new HashMap<String, AbstractSftpOperationTemplate>();
 
+    /**
+     * 获取sftp操作实例
+     * @param operationType
+     * @return
+     */
     public static AbstractSftpOperationTemplate getOperation(SftpOperationTypeEnums operationType){
-        switch (operationType){
-            case COPY:
-                return COPY_OPERATION;
-            case RENAME:
-                return RENAME_OPERATION;
-            case UPLOAD:
-                return UPLOAD_OPERATION;
-            case DOWNLOAD:
-                return DOWNLOAD_OPERATION;
-            case LIST_FILES:
-                return LIST_FILES_OPERATION;
-            case FILE_EXISTS:
-                return FILE_EXISTS_OPERATION;
-            case DEL:
-                return DEL_OPERATION;
-            case CREATE:
-                return CREATE_OPERATION;
-            default:
-                throw new RdfFileException("rdf-file#SftpOperationFactory.getOperation("
-                        + operationType + ")unsupport operation type", RdfErrorEnum.UNSUPPORTED_OPERATION);
+        if(!operationMap.containsKey(operationType.toString())){
+            throw new RdfFileException("rdf-file#SftpOperationFactory.getOperation("
+                    + operationType + ")unsupport operation type", RdfErrorEnum.UNSUPPORTED_OPERATION);
         }
+        return operationMap.get(operationType.toString());
     }
 
 
+    /**
+     * sftp healthcheck。
+     *
+     * SFTPUserInfo
+     *   SFTP用户信息
+     * SftpOperationTypeEnums.HEALTH_CHECK
+     */
+    private static final AbstractSftpOperationTemplate HEALTH_CHECK_OPERATION
+            = new AbstractSftpOperationTemplate<Boolean>() {
+        @Override
+        protected void initOperationType() {
+            this.setOperationType(SftpOperationTypeEnums.HEALTH_CHECK.toString());
+        }
+
+        @Override
+        protected SftpOperationResponse<Boolean> doBusiness(SFTPUserInfo user
+                , Map<String, String> params) throws Exception{
+            SftpOperationResponse<Boolean> response = new SftpOperationResponse<Boolean>();
+
+            response.setSuccess(true);
+            response.setData(true);
+            return response;
+        }
+
+        @Override
+        protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<String, String> params) {
+            return true;
+        }
+    };
 
     /**
      * 通过SFTP上传文件。
@@ -70,15 +92,15 @@ public class SftpOperationFactory {
          = new AbstractSftpOperationTemplate<Boolean>() {
         @Override
         protected void initOperationType() {
-            this.setOperationType(SftpOperationTypeEnums.UPLOAD);
+            this.setOperationType(SftpOperationTypeEnums.UPLOAD.toString());
         }
 
         @Override
         protected SftpOperationResponse<Boolean> doBusiness(SFTPUserInfo user
-                , Map<SftpOperationParamEnums, String> params) throws Exception{
+                , Map<String, String> params) throws Exception{
             SftpOperationResponse<Boolean> response = new SftpOperationResponse<Boolean>();
-            String localFile = params.get(SftpOperationParamEnums.SOURCE_FILE);
-            String remoteFile = params.get(SftpOperationParamEnums.TARGET_FILE);
+            String localFile = params.get(SftpOperationParamEnums.SOURCE_FILE.toString());
+            String remoteFile = params.get(SftpOperationParamEnums.TARGET_FILE.toString());
             ChannelSftp sftp = SftpThreadContext.getChannelSftp();
             SFTPHelper.createFTPDirIfnotExist(sftp, remoteFile);
             SFTPLogMonitor progressMonitor = new SFTPLogMonitor();
@@ -89,9 +111,9 @@ public class SftpOperationFactory {
         }
 
         @Override
-        protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<SftpOperationParamEnums, String> params) {
-            return params.containsKey(SftpOperationParamEnums.SOURCE_FILE)
-                    && params.containsKey(SftpOperationParamEnums.TARGET_FILE);
+        protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<String, String> params) {
+            return params.containsKey(SftpOperationParamEnums.SOURCE_FILE.toString())
+                    && params.containsKey(SftpOperationParamEnums.TARGET_FILE.toString());
         }
     };
 
@@ -111,17 +133,17 @@ public class SftpOperationFactory {
 
         @Override
         protected void initOperationType() {
-            this.setOperationType(SftpOperationTypeEnums.RENAME);
+            this.setOperationType(SftpOperationTypeEnums.RENAME.toString());
         }
 
         @Override
         protected SftpOperationResponse<Boolean> doBusiness(SFTPUserInfo user
-                , Map<SftpOperationParamEnums, String> params) throws Exception{
+                , Map<String, String> params) throws Exception{
             SftpOperationResponse<Boolean> response = new SftpOperationResponse<Boolean>();
 
             ChannelSftp sftp = SftpThreadContext.getChannelSftp();
-            String fileName = params.get(SftpOperationParamEnums.SOURCE_FILE);
-            String newFileName = params.get(SftpOperationParamEnums.TARGET_FILE);
+            String fileName = params.get(SftpOperationParamEnums.SOURCE_FILE.toString());
+            String newFileName = params.get(SftpOperationParamEnums.TARGET_FILE.toString());
             // 获取文件属性,如果获取不到或者获取异常,则认为文件不存在
             SftpATTRS sftpATTRS = sftp.stat(fileName);
 
@@ -143,9 +165,9 @@ public class SftpOperationFactory {
         }
 
         @Override
-        protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<SftpOperationParamEnums, String> params) {
-            return params.containsKey(SftpOperationParamEnums.SOURCE_FILE)
-                    && params.containsKey(SftpOperationParamEnums.TARGET_FILE);
+        protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<String, String> params) {
+            return params.containsKey(SftpOperationParamEnums.SOURCE_FILE.toString())
+                    && params.containsKey(SftpOperationParamEnums.TARGET_FILE.toString());
         }
     };
 
@@ -165,17 +187,17 @@ public class SftpOperationFactory {
 
         @Override
         protected void initOperationType() {
-            this.setOperationType(SftpOperationTypeEnums.DOWNLOAD);
+            this.setOperationType(SftpOperationTypeEnums.DOWNLOAD.toString());
         }
 
         @Override
         protected SftpOperationResponse<Boolean> doBusiness(SFTPUserInfo user
-                , Map<SftpOperationParamEnums, String> params) throws Exception{
+                , Map<String, String> params) throws Exception{
             SftpOperationResponse<Boolean> response = new SftpOperationResponse<Boolean>();
 
             ChannelSftp sftp = SftpThreadContext.getChannelSftp();
-            String remoteFile = params.get(SftpOperationParamEnums.SOURCE_FILE);
-            String localFile = params.get(SftpOperationParamEnums.TARGET_FILE);
+            String remoteFile = params.get(SftpOperationParamEnums.SOURCE_FILE.toString());
+            String localFile = params.get(SftpOperationParamEnums.TARGET_FILE.toString());
 
             // 下载前先创建本地目录，如失败则直接返回
             SFTPHelper.createLocalDirIfnotExist(localFile);
@@ -189,9 +211,9 @@ public class SftpOperationFactory {
         }
 
         @Override
-        protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<SftpOperationParamEnums, String> params) {
-            return params.containsKey(SftpOperationParamEnums.SOURCE_FILE)
-                    && params.containsKey(SftpOperationParamEnums.TARGET_FILE);
+        protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<String, String> params) {
+            return params.containsKey(SftpOperationParamEnums.SOURCE_FILE.toString())
+                    && params.containsKey(SftpOperationParamEnums.TARGET_FILE.toString());
         }
     };
 
@@ -210,30 +232,30 @@ public class SftpOperationFactory {
 
         @Override
         protected void initOperationType() {
-            this.setOperationType(SftpOperationTypeEnums.COPY);
+            this.setOperationType(SftpOperationTypeEnums.COPY.toString());
         }
 
         @Override
         protected SftpOperationResponse<Boolean> doBusiness(SFTPUserInfo user
-                , Map<SftpOperationParamEnums, String> params) throws Exception{
+                , Map<String, String> params) throws Exception{
             SftpOperationResponse<Boolean> response = new SftpOperationResponse<Boolean>();
 
-            String localTmpPath = params.get(SftpOperationParamEnums.LOCAL_TMP_PATH);
-            String srcFile = params.get(SftpOperationParamEnums.SOURCE_FILE);
-            String targetFile = params.get(SftpOperationParamEnums.TARGET_FILE);
+            String localTmpPath = params.get(SftpOperationParamEnums.LOCAL_TMP_PATH.toString());
+            String srcFile = params.get(SftpOperationParamEnums.SOURCE_FILE.toString());
+            String targetFile = params.get(SftpOperationParamEnums.TARGET_FILE.toString());
 
-            String localTmpFileName = localTmpPath + "/" + new File(srcFile).getName();
+            String localTmpFileName = RdfFileUtil.combinePath(localTmpPath, new File(srcFile).getName());
 
-            Map<SftpOperationParamEnums, String> downloadOperationParams
-                    = new HashMap<SftpOperationParamEnums, String>();
-            downloadOperationParams.put(SftpOperationParamEnums.TARGET_FILE, localTmpFileName);
-            downloadOperationParams.put(SftpOperationParamEnums.SOURCE_FILE, srcFile);
+            Map<String, String> downloadOperationParams
+                    = new HashMap<String, String>();
+            downloadOperationParams.put(SftpOperationParamEnums.TARGET_FILE.toString(), localTmpFileName);
+            downloadOperationParams.put(SftpOperationParamEnums.SOURCE_FILE.toString(), srcFile);
             DOWNLOAD_OPERATION.doBusiness(user, downloadOperationParams);
 
-            Map<SftpOperationParamEnums, String> uploadOperationParams
-                    = new HashMap<SftpOperationParamEnums, String>();
-            uploadOperationParams.put(SftpOperationParamEnums.TARGET_FILE, targetFile);
-            uploadOperationParams.put(SftpOperationParamEnums.SOURCE_FILE, localTmpFileName);
+            Map<String, String> uploadOperationParams
+                    = new HashMap<String, String>();
+            uploadOperationParams.put(SftpOperationParamEnums.TARGET_FILE.toString(), targetFile);
+            uploadOperationParams.put(SftpOperationParamEnums.SOURCE_FILE.toString(), localTmpFileName);
             UPLOAD_OPERATION.doBusiness(user, uploadOperationParams);
 
             try{
@@ -250,10 +272,10 @@ public class SftpOperationFactory {
         }
 
         @Override
-        protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<SftpOperationParamEnums, String> params) {
-            return params.containsKey(SftpOperationParamEnums.SOURCE_FILE)
-                    && params.containsKey(SftpOperationParamEnums.TARGET_FILE)
-                    && params.containsKey(SftpOperationParamEnums.LOCAL_TMP_PATH);
+        protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<String, String> params) {
+            return params.containsKey(SftpOperationParamEnums.SOURCE_FILE.toString())
+                    && params.containsKey(SftpOperationParamEnums.TARGET_FILE.toString())
+                    && params.containsKey(SftpOperationParamEnums.LOCAL_TMP_PATH.toString());
         }
     };
 
@@ -271,14 +293,14 @@ public class SftpOperationFactory {
 
         @Override
         protected void initOperationType() {
-            this.setOperationType(SftpOperationTypeEnums.FILE_EXISTS);
+            this.setOperationType(SftpOperationTypeEnums.FILE_EXISTS.toString());
         }
 
         @Override
         protected SftpOperationResponse<SftpATTRS> doBusiness(SFTPUserInfo user
-                , Map<SftpOperationParamEnums, String> params) throws Exception{
+                , Map<String, String> params) throws Exception{
             SftpOperationResponse<SftpATTRS> response = new SftpOperationResponse<SftpATTRS>();
-            String remoteFile = params.get(SftpOperationParamEnums.TARGET_FILE);
+            String remoteFile = params.get(SftpOperationParamEnums.TARGET_FILE.toString());
             ChannelSftp sftp = SftpThreadContext.getChannelSftp();
             try{
                 // 获取文件属性,如果获取不到或者获取异常,则认为文件不存在
@@ -292,8 +314,8 @@ public class SftpOperationFactory {
         }
 
         @Override
-        protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<SftpOperationParamEnums, String> params) {
-            return params.containsKey(SftpOperationParamEnums.TARGET_FILE);
+        protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<String, String> params) {
+            return params.containsKey(SftpOperationParamEnums.TARGET_FILE.toString());
         }
     };
 
@@ -311,14 +333,14 @@ public class SftpOperationFactory {
 
         @Override
         protected void initOperationType() {
-            this.setOperationType(SftpOperationTypeEnums.CREATE);
+            this.setOperationType(SftpOperationTypeEnums.CREATE.toString());
         }
 
         @Override
         protected SftpOperationResponse<Boolean> doBusiness(SFTPUserInfo user
-                , Map<SftpOperationParamEnums, String> params) throws Exception{
+                , Map<String, String> params) throws Exception{
             SftpOperationResponse<Boolean> response = new SftpOperationResponse<Boolean>();
-            String targetFile = params.get(SftpOperationParamEnums.TARGET_FILE);
+            String targetFile = params.get(SftpOperationParamEnums.TARGET_FILE.toString());
             ChannelSftp sftp = SftpThreadContext.getChannelSftp();
             SFTPHelper.createFTPDirIfnotExist(sftp, targetFile);
             sftp.put(new ByteArrayInputStream(FileSftpStorageConstants.EMPTY_STRING.getBytes()), targetFile);
@@ -328,8 +350,8 @@ public class SftpOperationFactory {
         }
 
         @Override
-        protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<SftpOperationParamEnums, String> params) {
-            return params.containsKey(SftpOperationParamEnums.TARGET_FILE);
+        protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<String, String> params) {
+            return params.containsKey(SftpOperationParamEnums.TARGET_FILE.toString());
         }
     };
 
@@ -346,14 +368,14 @@ public class SftpOperationFactory {
 
         @Override
         protected void initOperationType() {
-            this.setOperationType(SftpOperationTypeEnums.DEL);
+            this.setOperationType(SftpOperationTypeEnums.DEL.toString());
         }
 
         @Override
         protected SftpOperationResponse<Boolean> doBusiness(SFTPUserInfo user
-                , Map<SftpOperationParamEnums, String> params) throws Exception{
+                , Map<String, String> params) throws Exception{
             SftpOperationResponse<Boolean> response = new SftpOperationResponse<Boolean>();
-            String target = params.get(SftpOperationParamEnums.TARGET_FILE);
+            String target = params.get(SftpOperationParamEnums.TARGET_FILE.toString());
             ChannelSftp sftp = SftpThreadContext.getChannelSftp();
             SftpATTRS sftpATTRS = null;
             boolean isExists = false;
@@ -380,8 +402,8 @@ public class SftpOperationFactory {
         }
 
         @Override
-        protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<SftpOperationParamEnums, String> params) {
-            return params.containsKey(SftpOperationParamEnums.TARGET_FILE);
+        protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<String, String> params) {
+            return params.containsKey(SftpOperationParamEnums.TARGET_FILE.toString());
         }
     };
 
@@ -398,16 +420,16 @@ public class SftpOperationFactory {
 
         @Override
         protected void initOperationType() {
-            this.setOperationType(SftpOperationTypeEnums.LIST_FILES);
+            this.setOperationType(SftpOperationTypeEnums.LIST_FILES.toString());
         }
 
         @Override
         protected SftpOperationResponse<Vector<SftpFileEntry>> doBusiness(SFTPUserInfo user
-                , Map<SftpOperationParamEnums, String> params) throws Exception{
+                , Map<String, String> params) throws Exception{
             SftpOperationResponse<Vector<SftpFileEntry>> response = new SftpOperationResponse<Vector<SftpFileEntry>>();
-            String targetDir = params.get(SftpOperationParamEnums.TARGET_DIR);
+            String targetDir = params.get(SftpOperationParamEnums.TARGET_DIR.toString());
             boolean recursiveList = FileSftpStorageConstants.T
-                    .equals(params.get(SftpOperationParamEnums.RECURSIVE_LIST));
+                    .equals(params.get(SftpOperationParamEnums.RECURSIVE_LIST.toString()));
             ChannelSftp sftp = SftpThreadContext.getChannelSftp();
 
             Vector<SftpFileEntry> fileEntries = SFTPHelper.listFiles(sftp, targetDir, recursiveList);
@@ -418,10 +440,21 @@ public class SftpOperationFactory {
         }
 
         @Override
-        protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<SftpOperationParamEnums, String> params) {
-            return params.containsKey(SftpOperationParamEnums.TARGET_DIR);
+        protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<String, String> params) {
+            return params.containsKey(SftpOperationParamEnums.TARGET_DIR.toString());
         }
     };
 
+    static {
+        operationMap.put(SftpOperationTypeEnums.COPY.toString(), COPY_OPERATION);
+        operationMap.put(SftpOperationTypeEnums.CREATE.toString(), CREATE_OPERATION);
+        operationMap.put(SftpOperationTypeEnums.RENAME.toString(), RENAME_OPERATION);
+        operationMap.put(SftpOperationTypeEnums.UPLOAD.toString(), UPLOAD_OPERATION);
+        operationMap.put(SftpOperationTypeEnums.DOWNLOAD.toString(), DOWNLOAD_OPERATION);
+        operationMap.put(SftpOperationTypeEnums.LIST_FILES.toString(), LIST_FILES_OPERATION);
+        operationMap.put(SftpOperationTypeEnums.FILE_EXISTS.toString(), FILE_EXISTS_OPERATION);
+        operationMap.put(SftpOperationTypeEnums.DEL.toString(), DEL_OPERATION);
+        operationMap.put(SftpOperationTypeEnums.HEALTH_CHECK.toString(), HEALTH_CHECK_OPERATION);
+    }
 
 }

@@ -19,5 +19,6 @@ public enum SftpOperationTypeEnums {
     LIST_FILES,
     DEL,
     CREATE,
+    HEALTH_CHECK,
 
 }

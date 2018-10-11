@@ -18,13 +18,14 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 /**
- *
+ * sftp操作模版
+ * 用户可以自定义实现
  * @author haofan.whf
  * @version $Id: AbstractSftpOperTemplate.java, v 0.1 2018年10月06日 下午3:44 haofan.whf Exp $
  */
 public abstract class AbstractSftpOperationTemplate<T> {
 
-    private SftpOperationTypeEnums operationType;
+    private String operationType;
 
     protected abstract void initOperationType();
 
@@ -36,7 +37,7 @@ public abstract class AbstractSftpOperationTemplate<T> {
      * @throws Exception
      */
     protected abstract SftpOperationResponse<T> doBusiness(SFTPUserInfo user
-            , Map<SftpOperationParamEnums, String> params) throws Exception;
+            , Map<String, String> params) throws Exception;
 
     private void initContext(){
         initOperationType();
@@ -48,10 +49,10 @@ public abstract class AbstractSftpOperationTemplate<T> {
      * @param params
      * @return
      */
-    protected abstract boolean checkBeforeDoBiz(SFTPUserInfo user, Map<SftpOperationParamEnums, String> params);
+    protected abstract boolean checkBeforeDoBiz(SFTPUserInfo user, Map<String, String> params);
 
     public SftpOperationResponse<T> handle(SFTPUserInfo user
-            , Map<SftpOperationParamEnums, String> params){
+            , Map<String, String> params){
         initContext();
         RdfFileLogUtil.common.info("rdf-file#sftpOperation."
                 + this.operationType + ".request,params=" + params);
@@ -136,7 +137,7 @@ public abstract class AbstractSftpOperationTemplate<T> {
      *
      * @param operationType value to be assigned to property operationType
      */
-    public void setOperationType(SftpOperationTypeEnums operationType) {
+    public void setOperationType(String operationType) {
         this.operationType = operationType;
     }
 }

@@ -22,10 +22,10 @@ public class SFTPUserInfo {
 	/** FTP登录用户 */
 	private String user;
 
-	/** 密码 - 明文存储的密码 - 后续会逐渐删除 */
+	/** 密码 - 明文存储的密码 */
 	private String pswd;
 
-	/** 密码 - 经过kmi解密之后的 */
+	/** 密码 - 用户自定义加密解密方法 */
 	private String securityPswd;
 
 	/** 服务器地址 */
@@ -37,7 +37,10 @@ public class SFTPUserInfo {
 	/** 身份私钥文件 */
 	private String identityFile;
 
-	/** 验证类型: 0密码验证，1私钥验证, 2代表混合模式认证 ；必须指定，所以缺省是非法值 */
+	/**
+	 * 验证类型:
+	 * @see SftpAuthEnum
+	 * */
 	private SftpAuthEnum authType = SftpAuthEnum.PASSWORD;
 
 	private String privateKeyName;

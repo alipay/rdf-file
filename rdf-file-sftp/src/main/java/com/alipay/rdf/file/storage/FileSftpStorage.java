@@ -39,11 +39,11 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 	@Override
 	public void copy(String srcFile, String toFile) {
 
-		Map<SftpOperationParamEnums, String> params = new HashMap<SftpOperationParamEnums, String>();
+		Map<String, String> params = new HashMap<String, String>();
 
-		params.put(SftpOperationParamEnums.SOURCE_FILE, srcFile);
-		params.put(SftpOperationParamEnums.TARGET_FILE, toFile);
-		params.put(SftpOperationParamEnums.LOCAL_TMP_PATH, sftpConfig.getLocalTmpPath());
+		params.put(SftpOperationParamEnums.SOURCE_FILE.toString(), srcFile);
+		params.put(SftpOperationParamEnums.TARGET_FILE.toString(), toFile);
+		params.put(SftpOperationParamEnums.LOCAL_TMP_PATH.toString(), sftpConfig.getLocalTmpPath());
 
 		AbstractSftpOperationTemplate operationTemplate
 				= SftpOperationFactory.getOperation(SftpOperationTypeEnums.COPY);
@@ -59,9 +59,9 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 	@Override
 	public void createNewFile(String fileFullPath) {
 
-		Map<SftpOperationParamEnums, String> params = new HashMap<SftpOperationParamEnums, String>();
+		Map<String, String> params = new HashMap<String, String>();
 
-		params.put(SftpOperationParamEnums.TARGET_FILE, fileFullPath);
+		params.put(SftpOperationParamEnums.TARGET_FILE.toString(), fileFullPath);
 
 		AbstractSftpOperationTemplate operationTemplate
 				= SftpOperationFactory.getOperation(SftpOperationTypeEnums.CREATE);
@@ -77,9 +77,9 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 	@Override
 	public void delete(String fileFullPath) {
 
-		Map<SftpOperationParamEnums, String> params = new HashMap<SftpOperationParamEnums, String>();
+		Map<String, String> params = new HashMap<String, String>();
 
-		params.put(SftpOperationParamEnums.TARGET_FILE, fileFullPath);
+		params.put(SftpOperationParamEnums.TARGET_FILE.toString(), fileFullPath);
 
 		AbstractSftpOperationTemplate operationTemplate
 				= SftpOperationFactory.getOperation(SftpOperationTypeEnums.DEL);
@@ -95,10 +95,10 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 	@Override
 	public void download(String srcFile, String toFile) {
 
-		Map<SftpOperationParamEnums, String> params = new HashMap<SftpOperationParamEnums, String>();
+		Map<String, String> params = new HashMap<String, String>();
 
-		params.put(SftpOperationParamEnums.SOURCE_FILE, srcFile);
-		params.put(SftpOperationParamEnums.TARGET_FILE, toFile);
+		params.put(SftpOperationParamEnums.SOURCE_FILE.toString(), srcFile);
+		params.put(SftpOperationParamEnums.TARGET_FILE.toString(), toFile);
 
 		AbstractSftpOperationTemplate operationTemplate
 				= SftpOperationFactory.getOperation(SftpOperationTypeEnums.DOWNLOAD);
@@ -114,9 +114,9 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 	@Override
 	public FileInfo getFileInfo(String filePath) {
 
-		Map<SftpOperationParamEnums, String> params = new HashMap<SftpOperationParamEnums, String>();
+		Map<String, String> params = new HashMap<String, String>();
 
-		params.put(SftpOperationParamEnums.TARGET_FILE, filePath);
+		params.put(SftpOperationParamEnums.TARGET_FILE.toString(), filePath);
 
 		AbstractSftpOperationTemplate operationTemplate
 				= SftpOperationFactory.getOperation(SftpOperationTypeEnums.FILE_EXISTS);
@@ -143,21 +143,21 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 	public List<String> listAllFiles(String folderName, String[] regexs) {
 		SftpOperationResponse<Vector<SftpFileEntry>> response = listFiles(folderName, true);
 
-		return filterPaths(buildPathsFromFileEntries(folderName, response.getData()), regexs);
+		return filterPaths(buildPathsFromFileEntries(response.getData()), regexs);
 	}
 
 	@Override
 	public List<String> listAllFiles(String folderName, FilePathFilter... fileFilters) {
 		SftpOperationResponse<Vector<SftpFileEntry>> response = listFiles(folderName, true);
 
-		return filterPaths(buildPathsFromFileEntries(folderName, response.getData()), fileFilters);
+		return filterPaths(buildPathsFromFileEntries(response.getData()), fileFilters);
 	}
 
 	@Override
 	public List<String> listFiles(String folderName, String[] regexs) {
 		SftpOperationResponse<Vector<SftpFileEntry>> response = listFiles(folderName, false);
 
-		return filterPaths(buildPathsFromFileEntries(folderName, response.getData()), regexs);
+		return filterPaths(buildPathsFromFileEntries(response.getData()), regexs);
 	}
 
 	@Override
@@ -165,15 +165,15 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 
 		SftpOperationResponse<Vector<SftpFileEntry>> response = listFiles(folderName, false);
 
-		return filterPaths(buildPathsFromFileEntries(folderName, response.getData()), fileFilters);
+		return filterPaths(buildPathsFromFileEntries(response.getData()), fileFilters);
 	}
 
 	@Override
 	public void rename(String srcFile, String toFile) {
-		Map<SftpOperationParamEnums, String> params = new HashMap<SftpOperationParamEnums, String>();
+		Map<String, String> params = new HashMap<String, String>();
 
-		params.put(SftpOperationParamEnums.SOURCE_FILE, srcFile);
-		params.put(SftpOperationParamEnums.TARGET_FILE, toFile);
+		params.put(SftpOperationParamEnums.SOURCE_FILE.toString(), srcFile);
+		params.put(SftpOperationParamEnums.TARGET_FILE.toString(), toFile);
 
 		AbstractSftpOperationTemplate operationTemplate
 				= SftpOperationFactory.getOperation(SftpOperationTypeEnums.RENAME);
@@ -195,10 +195,10 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 		try {
 
 			if (!isExist || override) {
-				Map<SftpOperationParamEnums, String> params = new HashMap<SftpOperationParamEnums, String>();
+				Map<String, String> params = new HashMap<String, String>();
 
-				params.put(SftpOperationParamEnums.SOURCE_FILE, srcFile);
-				params.put(SftpOperationParamEnums.TARGET_FILE, toFile);
+				params.put(SftpOperationParamEnums.SOURCE_FILE.toString(), srcFile);
+				params.put(SftpOperationParamEnums.TARGET_FILE.toString(), toFile);
 
 				AbstractSftpOperationTemplate operationTemplate
 						= SftpOperationFactory.getOperation(SftpOperationTypeEnums.UPLOAD);
@@ -254,10 +254,10 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 
 
 	private SftpOperationResponse<Vector<SftpFileEntry>> listFiles(String folderName, boolean recursiveList){
-		Map<SftpOperationParamEnums, String> params = new HashMap<SftpOperationParamEnums, String>();
+		Map<String, String> params = new HashMap<String, String>();
 
-		params.put(SftpOperationParamEnums.TARGET_DIR, folderName);
-		params.put(SftpOperationParamEnums.RECURSIVE_LIST, recursiveList
+		params.put(SftpOperationParamEnums.TARGET_DIR.toString(), folderName);
+		params.put(SftpOperationParamEnums.RECURSIVE_LIST.toString(), recursiveList
 				? FileSftpStorageConstants.T : FileSftpStorageConstants.F);
 
 		AbstractSftpOperationTemplate operationTemplate
@@ -316,7 +316,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 		return result;
 	}
 
-	private List<String> buildPathsFromFileEntries(String folderName, Vector<SftpFileEntry> entries){
+	private List<String> buildPathsFromFileEntries(Vector<SftpFileEntry> entries){
 		List<String> paths = new ArrayList<String>();
 		for (SftpFileEntry entry : entries) {
 			paths.add(entry.getFullFileName());
