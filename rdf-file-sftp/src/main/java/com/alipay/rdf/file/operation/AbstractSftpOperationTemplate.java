@@ -8,19 +8,24 @@ import java.util.Map;
 
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
+import com.alipay.rdf.file.interfaces.FileSftpStorageConstants;
+import com.alipay.rdf.file.util.JschFactory;
 import com.alipay.rdf.file.util.RdfFileLogUtil;
-import com.alipay.rdf.file.util.SFTPHelper;
 import com.alipay.rdf.file.util.SFTPUserInfo;
+import com.alipay.rdf.file.util.SftpThreadContext;
 import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 
 /**
- *
+ * sftp操作模版
+ * 用户可以自定义实现
  * @author haofan.whf
  * @version $Id: AbstractSftpOperTemplate.java, v 0.1 2018年10月06日 下午3:44 haofan.whf Exp $
  */
 public abstract class AbstractSftpOperationTemplate<T> {
 
-    private SftpOperationTypeEnums operationType;
+    private String operationType;
 
     protected abstract void initOperationType();
 
@@ -32,7 +37,7 @@ public abstract class AbstractSftpOperationTemplate<T> {
      * @throws Exception
      */
     protected abstract SftpOperationResponse<T> doBusiness(SFTPUserInfo user
-            , Map<SftpOperationParamEnums, String> params) throws Exception;
+            , Map<String, String> params) throws Exception;
 
     private void initContext(){
         initOperationType();
@@ -44,10 +49,10 @@ public abstract class AbstractSftpOperationTemplate<T> {
      * @param params
      * @return
      */
-    protected abstract boolean checkBeforeDoBiz(SFTPUserInfo user, Map<SftpOperationParamEnums, String> params);
+    protected abstract boolean checkBeforeDoBiz(SFTPUserInfo user, Map<String, String> params);
 
     public SftpOperationResponse<T> handle(SFTPUserInfo user
-            , Map<SftpOperationParamEnums, String> params){
+            , Map<String, String> params){
         initContext();
         RdfFileLogUtil.common.info("rdf-file#sftpOperation."
                 + this.operationType + ".request,params=" + params);
@@ -60,7 +65,7 @@ public abstract class AbstractSftpOperationTemplate<T> {
                 throw new RdfFileException("rdf-file#sftpOperation." + this.operationType
                         + ".checkParams fail,params=" + params, RdfErrorEnum.ILLEGAL_ARGUMENT);
             }
-            sftp = SFTPHelper.openChannelSftp(user);
+            sftp = openChannelSftp(user);
             response = doBusiness(user, params);
         } catch (Exception e){
             RdfFileLogUtil.common.warn("rdf-file#sftpOperation."
@@ -68,7 +73,7 @@ public abstract class AbstractSftpOperationTemplate<T> {
             response.setSuccess(false);
             response.setError(e);
         } finally {
-            SFTPHelper.closeConnection(sftp, user);
+            closeConnection(sftp, user);
         }
         RdfFileLogUtil.common.info("rdf-file#sftpOperation."
                 + this.operationType + ".response,result=" + response + ",params=" + params);
@@ -76,11 +81,63 @@ public abstract class AbstractSftpOperationTemplate<T> {
     }
 
     /**
+     * 关闭连接
+     *
+     * @param sftp
+     * @param user
+     */
+    private static void closeConnection(ChannelSftp sftp, SFTPUserInfo user) {
+        try {
+            sftp.disconnect();
+            if(sftp.getSession() != null){
+                sftp.getSession().disconnect();
+            }
+        } catch (Exception e) {
+            RdfFileLogUtil.common.warn("rdf-file#closeConnection fail"
+                    + ",user={" + user.toString(true, true) + "}", e);
+        }finally {
+            SftpThreadContext.clearChannelSftp();
+        }
+    }
+
+    /**
+     * 根据SFTP配置打开SFTP通道
+     * @param user
+     * @return
+     * @throws JSchException
+     */
+    private static ChannelSftp openChannelSftp(SFTPUserInfo user) throws JSchException {
+
+        RdfFileLogUtil.common.debug("rdf-file#SFTPHelper.openChannelSftp request"
+                + ",user={" + user.toString(true, false) + "}");
+        // 创建ssh会话
+        Session ssh = JschFactory.openConnection(user);
+
+        RdfFileLogUtil.common.debug("rdf-file#SFTPHelper.openChannelSftp create ssh success"
+                + ",user={" + user.toString(true, false) + "}");
+
+        // 打开sftp连接
+        ChannelSftp channel = (ChannelSftp) ssh.openChannel(FileSftpStorageConstants.SFTP);
+
+        if(channel == null){
+            throw new RdfFileException("rdf-file#SFTPHelper.openChannelSftp get ChannelSftp fail.", RdfErrorEnum.UNKOWN);
+        }
+
+        SftpThreadContext.setChannelSftp(channel);
+
+        channel.connect();
+
+        RdfFileLogUtil.common.debug("rdf-file#SFTPHelper.openChannelSftp create channel success"
+                + ",user={" + user.toString(true, false) + "}");
+        return channel;
+    }
+
+    /**
      * Setter method for property operationType.
      *
      * @param operationType value to be assigned to property operationType
      */
-    public void setOperationType(SftpOperationTypeEnums operationType) {
+    public void setOperationType(String operationType) {
         this.operationType = operationType;
     }
 }
