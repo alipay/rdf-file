@@ -217,22 +217,26 @@ public class TemplateLoader {
                                                     + bodyMeta.getName() + " 没有配置condition");
 
         String[] conditions = conditionConfig.split(":");
-        if (conditions.length != 2) {
+        if (conditions.length > 2) {
             throw new RdfFileException(
                 "rdf-file#TemplateLoader 多模板配置 path=" + templatePath + " bodyTempateName="
                                        + bodyMeta.getName() + " condition配置格式错误",
                 RdfErrorEnum.COLUMN_TYPE_ERROR);
         }
 
+        // 默认使用基于表达式行条件计算器
+        String conditionType = conditions.length == 2 ? conditions[0] : "expression";
+        String conditionParam = conditions.length == 2 ? conditions[1] : conditions[0];
+
         RdfFileRowConditionSpi rowCondition = ExtensionLoader
-            .getExtensionLoader(RdfFileRowConditionSpi.class).getNewExtension(conditions[0]);
+            .getExtensionLoader(RdfFileRowConditionSpi.class).getNewExtension(conditionType);
         RdfFileUtil.assertNotNull(rowCondition,
             "rdf-file#TemplateLoader 多模板配置 path=" + templatePath + " bodyTempateName="
                                                 + bodyMeta.getName() + " conditionType="
-                                                + conditions[0] + "没有对应实现类");
+                                                + conditionType + "没有对应实现类");
 
         bodyMeta.setRowConditionType(rowCondition);
-        bodyMeta.setRowConditionParam(conditions[1]);
+        bodyMeta.setRowConditionParam(conditionParam);
 
         rowCondition.init(bodyMeta);
     }
