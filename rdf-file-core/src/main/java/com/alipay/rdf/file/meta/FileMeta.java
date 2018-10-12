@@ -27,7 +27,7 @@ public class FileMeta {
     /** 头部字段*/
     private final List<FileColumnMeta>     headColumns           = new ArrayList<FileColumnMeta>();
     /** 行记录字段*/
-    private final List<FileColumnMeta>     bodyColumns           = new ArrayList<FileColumnMeta>();
+    private final List<FileBodyMeta>       bodyColumns           = new ArrayList<FileBodyMeta>();
     /** 尾部字段*/
     private final List<FileColumnMeta>     tailColumns           = new ArrayList<FileColumnMeta>();
 
@@ -49,6 +49,8 @@ public class FileMeta {
     private Map<FileDataTypeEnum, Boolean> startWithSplit        = new HashMap<FileDataTypeEnum, Boolean>();
 
     private Map<FileDataTypeEnum, Boolean> endWithSplit          = new HashMap<FileDataTypeEnum, Boolean>();
+    /**body是否是多模板配置*/
+    private boolean                        multiBody             = false;
 
     public boolean isStartWithSplit(FileDataTypeEnum rowType) {
         Boolean startSplit = startWithSplit.get(rowType);
@@ -158,14 +160,16 @@ public class FileMeta {
      * 
      * @param column
      */
-    public void addBodyColumn(FileColumnMeta column) {
-        bodyColumns.add(column);
+    public void addBodyColumn(FileBodyMeta bodyMeta) {
+        bodyColumns.add(bodyMeta);
     }
 
     public FileColumnMeta getBodyColumn(String name) {
-        for (FileColumnMeta colMeta : bodyColumns) {
-            if (colMeta.getName().equals(name)) {
-                return colMeta;
+        for (FileBodyMeta bodyMeta : bodyColumns) {
+            for (FileColumnMeta colMeta : bodyMeta.getColumns()) {
+                if (colMeta.getName().equals(name)) {
+                    return colMeta;
+                }
             }
         }
 
@@ -226,7 +230,12 @@ public class FileMeta {
      * @return property value of bodyColumns
      */
     public List<FileColumnMeta> getBodyColumns() {
-        return bodyColumns;
+        if (multiBody) {
+            throw new RdfFileException(
+                "rdf-file#FileMeta.getBodyColumns() protocol=" + protocol + " 不支持body多模板配置.",
+                RdfErrorEnum.UNSUPPORTED_OPERATION);
+        }
+        return bodyColumns.get(0).getColumns();
     }
 
     /**
@@ -343,6 +352,14 @@ public class FileMeta {
 
     public String getLineBreak() {
         return lineBreak;
+    }
+
+    public boolean isMultiBody() {
+        return multiBody;
+    }
+
+    public void setMultiBody(boolean multiBody) {
+        this.multiBody = multiBody;
     }
 
     public void setLineBreak(String lineBreak) {
