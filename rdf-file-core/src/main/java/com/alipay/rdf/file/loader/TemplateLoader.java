@@ -118,6 +118,7 @@ public class TemplateLoader {
                         .addHeadColumn(parseFileColumn(templatePath, head, colIndex++, fileMeta));
                 }
 
+                // body 配置多模板解析
                 if (templateConfig.getMultiBodys().size() > 0) {
                     fileMeta.setMultiBody(true);
                     for (MultiBodyConfig bodyConfig : templateConfig.getMultiBodys()) {
@@ -136,6 +137,7 @@ public class TemplateLoader {
                     }
                 }
 
+                // body单模板解析
                 if (templateConfig.getBody().size() > 0) {
                     if (fileMeta.isMultiBody()) {
                         throw new RdfFileException(
