@@ -14,7 +14,7 @@ import com.alipay.rdf.file.util.BeanMapWrapper;
 
 public class RowConditionUtil {
 
-    public static List<FileColumnMeta> getDeserializeColumns(FileConfig config, String[] row,
+    public static List<FileColumnMeta> deserializeColumns(FileConfig config, String[] row,
                                                              FileDataTypeEnum rowType) {
         FileMeta fileMeta = TemplateLoader.load(config);
 
@@ -32,7 +32,7 @@ public class RowConditionUtil {
         throw new RdfFileException("", RdfErrorEnum.UNSUPPORTED_OPERATION);
     }
 
-    public static List<FileColumnMeta> getSerializeColumns(FileConfig config, BeanMapWrapper row,
+    public static List<FileColumnMeta> serializeColumns(FileConfig config, BeanMapWrapper row,
                                                            FileDataTypeEnum rowType) {
         FileMeta fileMeta = TemplateLoader.load(config);
 
