@@ -238,6 +238,10 @@ public class FileMeta {
         return bodyColumns.get(0).getColumns();
     }
 
+    public List<FileBodyMeta> getBodyMetas() {
+        return this.bodyColumns;
+    }
+
     /**
      * Getter method for property <tt>tailColumns</tt>.
      * 

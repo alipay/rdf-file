@@ -3,6 +3,8 @@ package com.alipay.rdf.file.meta;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.alipay.rdf.file.exception.RdfErrorEnum;
+import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.spi.RdfFileRowConditionSpi;
 
 /**
@@ -43,5 +45,17 @@ public class FileBodyMeta {
 
     public void setColumns(List<FileColumnMeta> columns) {
         this.columns = columns;
+    }
+
+    public FileColumnMeta getColumn(String columName) {
+        for (FileColumnMeta col : columns) {
+            if (col.getName().equals(columName)) {
+                return col;
+            }
+        }
+
+        throw new RdfFileException("rdf-file#FileMeta.FileBodyMeta  bodyTempldateName=" + name
+                                   + ", columName=" + columName + ") 有没有定义",
+            RdfErrorEnum.COLUMN_NOT_DEFINED);
     }
 }
