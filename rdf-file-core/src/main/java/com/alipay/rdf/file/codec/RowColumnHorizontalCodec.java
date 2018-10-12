@@ -45,7 +45,7 @@ public class RowColumnHorizontalCodec {
             new BizData(RdfFileConstants.ROW_TYPE, rowType));
 
         FileMeta fileMeta = TemplateLoader.load(fileConfig);
-        List<FileColumnMeta> columnMetas = RowConditionUtil.getSerializeColumns(fileConfig, bmw,
+        List<FileColumnMeta> columnMetas = RowConditionUtil.serializeColumns(fileConfig, bmw,
             rowType);
         StringBuffer line = new StringBuffer();
         String split = ProtocolLoader.loadProtocol(fileMeta.getProtocol()).getRowSplit()
@@ -108,7 +108,7 @@ public class RowColumnHorizontalCodec {
         String[] column = ProtocolLoader.loadProtocol(fileMeta.getProtocol()).getRowSplit()
             .split(new SplitContext(line, fileConfig, rowType));
 
-        List<FileColumnMeta> columnMetas = RowConditionUtil.getDeserializeColumns(fileConfig,
+        List<FileColumnMeta> columnMetas = RowConditionUtil.deserializeColumns(fileConfig,
             column, rowType);
 
         int splitLength = startWithSplit ? columnMetas.size() + 1 : columnMetas.size();
