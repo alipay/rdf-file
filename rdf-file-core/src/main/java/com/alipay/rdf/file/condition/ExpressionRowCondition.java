@@ -1,5 +1,6 @@
 package com.alipay.rdf.file.condition;
 
+import com.alipay.rdf.file.meta.FileBodyMeta;
 import com.alipay.rdf.file.spi.RdfFileRowConditionSpi;
 
 /**
@@ -11,6 +12,11 @@ import com.alipay.rdf.file.spi.RdfFileRowConditionSpi;
  * @version $Id: ExpressionRowCondition.java, v 0.1 2018年10月11日 下午8:48:10 hongwei.quhw Exp $
  */
 public class ExpressionRowCondition implements RdfFileRowConditionSpi {
+
+    @Override
+    public void init(FileBodyMeta bodyMeta) {
+        String param = bodyMeta.getRowConditionParam();
+    }
 
     @Override
     public boolean caculate(RowConditionContext ctx) {

@@ -225,17 +225,16 @@ public class TemplateLoader {
         }
 
         RdfFileRowConditionSpi rowCondition = ExtensionLoader
-            .getExtensionLoader(RdfFileRowConditionSpi.class).getExtension(conditions[0]);
+            .getExtensionLoader(RdfFileRowConditionSpi.class).getNewExtension(conditions[0]);
         RdfFileUtil.assertNotNull(rowCondition,
             "rdf-file#TemplateLoader 多模板配置 path=" + templatePath + " bodyTempateName="
                                                 + bodyMeta.getName() + " conditionType="
                                                 + conditions[0] + "没有对应实现类");
 
-        rowCondition.init(bodyMeta);
-
         bodyMeta.setRowConditionType(rowCondition);
         bodyMeta.setRowConditionParam(conditions[1]);
 
+        rowCondition.init(bodyMeta);
     }
 
     private static void multiBodyConfigValidate(List<FileBodyMeta> bodyColumns,
