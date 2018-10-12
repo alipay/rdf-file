@@ -3,6 +3,8 @@ package com.alipay.rdf.file.loader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -10,15 +12,18 @@ import com.alibaba.fastjson.JSON;
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.interfaces.RowValidator;
+import com.alipay.rdf.file.meta.FileBodyMeta;
 import com.alipay.rdf.file.meta.FileColumnAttribute;
 import com.alipay.rdf.file.meta.FileColumnMeta;
 import com.alipay.rdf.file.meta.FileColumnRangeMeta;
 import com.alipay.rdf.file.meta.FileColumnTypeMeta;
 import com.alipay.rdf.file.meta.FileMeta;
+import com.alipay.rdf.file.meta.MultiBodyConfig;
 import com.alipay.rdf.file.meta.TemplateConfig;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.FileDataTypeEnum;
 import com.alipay.rdf.file.model.FileDefaultConfig;
+import com.alipay.rdf.file.spi.RdfFileRowConditionSpi;
 import com.alipay.rdf.file.util.RdfFileLogUtil;
 import com.alipay.rdf.file.util.RdfFileUtil;
 
@@ -115,11 +120,38 @@ public class TemplateLoader {
                         .addHeadColumn(parseFileColumn(templatePath, head, colIndex++, fileMeta));
                 }
 
-                colIndex = 0;
-                // body
-                for (String body : templateConfig.getBody()) {
-                    fileMeta
-                        .addBodyColumn(parseFileColumn(templatePath, body, colIndex++, fileMeta));
+                if (templateConfig.getMultiBodys().size() > 0) {
+                    fileMeta.setMultiBody(true);
+                    for (MultiBodyConfig bodyConfig : templateConfig.getMultiBodys()) {
+                        // body
+                        FileBodyMeta bodyMeta = new FileBodyMeta();
+                        bodyMeta.setName(bodyConfig.getName());
+                        bodyMeta.setRowCondition(
+                            ExtensionLoader.getExtensionLoader(RdfFileRowConditionSpi.class)
+                                .getExtension(bodyConfig.getCondition()));
+                        colIndex = 0;
+                        for (String body : bodyConfig.getBodyColumns()) {
+                            bodyMeta.getColumns()
+                                .add(parseFileColumn(templatePath, body, colIndex++, fileMeta));
+                        }
+                        fileMeta.addBodyColumn(bodyMeta);
+                    }
+                }
+
+                if (templateConfig.getBody().size() > 0) {
+                    if (fileMeta.isMultiBody()) {
+                        throw new RdfFileException(
+                            "rdf-file#TemplateLoader 数据定义模板,不支持同时定义body和multiBodys属性",
+                            RdfErrorEnum.UNSUPPORTED_OPERATION);
+                    }
+                    colIndex = 0;
+                    // body
+                    FileBodyMeta bodyMeta = new FileBodyMeta();
+                    for (String body : templateConfig.getBody()) {
+                        bodyMeta.getColumns()
+                            .add(parseFileColumn(templatePath, body, colIndex++, fileMeta));
+                    }
+                    fileMeta.addBodyColumn(bodyMeta);
                 }
 
                 colIndex = 0;

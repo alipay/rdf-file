@@ -1,0 +1,2 @@
+expression=com.alipay.rdf.file.condition.ExpressionRowCondition
+callback=com.alipay.rdf.file.condition.CallbackRowCondition
