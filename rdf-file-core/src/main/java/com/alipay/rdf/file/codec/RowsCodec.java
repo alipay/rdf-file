@@ -35,7 +35,6 @@ public class RowsCodec {
                                  FileDataTypeEnum rowType) {
         FileMeta fileMeta = TemplateLoader.load(fileConfig);
         List<RowDefinition> rds = ProtocolLoader.getRowDefinitos(fileMeta.getProtocol(), rowType);
-        List<FileColumnMeta> columnMetas = fileMeta.getColumns(rowType);
         BeanMapWrapper bmw = new BeanMapWrapper(rowBean);
 
         for (RowDefinition rd : rds) {
@@ -44,6 +43,7 @@ public class RowsCodec {
                     writer.writeLine(RowColumnHorizontalCodec.serialize(bmw, fileConfig, rd,
                         processors, rowType));
                 } else {
+                    List<FileColumnMeta> columnMetas = fileMeta.getColumns(rowType);
                     for (int i = 0; i < columnMetas.size(); i++) {
                         FileColumnMeta columnMeta = columnMetas.get(i);
                         FuncContext ctx = new FuncContext();
@@ -79,7 +79,6 @@ public class RowsCodec {
                                     FileDataTypeEnum rowType) {
         FileMeta fileMeta = TemplateLoader.load(fileConfig);
         List<RowDefinition> rds = ProtocolLoader.getRowDefinitos(fileMeta.getProtocol(), rowType);
-        List<FileColumnMeta> columnMetas = fileMeta.getColumns(rowType);
         BeanMapWrapper bmw = new BeanMapWrapper(requiredType);
 
         for (RowDefinition rd : rds) {
@@ -96,6 +95,7 @@ public class RowsCodec {
                 }
                 // column每一个就是一行
                 else if (rd.getColumnLayout().equals(ColumnLayoutEnum.vertical)) {
+                    List<FileColumnMeta> columnMetas = fileMeta.getColumns(rowType);
                     for (int i = 0; i < columnMetas.size(); i++) {
                         String line = reader.readLine();
                         if (null == line) {
