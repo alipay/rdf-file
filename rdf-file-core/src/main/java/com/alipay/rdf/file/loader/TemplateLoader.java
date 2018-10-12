@@ -3,6 +3,7 @@ package com.alipay.rdf.file.loader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -135,6 +136,8 @@ public class TemplateLoader {
                         }
                         fileMeta.addBodyColumn(bodyMeta);
                     }
+
+                    multiBodyConfigValidate(fileMeta.getBodyMetas());
                 }
 
                 // body单模板解析
@@ -203,6 +206,30 @@ public class TemplateLoader {
             CACHE.put(templatePath, fileMeta);
 
             return fileMeta;
+        }
+    }
+
+    private static void multiBodyConfigValidate(List<FileBodyMeta> bodyColumns) {
+        for (int i = 0; i < bodyColumns.size() - 1; i++) {
+            FileBodyMeta bodyMeta = bodyColumns.get(i);
+            for (FileColumnMeta colMeta : bodyMeta.getColumns()) {
+                for (int j = i + 1; j < bodyColumns.size(); j++) {
+                    FileBodyMeta compareBodyMeta = bodyColumns.get(j);
+                    FileColumnMeta compareColMeta = compareBodyMeta.getColumn(colMeta.getName());
+                    if (null != compareColMeta) {
+                        // 数据类型定义要一致
+                        if (!(RdfFileUtil.equals(colMeta.getType().getName(),
+                            compareColMeta.getType().getName())
+                              && RdfFileUtil.equals(colMeta.getType().getExtra(),
+                                  compareColMeta.getType().getExtra()))) {
+                            throw new RdfFileException(
+                                "rdf-file#multiBody columName=[" + colMeta.getName()
+                                                       + "]数据类型在不通的body模板中定义不一致",
+                                RdfErrorEnum.COLUMN_TYPE_ERROR);
+                        }
+                    }
+                }
+            }
         }
     }
 
