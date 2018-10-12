@@ -9,7 +9,6 @@ import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.interfaces.RowValidator;
 import com.alipay.rdf.file.model.FileDataTypeEnum;
-import com.alipay.rdf.file.util.BeanMapWrapper;
 import com.alipay.rdf.file.util.RdfFileUtil;
 
 /**
@@ -96,20 +95,6 @@ public class FileMeta {
     }
 
     public List<FileColumnMeta> getColumns(FileDataTypeEnum rowType) {
-        switch (rowType) {
-            case HEAD:
-                return getHeadColumns();
-            case BODY:
-                return getBodyColumns();
-            case TAIL:
-                return getTailColumns();
-            default:
-                throw new RdfFileException("不支持类似rowType=" + rowType.name(),
-                    RdfErrorEnum.UNSUPPORTED_OPERATION);
-        }
-    }
-
-    public List<FileColumnMeta> getColumns(FileDataTypeEnum rowType, BeanMapWrapper row) {
         switch (rowType) {
             case HEAD:
                 return getHeadColumns();

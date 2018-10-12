@@ -1,7 +1,9 @@
 package com.alipay.rdf.file.condition;
 
 import com.alipay.rdf.file.meta.FileBodyMeta;
+import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.spi.RdfFileRowConditionSpi;
+import com.alipay.rdf.file.util.BeanMapWrapper;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
@@ -19,7 +21,12 @@ public class ExpressionRowCondition implements RdfFileRowConditionSpi {
     }
 
     @Override
-    public boolean caculate(RowConditionContext ctx) {
+    public boolean serialize(FileConfig config, BeanMapWrapper row) {
+        return false;
+    }
+
+    @Override
+    public boolean deserialize(FileConfig fileConfig, String[] row) {
         return false;
     }
 

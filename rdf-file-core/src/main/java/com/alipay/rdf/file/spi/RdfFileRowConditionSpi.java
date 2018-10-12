@@ -15,25 +15,22 @@ import com.alipay.rdf.file.util.BeanMapWrapper;
  */
 public interface RdfFileRowConditionSpi extends RdfInit<FileBodyMeta> {
 
-    boolean caculate(RowConditionContext ctx);
+    /**
+     * 写入文件是条件决策
+     * 
+     * @param config
+     * @param column
+     * @return
+     */
+    boolean serialize(FileConfig config, BeanMapWrapper row);
 
-    public static class RowConditionContext {
-        /**文件配置*/
-        private final FileConfig     fileConfig;
-        /**行数据*/
-        private final BeanMapWrapper row;
+    /**
+     * 读取文件时条件决策
+     * 
+     * @param fileConfig
+     * @param row
+     * @return
+     */
+    boolean deserialize(FileConfig fileConfig, String[] row);
 
-        public RowConditionContext(FileConfig fileConfig, BeanMapWrapper row) {
-            this.fileConfig = fileConfig;
-            this.row = row;
-        }
-
-        public FileConfig getFileConfig() {
-            return fileConfig;
-        }
-
-        public BeanMapWrapper getRow() {
-            return row;
-        }
-    }
 }

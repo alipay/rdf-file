@@ -3,6 +3,7 @@ package com.alipay.rdf.file.codec;
 import java.util.List;
 import java.util.Map;
 
+import com.alipay.rdf.file.condition.RowConditionUtil;
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.loader.ProtocolLoader;
@@ -44,7 +45,8 @@ public class RowColumnHorizontalCodec {
             new BizData(RdfFileConstants.ROW_TYPE, rowType));
 
         FileMeta fileMeta = TemplateLoader.load(fileConfig);
-        List<FileColumnMeta> columnMetas = fileMeta.getColumns(rowType);
+        List<FileColumnMeta> columnMetas = RowConditionUtil.getSerializeColumns(fileConfig, bmw,
+            rowType);
         StringBuffer line = new StringBuffer();
         String split = ProtocolLoader.loadProtocol(fileMeta.getProtocol()).getRowSplit()
             .getSplit(fileConfig);
@@ -99,7 +101,6 @@ public class RowColumnHorizontalCodec {
             new BizData(RdfFileConstants.ROW_TYPE, rowType));
 
         FileMeta fileMeta = TemplateLoader.load(fileConfig);
-        List<FileColumnMeta> columnMetas = fileMeta.getColumns(rowType);
 
         boolean startWithSplit = fileMeta.isStartWithSplit(rowType);
         boolean endWithSplit = fileMeta.isEndWithSplit(rowType);
@@ -107,11 +108,12 @@ public class RowColumnHorizontalCodec {
         String[] column = ProtocolLoader.loadProtocol(fileMeta.getProtocol()).getRowSplit()
             .split(new SplitContext(line, fileConfig, rowType));
 
+        List<FileColumnMeta> columnMetas = RowConditionUtil.getDeserializeColumns(fileConfig,
+            column, rowType);
+
         int splitLength = startWithSplit ? columnMetas.size() + 1 : columnMetas.size();
         splitLength = endWithSplit ? splitLength + 1 : splitLength;
-        
-        
-        
+
         if (column.length != splitLength) {
             throw new RdfFileException(
                 "rdf-file#RowColumnHorizontalCodec.deserialize fileConfig=" + fileConfig + ", line="
