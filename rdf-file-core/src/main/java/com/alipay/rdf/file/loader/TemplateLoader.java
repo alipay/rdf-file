@@ -235,7 +235,7 @@ public class TemplateLoader {
                                                 + bodyMeta.getName() + " conditionType="
                                                 + conditionType + "没有对应实现类");
 
-        bodyMeta.setRowConditionType(rowCondition);
+        bodyMeta.setRowCondition(rowCondition);
         bodyMeta.setRowConditionParam(conditionParam);
 
         rowCondition.init(bodyMeta);

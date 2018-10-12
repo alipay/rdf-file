@@ -19,7 +19,7 @@ public class FileBodyMeta {
     /**body模板名*/
     private String                 name;
     /**行条件计算器*/
-    private RdfFileRowConditionSpi rowConditionType;
+    private RdfFileRowConditionSpi rowCondition;
     /**行条件计算器入参*/
     private String                 rowConditionParam;
     /**定义的body字段*/
@@ -33,12 +33,12 @@ public class FileBodyMeta {
         this.name = name;
     }
 
-    public RdfFileRowConditionSpi getRowConditionType() {
-        return rowConditionType;
+    public RdfFileRowConditionSpi getRowCondition() {
+        return rowCondition;
     }
 
-    public void setRowConditionType(RdfFileRowConditionSpi rowConditionType) {
-        this.rowConditionType = rowConditionType;
+    public void setRowCondition(RdfFileRowConditionSpi rowCondition) {
+        this.rowCondition = rowCondition;
     }
 
     public String getRowConditionParam() {
