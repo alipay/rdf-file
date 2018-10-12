@@ -126,18 +126,19 @@ public class TemplateLoader {
                         // body
                         FileBodyMeta bodyMeta = new FileBodyMeta();
                         bodyMeta.setName(bodyConfig.getName());
-                        bodyMeta.setRowCondition(
-                            ExtensionLoader.getExtensionLoader(RdfFileRowConditionSpi.class)
-                                .getExtension(bodyConfig.getCondition()));
                         colIndex = 0;
                         for (String body : bodyConfig.getBodyColumns()) {
                             bodyMeta.getColumns()
                                 .add(parseFileColumn(templatePath, body, colIndex++, fileMeta));
                         }
+
+                        // 解析行条件
+                        parseRowConditon(bodyMeta, bodyConfig.getCondition(), templatePath);
+
                         fileMeta.addBodyColumn(bodyMeta);
                     }
 
-                    multiBodyConfigValidate(fileMeta.getBodyMetas());
+                    multiBodyConfigValidate(fileMeta.getBodyMetas(), templatePath);
                 }
 
                 // body单模板解析
@@ -209,7 +210,36 @@ public class TemplateLoader {
         }
     }
 
-    private static void multiBodyConfigValidate(List<FileBodyMeta> bodyColumns) {
+    private static void parseRowConditon(FileBodyMeta bodyMeta, String conditionConfig,
+                                         String templatePath) {
+        RdfFileUtil.assertNotBlank(conditionConfig,
+            "rdf-file#TemplateLoader 多模板配置 path=" + templatePath + " bodyTempateName="
+                                                    + bodyMeta.getName() + " 没有配置condition");
+
+        String[] conditions = conditionConfig.split(":");
+        if (conditions.length != 2) {
+            throw new RdfFileException(
+                "rdf-file#TemplateLoader 多模板配置 path=" + templatePath + " bodyTempateName="
+                                       + bodyMeta.getName() + " condition配置格式错误",
+                RdfErrorEnum.COLUMN_TYPE_ERROR);
+        }
+
+        RdfFileRowConditionSpi rowCondition = ExtensionLoader
+            .getExtensionLoader(RdfFileRowConditionSpi.class).getExtension(conditions[0]);
+        RdfFileUtil.assertNotNull(rowCondition,
+            "rdf-file#TemplateLoader 多模板配置 path=" + templatePath + " bodyTempateName="
+                                                + bodyMeta.getName() + " conditionType="
+                                                + conditions[0] + "没有对应实现类");
+
+        rowCondition.init(bodyMeta);
+
+        bodyMeta.setRowConditionType(rowCondition);
+        bodyMeta.setRowConditionParam(conditions[1]);
+
+    }
+
+    private static void multiBodyConfigValidate(List<FileBodyMeta> bodyColumns,
+                                                String templatePath) {
         for (int i = 0; i < bodyColumns.size() - 1; i++) {
             FileBodyMeta bodyMeta = bodyColumns.get(i);
             for (FileColumnMeta colMeta : bodyMeta.getColumns()) {
@@ -223,7 +253,8 @@ public class TemplateLoader {
                               && RdfFileUtil.equals(colMeta.getType().getExtra(),
                                   compareColMeta.getType().getExtra()))) {
                             throw new RdfFileException(
-                                "rdf-file#multiBody columName=[" + colMeta.getName()
+                                "rdf-file#multiBody templatePath=" + templatePath + " columName=["
+                                                       + colMeta.getName()
                                                        + "]数据类型在不通的body模板中定义不一致",
                                 RdfErrorEnum.COLUMN_TYPE_ERROR);
                         }
