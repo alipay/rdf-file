@@ -1,2 +1,2 @@
-expression=com.alipay.rdf.file.condition.ExpressionRowCondition
+match=com.alipay.rdf.file.condition.MatchRowCondition
 callback=com.alipay.rdf.file.condition.CallbackRowCondition

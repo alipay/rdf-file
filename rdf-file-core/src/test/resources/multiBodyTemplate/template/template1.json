@@ -22,7 +22,7 @@
 	     	]
 	     }, {
  			"name":"columnTemplate1",
- 			"condition":"expression:bol=true",
+ 			"condition":"match:bol=tru|seq(0,4)=aaa|age=15",
  			"bodyColumns":[ 
 	     		"seq|流水号",
 	     		"instSeq|基金公司订单号|Required",
@@ -38,7 +38,7 @@
 	     	]
 	     }, {
 	     	"name":"columnTemplate2",
- 			"condition":"com.alipay.rdf.file.multiBodyTempalte.BizCallbackRowCondition",
+ 			"condition":"callback:com.alipay.rdf.file.multiBodyTempalte.BizCallbackRowCondition",
  			"bodyColumns":[ 
 	     		"seq|流水号",
 	     		"instSeq|基金公司订单号|Required",
