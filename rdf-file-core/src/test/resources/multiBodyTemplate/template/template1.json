@@ -38,7 +38,7 @@
 	     	]
 	     }, {
 	     	"name":"columnTemplate2",
- 			"condition":"callback:com.alipay.rdf.file.multiBodyTempalte.BizCallbackRowConditionSpi",
+ 			"condition":"com.alipay.rdf.file.multiBodyTempalte.BizCallbackRowCondition",
  			"bodyColumns":[ 
 	     		"seq|流水号",
 	     		"instSeq|基金公司订单号|Required",
