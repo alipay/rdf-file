@@ -126,6 +126,7 @@ public class TemplateLoader {
                         // body
                         FileBodyMeta bodyMeta = new FileBodyMeta();
                         bodyMeta.setName(bodyConfig.getName());
+                        bodyMeta.setTemplatePath(templatePath);
                         colIndex = 0;
                         for (String body : bodyConfig.getBodyColumns()) {
                             bodyMeta.getColumns()
@@ -225,7 +226,7 @@ public class TemplateLoader {
         }
 
         // 默认使用基于表达式行条件计算器
-        String conditionType = conditions.length == 2 ? conditions[0] : "expression";
+        String conditionType = conditions.length == 2 ? conditions[0] : "match";
         String conditionParam = conditions.length == 2 ? conditions[1] : conditions[0];
 
         RdfFileRowConditionSpi rowCondition = ExtensionLoader

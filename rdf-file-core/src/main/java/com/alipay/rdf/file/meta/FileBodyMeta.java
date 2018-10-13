@@ -18,6 +18,8 @@ import com.alipay.rdf.file.spi.RdfFileRowConditionSpi;
 public class FileBodyMeta {
     /**body模板名*/
     private String                 name;
+    /**模板路径*/
+    private String                 templatePath;
     /**行条件计算器*/
     private RdfFileRowConditionSpi rowCondition;
     /**行条件计算器入参*/
@@ -55,6 +57,14 @@ public class FileBodyMeta {
 
     public void setColumns(List<FileColumnMeta> columns) {
         this.columns = columns;
+    }
+
+    public String getTemplatePath() {
+        return templatePath;
+    }
+
+    public void setTemplatePath(String templatePath) {
+        this.templatePath = templatePath;
     }
 
     public FileColumnMeta getColumn(String columName) {
