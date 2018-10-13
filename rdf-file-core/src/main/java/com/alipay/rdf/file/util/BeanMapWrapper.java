@@ -101,4 +101,9 @@ public class BeanMapWrapper {
     public Object getBean() {
         return bean;
     }
+
+    @Override
+    public String toString() {
+        return bean.toString();
+    }
 }
