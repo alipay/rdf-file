@@ -164,19 +164,6 @@ public class FileMeta {
         bodyColumns.add(bodyMeta);
     }
 
-    public FileColumnMeta getBodyColumn(String name) {
-        for (FileBodyMeta bodyMeta : bodyColumns) {
-            for (FileColumnMeta colMeta : bodyMeta.getColumns()) {
-                if (colMeta.getName().equals(name)) {
-                    return colMeta;
-                }
-            }
-        }
-
-        throw new RdfFileException("rdf-file#FileMeta.getBodyColumn(name=" + name + ") 有没有定义",
-            RdfErrorEnum.COLUMN_NOT_DEFINED);
-    }
-
     /**
      * 增加文件尾
      * 
