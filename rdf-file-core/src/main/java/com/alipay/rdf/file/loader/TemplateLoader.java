@@ -249,8 +249,10 @@ public class TemplateLoader {
             for (FileColumnMeta colMeta : bodyMeta.getColumns()) {
                 for (int j = i + 1; j < bodyColumns.size(); j++) {
                     FileBodyMeta compareBodyMeta = bodyColumns.get(j);
-                    FileColumnMeta compareColMeta = compareBodyMeta.getColumn(colMeta.getName());
-                    if (null != compareColMeta) {
+
+                    try {
+                        FileColumnMeta compareColMeta = compareBodyMeta
+                            .getColumn(colMeta.getName());
                         // 数据类型定义要一致
                         if (!(RdfFileUtil.equals(colMeta.getType().getName(),
                             compareColMeta.getType().getName())
@@ -261,6 +263,10 @@ public class TemplateLoader {
                                                        + colMeta.getName()
                                                        + "]数据类型在不通的body模板中定义不一致",
                                 RdfErrorEnum.COLUMN_TYPE_ERROR);
+                        }
+                    } catch (RdfFileException e) {
+                        if (!RdfErrorEnum.COLUMN_NOT_DEFINED.equals(e.getErrorEnum())) {
+                            throw e;
                         }
                     }
                 }
