@@ -2,6 +2,7 @@ package com.alipay.rdf.file.loader;
 
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
+import com.alipay.rdf.file.meta.FileBodyMeta;
 import com.alipay.rdf.file.meta.FileColumnMeta;
 import com.alipay.rdf.file.meta.FileMeta;
 import com.alipay.rdf.file.meta.SummaryPairMeta;
@@ -104,20 +105,25 @@ public class SummaryLoader {
             }
         }
 
-        FileColumnMeta bodyColMeta = fileMeta.getBodyColumn(columnKey);
+        for (FileBodyMeta bodyMeta : fileMeta.getBodyMetas()) {
+            for (FileColumnMeta colMeta : bodyMeta.getColumns()) {
+                if (colMeta.getName().equals(columnKey)) {
+                    //校验
+                    RdfFileColumnTypeSpi summaryType = ExtensionLoader
+                        .getExtensionLoader(RdfFileColumnTypeSpi.class)
+                        .getExtension(summaryColMeta.getType().getName());
+                    RdfFileColumnTypeSpi column = ExtensionLoader
+                        .getExtensionLoader(RdfFileColumnTypeSpi.class)
+                        .getExtension(colMeta.getType().getName());
 
-        //校验
-        RdfFileColumnTypeSpi summaryType = ExtensionLoader
-            .getExtensionLoader(RdfFileColumnTypeSpi.class)
-            .getExtension(summaryColMeta.getType().getName());
-        RdfFileColumnTypeSpi column = ExtensionLoader.getExtensionLoader(RdfFileColumnTypeSpi.class)
-            .getExtension(bodyColMeta.getType().getName());
-
-        if (!summaryType.getClass().getName().equals(column.getClass().getName())) {
-            throw new RdfFileException(
-                "rdf-file#SummaryPair定义的head=[" + summaryType.getClass().getName() + "]和Column=["
-                                       + column.getClass().getName() + "]字段类型不一致",
-                RdfErrorEnum.SUMMARY_DEFINED_ERROR);
+                    if (!summaryType.getClass().getName().equals(column.getClass().getName())) {
+                        throw new RdfFileException("rdf-file#SummaryPair定义的head=["
+                                                   + summaryType.getClass().getName() + "]和Column=["
+                                                   + column.getClass().getName() + "]字段类型不一致",
+                            RdfErrorEnum.SUMMARY_DEFINED_ERROR);
+                    }
+                }
+            }
         }
 
         return new SummaryPairMeta(summaryKey, columnKey, summaryColMeta, summaryDataType);
