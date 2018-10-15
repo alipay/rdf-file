@@ -35,14 +35,6 @@ public class MultiTemplateLoaderTest {
                 "utf-8");
             Assert.fail();
         } catch (RdfFileException e) {
-            Assert.assertEquals(RdfErrorEnum.COLUMN_NOT_DEFINED, e.getErrorEnum());
-        }
-
-        try {
-            TemplateLoader.load("/multiBodyTemplate/template/template2_summary_error2.json",
-                "utf-8");
-            Assert.fail();
-        } catch (RdfFileException e) {
             Assert.assertEquals(RdfErrorEnum.SUMMARY_DEFINED_ERROR, e.getErrorEnum());
         }
 
