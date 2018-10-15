@@ -21,11 +21,28 @@ public class TemplateLoaderTest {
         TemplateLoader.load("/multiBodyTemplate/template/template1.json", "utf-8");
 
         try {
+            TemplateLoader.load("/multiBodyTemplate/template/template2_error.json", "utf-8");
+            Assert.fail();
+        } catch (RdfFileException e) {
+            Assert.assertEquals(RdfErrorEnum.TEMPLATE_ERROR, e.getErrorEnum());
+        }
+
+        try {
             TemplateLoader.load("/multiBodyTemplate/template/template2_summary_error.json",
                 "utf-8");
             Assert.fail();
         } catch (RdfFileException e) {
             Assert.assertEquals(RdfErrorEnum.COLUMN_NOT_DEFINED, e.getErrorEnum());
         }
+
+        try {
+            TemplateLoader.load("/multiBodyTemplate/template/template2_summary_error2.json",
+                "utf-8");
+            Assert.fail();
+        } catch (RdfFileException e) {
+            Assert.assertEquals(RdfErrorEnum.SUMMARY_DEFINED_ERROR, e.getErrorEnum());
+        }
+
+        TemplateLoader.load("/multiBodyTemplate/template/template2_summary_ok.json", "utf-8");
     }
 }
