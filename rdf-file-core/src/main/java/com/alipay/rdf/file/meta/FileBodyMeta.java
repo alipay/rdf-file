@@ -74,8 +74,9 @@ public class FileBodyMeta {
             }
         }
 
-        throw new RdfFileException("rdf-file#FileMeta.FileBodyMeta  bodyTempldateName=[" + name
-                                   + "], columName=[" + columName + "] 有没有定义",
+        throw new RdfFileException("rdf-file#FileMeta.FileBodyMeta templatePath=[" + templatePath
+                                   + "]  bodyTempldateName=[" + name + "], columName=[" + columName
+                                   + "] 有没有定义",
             RdfErrorEnum.COLUMN_NOT_DEFINED);
     }
 }

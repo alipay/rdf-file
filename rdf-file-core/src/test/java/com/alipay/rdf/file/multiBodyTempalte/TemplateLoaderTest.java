@@ -1,7 +1,10 @@
 package com.alipay.rdf.file.multiBodyTempalte;
 
+import org.junit.Assert;
 import org.junit.Test;
 
+import com.alipay.rdf.file.exception.RdfErrorEnum;
+import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.loader.TemplateLoader;
 
 /**
@@ -16,5 +19,13 @@ public class TemplateLoaderTest {
     @Test
     public void testMult() {
         TemplateLoader.load("/multiBodyTemplate/template/template1.json", "utf-8");
+
+        try {
+            TemplateLoader.load("/multiBodyTemplate/template/template2_summary_error.json",
+                "utf-8");
+            Assert.fail();
+        } catch (RdfFileException e) {
+            Assert.assertEquals(RdfErrorEnum.COLUMN_NOT_DEFINED, e.getErrorEnum());
+        }
     }
 }

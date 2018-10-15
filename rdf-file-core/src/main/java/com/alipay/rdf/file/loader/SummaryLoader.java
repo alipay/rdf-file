@@ -106,23 +106,20 @@ public class SummaryLoader {
         }
 
         for (FileBodyMeta bodyMeta : fileMeta.getBodyMetas()) {
-            for (FileColumnMeta colMeta : bodyMeta.getColumns()) {
-                if (colMeta.getName().equals(columnKey)) {
-                    //校验
-                    RdfFileColumnTypeSpi summaryType = ExtensionLoader
-                        .getExtensionLoader(RdfFileColumnTypeSpi.class)
-                        .getExtension(summaryColMeta.getType().getName());
-                    RdfFileColumnTypeSpi column = ExtensionLoader
-                        .getExtensionLoader(RdfFileColumnTypeSpi.class)
-                        .getExtension(colMeta.getType().getName());
+            FileColumnMeta colMeta = bodyMeta.getColumn(columnKey);
+            //校验
+            RdfFileColumnTypeSpi summaryType = ExtensionLoader
+                .getExtensionLoader(RdfFileColumnTypeSpi.class)
+                .getExtension(summaryColMeta.getType().getName());
+            RdfFileColumnTypeSpi column = ExtensionLoader
+                .getExtensionLoader(RdfFileColumnTypeSpi.class)
+                .getExtension(colMeta.getType().getName());
 
-                    if (!summaryType.getClass().getName().equals(column.getClass().getName())) {
-                        throw new RdfFileException("rdf-file#SummaryPair定义的head=["
-                                                   + summaryType.getClass().getName() + "]和Column=["
-                                                   + column.getClass().getName() + "]字段类型不一致",
-                            RdfErrorEnum.SUMMARY_DEFINED_ERROR);
-                    }
-                }
+            if (!summaryType.getClass().getName().equals(column.getClass().getName())) {
+                throw new RdfFileException("rdf-file#SummaryPair定义的head=["
+                                           + summaryType.getClass().getName() + "]和Column=["
+                                           + column.getClass().getName() + "]字段类型不一致",
+                    RdfErrorEnum.SUMMARY_DEFINED_ERROR);
             }
         }
 
