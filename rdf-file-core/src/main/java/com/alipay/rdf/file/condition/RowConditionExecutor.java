@@ -26,7 +26,7 @@ public class RowConditionExecutor {
                                                       FileDataTypeEnum rowType, String line) {
         FileMeta fileMeta = TemplateLoader.load(config);
 
-        if (!fileMeta.isMultiBody()) {
+        if (!fileMeta.isMultiBody() || !FileDataTypeEnum.BODY.equals(rowType)) {
             return fileMeta.getColumns(rowType);
         }
 
@@ -46,7 +46,7 @@ public class RowConditionExecutor {
                                                     FileDataTypeEnum rowType) {
         FileMeta fileMeta = TemplateLoader.load(config);
 
-        if (!fileMeta.isMultiBody()) {
+        if (!fileMeta.isMultiBody() || !FileDataTypeEnum.BODY.equals(rowType)) {
             return fileMeta.getColumns(rowType);
         }
 
