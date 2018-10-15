@@ -105,8 +105,22 @@ public class SummaryLoader {
             }
         }
 
+        boolean exsitBodyColumn = false;
         for (FileBodyMeta bodyMeta : fileMeta.getBodyMetas()) {
-            FileColumnMeta colMeta = bodyMeta.getColumn(columnKey);
+            FileColumnMeta colMeta = null;
+            try {
+                colMeta = bodyMeta.getColumn(columnKey);
+            } catch (RdfFileException e) {
+                if (RdfErrorEnum.COLUMN_NOT_DEFINED.equals(e.getErrorEnum())
+                    && fileMeta.isMultiBody()) {
+                    continue;
+                }
+            }
+
+            if (null != colMeta) {
+                exsitBodyColumn = true;
+            }
+
             //校验
             RdfFileColumnTypeSpi summaryType = ExtensionLoader
                 .getExtensionLoader(RdfFileColumnTypeSpi.class)
@@ -121,7 +135,13 @@ public class SummaryLoader {
                                            + column.getClass().getName() + "]字段类型不一致",
                     RdfErrorEnum.SUMMARY_DEFINED_ERROR);
             }
+
         }
+
+        RdfFileUtil.assertTrue(exsitBodyColumn,
+            "rdf-file#SummaryPair body模板中么有定义 templatePath=[" + fileMeta.getTemplatePath()
+                                                + "],column=[" + columnKey + "]",
+            RdfErrorEnum.COLUMN_NOT_DEFINED);
 
         return new SummaryPairMeta(summaryKey, columnKey, summaryColMeta, summaryDataType);
     }

@@ -18,7 +18,7 @@
  			"condition":"match:bol=false|seq(0,4)=aaa|age=15",
  			"bodyColumns":[ 
 	     		"seq|流水号",
-	     		"amount|金额|BigDecimal",
+	     		"amount|金额|Integer",
 	     		"age|年龄|Integer",
 	     		"longN|长整型|Long",
 	     		"bol|布尔值|Boolean",

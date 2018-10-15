@@ -107,6 +107,12 @@ public class RdfFileUtil {
         }
     }
 
+    public static void assertTrue(boolean bol, String str2, RdfErrorEnum errorcode) {
+        if (!bol) {
+            throw new RdfFileException(str2, errorcode);
+        }
+    }
+
     public static String assertTrimNotBlank(String text) {
         if (null == text || 0 == text.trim().length()) {
             throw new RdfFileException("rdf-file#字符串不能为空", RdfErrorEnum.ILLEGAL_ARGUMENT);

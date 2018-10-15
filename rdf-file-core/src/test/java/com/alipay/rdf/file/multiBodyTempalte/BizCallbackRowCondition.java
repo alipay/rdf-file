@@ -28,7 +28,7 @@ public class BizCallbackRowCondition implements RdfFileRowConditionSpi {
 
     @Override
     public boolean deserialize(FileConfig fileConfig, String[] row) {
-        return false;
+        return row[7].equals("33") && row[8].equals("67");
     }
 
 }
