@@ -21,7 +21,9 @@ public class BizCallbackRowCondition implements RdfFileRowConditionSpi {
 
     @Override
     public boolean serialize(FileConfig config, BeanMapWrapper row) {
-        return false;
+        long longN = (Long) row.getProperty("longN");
+        int age = (Integer) row.getProperty("age");
+        return age + longN == 100;
     }
 
     @Override
