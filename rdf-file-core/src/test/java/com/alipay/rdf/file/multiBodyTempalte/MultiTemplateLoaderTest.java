@@ -14,7 +14,7 @@ import com.alipay.rdf.file.loader.TemplateLoader;
  * @author hongwei.quhw
  * @version $Id: TemplateLoaderTest.java, v 0.1 2018年10月11日 下午5:19:18 hongwei.quhw Exp $
  */
-public class TemplateLoaderTest {
+public class MultiTemplateLoaderTest {
 
     @Test
     public void testMult() {
