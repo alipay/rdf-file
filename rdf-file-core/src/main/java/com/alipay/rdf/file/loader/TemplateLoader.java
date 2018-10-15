@@ -144,7 +144,7 @@ public class TemplateLoader {
                     if (fileMeta.isMultiBody()) {
                         throw new RdfFileException(
                             "rdf-file#TemplateLoader 数据定义模板,不支持同时定义body和multiBodys属性",
-                            RdfErrorEnum.UNSUPPORTED_OPERATION);
+                            RdfErrorEnum.TEMPLATE_ERROR);
                     }
                     colIndex = 0;
                     // body
