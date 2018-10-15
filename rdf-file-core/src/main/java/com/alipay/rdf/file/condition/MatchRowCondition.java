@@ -33,6 +33,11 @@ public class MatchRowCondition implements RdfFileRowConditionSpi {
     public boolean serialize(FileConfig config, BeanMapWrapper row) {
         for (MatchHolder match : matches) {
             Object value = row.getProperty(match.name);
+
+            RdfFileUtil.assertNotNull(value,
+                "rdf-file#MatchRowCondition columName=[" + match.name + "]值为null不能进行条件计算",
+                RdfErrorEnum.ILLEGAL_ARGUMENT);
+
             if (match.subString) {
                 value = ((String) value).substring(match.start, match.end);
             }
@@ -40,11 +45,9 @@ public class MatchRowCondition implements RdfFileRowConditionSpi {
             if (value instanceof Comparable) {
                 if (((Comparable) value).compareTo((Comparable) match.objValue) != 0) {
                     return false;
-                } else {
-                    if (!RdfFileUtil.equals(value.toString(), match.objValue.toString())) {
-                        return false;
-                    }
                 }
+            } else if (!RdfFileUtil.equals(value.toString(), match.objValue.toString())) {
+                return false;
             }
         }
 
