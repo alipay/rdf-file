@@ -74,7 +74,7 @@ public class RowColumnHorizontalCodec {
                     "rdf-file#RowColumnHorizontalCodec.serialize serialize row=" + bmw.getBean()
                                            + ", fileConfig=" + fileConfig + ", 将数据反序列到对象出错."
                                            + e.getMessage(),
-                    e.getErrorEnum());
+                    e, e.getErrorEnum());
             } catch (Throwable e) {
                 throw new RdfFileException(
                     "rdf-file#RowColumnHorizontalCodec.serialize row=" + bmw.getBean()
