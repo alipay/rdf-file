@@ -71,6 +71,8 @@ public enum RdfErrorEnum {
 
                           TYPE_CONVERTION_ERROR("类型转换失败"),
 
+                          TYPE_GET_PROPERTY_ERROR("类型转换属性获取失败"),
+
                           FORMAT_ERROR("格式化错误");
 
     private final String desc;

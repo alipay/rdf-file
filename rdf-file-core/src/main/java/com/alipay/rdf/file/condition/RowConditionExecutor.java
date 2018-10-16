@@ -31,8 +31,15 @@ public class RowConditionExecutor {
         }
 
         for (FileBodyMeta bodyMeta : fileMeta.getBodyMetas()) {
-            if (bodyMeta.getRowCondition().deserialize(config, row)) {
-                return bodyMeta.getColumns();
+            try {
+                if (bodyMeta.getRowCondition().deserialize(config, row)) {
+                    return bodyMeta.getColumns();
+                }
+            } catch (RdfFileException e) {
+                if (e.getErrorEnum().equals(RdfErrorEnum.TYPE_GET_PROPERTY_ERROR)) {
+                    continue;
+                }
+                throw e;
             }
         }
 
@@ -51,8 +58,15 @@ public class RowConditionExecutor {
         }
 
         for (FileBodyMeta bodyMeta : fileMeta.getBodyMetas()) {
-            if (bodyMeta.getRowCondition().serialize(config, row)) {
-                return bodyMeta.getColumns();
+            try {
+                if (bodyMeta.getRowCondition().serialize(config, row)) {
+                    return bodyMeta.getColumns();
+                }
+            } catch (RdfFileException e) {
+                if (e.getErrorEnum().equals(RdfErrorEnum.TYPE_GET_PROPERTY_ERROR)) {
+                    continue;
+                }
+                throw e;
             }
         }
 
