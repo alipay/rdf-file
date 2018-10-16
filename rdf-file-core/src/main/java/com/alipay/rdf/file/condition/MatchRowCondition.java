@@ -159,4 +159,8 @@ public class MatchRowCondition implements RdfFileRowConditionSpi {
         /**字符串截取结束位置*/
         private int            end;
     }
+    
+    public static void main(String[] args) {
+        System.out.println("20180928119140004000000000232181".substring(13,17));
+    }
 }

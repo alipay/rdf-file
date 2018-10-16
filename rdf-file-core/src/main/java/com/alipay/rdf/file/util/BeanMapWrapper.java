@@ -67,8 +67,9 @@ public class BeanMapWrapper {
         } else {
             PropertyDescriptor pd = BEANINFO_CACHE.get(propertyName);
             if (null == pd || null == pd.getWriteMethod()) {
-                throw new RuntimeException(
-                    bean.getClass().getName() + "没有" + propertyName + "属性对应的写方法");
+                throw new RdfFileException(
+                    bean.getClass().getName() + "没有" + propertyName + "属性对应的写方法",
+                    RdfErrorEnum.TYPE_GET_PROPERTY_ERROR);
             }
 
             try {
@@ -86,8 +87,9 @@ public class BeanMapWrapper {
         } else {
             PropertyDescriptor pd = BEANINFO_CACHE.get(propertyName);
             if (null == pd || null == pd.getReadMethod()) {
-                throw new RuntimeException(
-                    bean.getClass().getName() + "没有" + propertyName + "属性对应的读方法");
+                throw new RdfFileException(
+                    bean.getClass().getName() + "没有" + propertyName + "属性对应的读方法",
+                    RdfErrorEnum.TYPE_GET_PROPERTY_ERROR);
             }
 
             try {
