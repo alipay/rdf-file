@@ -33,7 +33,7 @@
 https://segmentfault.com/a/1190000008578734
 
 ##Mac版本
-1.通过设置->用户与群组->新增sftpuser/sftpusers用户用户组
+1.通过设置->用户与群组->新增用户:sftpuser并设置密码,群组:sftpusers
 
 2.设置->共享->打开远程登录并允许sftpusers组的用户访问
 
