@@ -2,6 +2,7 @@ package com.alipay.rdf.file.storage;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ import com.alipay.rdf.file.operation.SftpOperationTypeEnums;
 import com.alipay.rdf.file.sftp.SftpTestUtil;
 import com.alipay.rdf.file.sftp.TestInitOperation;
 import com.alipay.rdf.file.util.RdfFileUtil;
+import com.alipay.rdf.file.sftp.TemporaryFolderUtil;
 
 /**
  * 测试用例
@@ -33,6 +35,8 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  * 注意owner和group还有权限
  */
 public class FileSftpStorageTest {
+
+    TemporaryFolderUtil temporaryFolderUtil = new TemporaryFolderUtil();
 
     StorageConfig storageConfig;
 
@@ -51,9 +55,9 @@ public class FileSftpStorageTest {
 
     String remoteCopyDst = "copydir/test_file_1_cp.txt";
 
-    String localTmpDir = "/Users/iminright-ali/";
-    String localDownloadDst = RdfFileUtil.combinePath(localTmpDir, "sftp/download_test.txt");
-    String localTmpFileName = RdfFileUtil.combinePath(localTmpDir, "sftp/localFile_1.txt");
+    String localTmpDir;
+    String localDownloadDst;
+    String localTmpFileName;
 
     String remoteUploadDir = "uploaddir";
     String remoteUploadFileName = "upload_test.txt";
@@ -68,6 +72,14 @@ public class FileSftpStorageTest {
     public void setup(){
         storageConfig = SftpTestUtil.getStorageConfig();
         fileStorage = FileFactory.createStorage(storageConfig);
+        try {
+            temporaryFolderUtil.create();
+        } catch (IOException e) {
+            throw new RuntimeException("获取临时目录异常", e);
+        }
+        localTmpDir = temporaryFolderUtil.getRoot().getName();
+        localDownloadDst = RdfFileUtil.combinePath(localTmpDir, "sftp/download_test.txt");
+        localTmpFileName = RdfFileUtil.combinePath(localTmpDir, "sftp/localFile_1.txt");
     }
 
     @Test
