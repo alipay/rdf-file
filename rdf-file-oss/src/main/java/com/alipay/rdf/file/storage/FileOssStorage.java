@@ -21,7 +21,6 @@ import com.alipay.rdf.file.spi.RdfFileSplitterSpi;
 import com.alipay.rdf.file.spi.RdfFileStorageSpi;
 import com.alipay.rdf.file.util.RdfFileLogUtil;
 import com.alipay.rdf.file.util.RdfFileUtil;
-import com.aliyun.oss.ClientConfiguration;
 import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSErrorCode;
