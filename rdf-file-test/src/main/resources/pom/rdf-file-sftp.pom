@@ -3,10 +3,10 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.alipay.rdf.file</groupId>
-	<artifactId>rdf-file-oss</artifactId>
+	<artifactId>rdf-file-sftp</artifactId>
 	<version>2.1.3</version>
-	<name>RDF FILE OSS</name>
-	<description>RDF FILE OSS</description>
+	<name>RDF FILE SFTP</name>
+	<description>RDF FILE SFTP</description>
 	<url>https://github.com/alipay/rdf-file</url>
 
 	<licenses>
