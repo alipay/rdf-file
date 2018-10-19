@@ -37,10 +37,17 @@
 				<artifactId>rdf-file-core</artifactId>
 				<version>${rdf.file.core.version}</version>
 			</dependency>
+
 			<dependency>
 				<groupId>com.alipay.rdf.file</groupId>
 				<artifactId>rdf-file-oss</artifactId>
 				<version>${rdf.file.oss.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.alipay.rdf.file</groupId>
+				<artifactId>rdf-file-sftp</artifactId>
+				<version>${rdf.file.sftp.version}</version>
 			</dependency>
 
 			<dependency>
@@ -98,10 +105,10 @@
 			<email>haofan.whf@alibaba-inc.com</email>
 		</developer>
 	</developers>
-	
+
 	<scm>
-        <connection>scm:git:git@github.com:alipay/rdf-file.git</connection>
-        <developerConnection>scm:git:ssh://github.com:alipay/rdf-file.git</developerConnection>
-        <url>https://github.com/alipay/rdf-file/tree/master</url>
-    </scm>
+		<connection>scm:git:git@github.com:alipay/rdf-file.git</connection>
+		<developerConnection>scm:git:ssh://github.com:alipay/rdf-file.git</developerConnection>
+		<url>https://github.com/alipay/rdf-file/tree/master</url>
+	</scm>
 </project>
