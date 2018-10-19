@@ -15,7 +15,7 @@
 .buildpath
 
 # sbteclipse plugin
-.target
+target/
 
 
 # idea file
@@ -23,5 +23,7 @@
 *.iml
 
 *_res.yaml
+
+
 
 

@@ -2,6 +2,7 @@ package com.alipay.rdf.file.storage;
 
 import com.alipay.rdf.file.model.FileDefaultConfig;
 import com.alipay.rdf.file.util.RdfFileUtil;
+import com.aliyun.oss.ClientConfiguration;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
@@ -30,16 +31,17 @@ public class OssConfig {
     /**追加上传的次数没有限制，文件大小上限为5GB*/
     private static final long  OSS_APPEND_SIZE_LIMIT             = 5 * 1024L * 1024L * 1024L;
 
-    private final String       bucketName;
-    private final String       endpoint;
-    private final String       accessKeyId;
-    private final String       accessKeySecret;
-    /** 
+    private final String              bucketName;
+    private final String              endpoint;
+    private final String              accessKeyId;
+    private final String              accessKeySecret;
+    private final ClientConfiguration clientConfiguration;
+    /**
      * 写文件时OSS本地文件根目录
      * <li>写文件时会先写在本地再上传到OSS
      * <li>OSS本地目录为：tempRoot + OSS路径
      */
-    private String             ossTempRoot;
+    private       String              ossTempRoot;
 
     private Long               ossBigFileSize;
 
@@ -47,10 +49,16 @@ public class OssConfig {
 
     public OssConfig(String bucketName, String endpoint, String accessKeyId,
                      String accessKeySecret) {
+        this(bucketName, endpoint, accessKeyId, accessKeySecret, null);
+    }
+
+    public OssConfig(String bucketName, String endpoint, String accessKeyId,
+                     String accessKeySecret, ClientConfiguration clientConfiguration) {
         this.bucketName = bucketName;
         this.endpoint = endpoint;
         this.accessKeyId = accessKeyId;
         this.accessKeySecret = accessKeySecret;
+        this.clientConfiguration = clientConfiguration;
     }
 
     public String getBucketName() {
@@ -123,6 +131,10 @@ public class OssConfig {
         this.ossAppendSizeLimit = ossAppendSizeLimit;
     }
 
+    public ClientConfiguration getClientConfiguration(){
+        return this.clientConfiguration;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -135,6 +147,7 @@ public class OssConfig {
                  + ((ossAppendSizeLimit == null) ? 0 : ossAppendSizeLimit.hashCode());
         result = prime * result + ((ossBigFileSize == null) ? 0 : ossBigFileSize.hashCode());
         result = prime * result + ((ossTempRoot == null) ? 0 : ossTempRoot.hashCode());
+        result = prime * result + ((clientConfiguration == null) ? 0 : clientConfiguration.hashCode());
         return result;
     }
 
@@ -181,6 +194,11 @@ public class OssConfig {
             if (other.ossTempRoot != null)
                 return false;
         } else if (!ossTempRoot.equals(other.ossTempRoot))
+            return false;
+        if (clientConfiguration == null) {
+            if (other.clientConfiguration != null)
+                return false;
+        } else if (!clientConfiguration.equals(other.clientConfiguration))
             return false;
         return true;
     }
