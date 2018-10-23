@@ -44,32 +44,40 @@ public class UploadOSSAfterWriteClose extends AbstractOssProcessor {
             .getParam(OssConfig.OSS_STORAGE_CONFIG_KEY);
         String localFilePath = RdfFileUtil.combinePath(ossConfig.getOssTempRoot(),
             config.getFilePath());
-        File localFile = new File(localFilePath);
 
-        if (RdfFileLogUtil.common.isInfo()) {
-            RdfFileLogUtil.common
-                .info("rdf-file#UploadOSSAfterWriteClose 构建的本地路径localFile=" + localFilePath);
+        try {
+            File localFile = new File(localFilePath);
+
+            if (RdfFileLogUtil.common.isInfo()) {
+                RdfFileLogUtil.common
+                    .info("rdf-file#UploadOSSAfterWriteClose 构建的本地路径localFile=" + localFilePath);
+            }
+
+            if (!localFile.exists()) {
+                throw new RdfFileException(
+                    "rdf-file#UploadOSSAfterWriteClose localFilePath=" + localFilePath + "不存在",
+                    RdfErrorEnum.NOT_EXSIT);
+            }
+
+            Boolean hasError = (Boolean) pc.getBizData("hasError");
+
+            if (null == hasError || !hasError) {
+                FileOssStorage fileStorage = (FileOssStorage) FileFactory
+                    .createStorage(pc.getFileConfig().getStorageConfig());
+
+                RdfProfiler.enter("rdf-file#upload oss start...");
+                if (config.isAppend()) {
+                    fileStorage.appendUploadFile(localFilePath, config.getFilePath());
+                } else {
+                    fileStorage.upload(localFilePath, config.getFilePath(), true);
+                }
+                RdfProfiler.release("rdf-file#upload oss end.");
+            }
+
+        } finally {
+            FileFactory.createStorage(new StorageConfig(FileCoreStorageContants.STORAGE_LOCAL))
+                .delete(localFilePath);
         }
-
-        if (!localFile.exists()) {
-            throw new RdfFileException(
-                "rdf-file#UploadOSSAfterWriteClose localFilePath=" + localFilePath + "不存在",
-                RdfErrorEnum.NOT_EXSIT);
-        }
-
-        FileOssStorage fileStorage = (FileOssStorage) FileFactory
-            .createStorage(pc.getFileConfig().getStorageConfig());
-
-        RdfProfiler.enter("rdf-file#upload oss start...");
-        if (config.isAppend()) {
-            fileStorage.appendUploadFile(localFilePath, config.getFilePath());
-        } else {
-            fileStorage.upload(localFilePath, config.getFilePath(), true);
-        }
-        RdfProfiler.release("rdf-file#upload oss end.");
-
-        FileFactory.createStorage(new StorageConfig(FileCoreStorageContants.STORAGE_LOCAL))
-            .delete(localFilePath);
     }
 
     @Override
