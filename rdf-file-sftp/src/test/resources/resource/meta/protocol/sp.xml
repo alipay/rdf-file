@@ -1,0 +1,23 @@
+<protocol name="sp">
+	<head>
+		<row>
+			<column>
+				<output>${column.value()}</output>
+			</column>
+		</row>
+	</head>
+	<body>
+		<row>
+			<column>
+				<output>${column.value()}</output>
+			</column>
+		</row>
+	</body>
+	<tail>
+		<row>
+			<column>
+				<output>${column.value()}</output>
+			</column>
+		</row>
+	</tail>
+</protocol>

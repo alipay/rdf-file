@@ -6,6 +6,7 @@ package com.alipay.rdf.file.operation;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -13,6 +14,7 @@ import java.util.Vector;
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.interfaces.FileSftpStorageConstants;
+import com.alipay.rdf.file.storage.SftpInputStream;
 import com.alipay.rdf.file.util.RdfFileLogUtil;
 import com.alipay.rdf.file.util.RdfFileUtil;
 import com.alipay.rdf.file.util.SFTPHelper;
@@ -445,6 +447,41 @@ public class SftpOperationFactory {
         }
     };
 
+    /**
+     * sftp getInputStream
+     *
+     * SFTPUserInfo
+     *   SFTP用户信息
+     * SftpOperationTypeEnums.GET_INPUT_STREAM
+     * SftpOperationParamEnums.TARGET_FILE
+     */
+    private static final AbstractSftpOperationTemplate GET_INPUT_STREAM_OPERATION
+            = new AbstractSftpOperationTemplate<InputStream>() {
+        @Override
+        protected void initOperationType() {
+            this.setOperationType(SftpOperationTypeEnums.GET_INPUT_STREAM.toString());
+        }
+
+        @Override
+        protected SftpOperationResponse<InputStream> doBusiness(SFTPUserInfo user
+                , Map<String, String> params) throws Exception{
+            SftpOperationResponse<InputStream> response = new SftpOperationResponse<InputStream>();
+            ChannelSftp sftp = SftpThreadContext.getChannelSftp();
+            String targetFile = params.get(SftpOperationParamEnums.TARGET_FILE.toString());
+            InputStream inputStream = sftp.get(targetFile);
+            SftpInputStream sftpInputStream = new SftpInputStream(inputStream, sftp);
+            response.setSuccess(true);
+            response.setData(sftpInputStream);
+            return response;
+        }
+
+        @Override
+        protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<String, String> params) {
+            return params.containsKey(SftpOperationParamEnums.TARGET_FILE.toString())
+                    && params.containsKey(SftpOperationParamEnums.DO_NOT_CLOSE_CONNECTION.toString());
+        }
+    };
+
     static {
         operationMap.put(SftpOperationTypeEnums.COPY.toString(), COPY_OPERATION);
         operationMap.put(SftpOperationTypeEnums.CREATE.toString(), CREATE_OPERATION);
@@ -455,6 +492,7 @@ public class SftpOperationFactory {
         operationMap.put(SftpOperationTypeEnums.FILE_EXISTS.toString(), FILE_EXISTS_OPERATION);
         operationMap.put(SftpOperationTypeEnums.DEL.toString(), DEL_OPERATION);
         operationMap.put(SftpOperationTypeEnums.HEALTH_CHECK.toString(), HEALTH_CHECK_OPERATION);
+        operationMap.put(SftpOperationTypeEnums.GET_INPUT_STREAM.toString(), GET_INPUT_STREAM_OPERATION);
     }
 
 }
