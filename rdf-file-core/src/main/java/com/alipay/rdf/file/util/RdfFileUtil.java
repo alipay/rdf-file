@@ -107,6 +107,12 @@ public class RdfFileUtil {
         }
     }
 
+    public static void assertTrue(boolean bol, String str2, RdfErrorEnum errorcode) {
+        if (!bol) {
+            throw new RdfFileException(str2, errorcode);
+        }
+    }
+
     public static String assertTrimNotBlank(String text) {
         if (null == text || 0 == text.trim().length()) {
             throw new RdfFileException("rdf-file#字符串不能为空", RdfErrorEnum.ILLEGAL_ARGUMENT);
@@ -154,8 +160,9 @@ public class RdfFileUtil {
     }
 
     public static String safeReadFully(InputStream is, String encoding) {
+        InputStreamReader rdr = null;
         try {
-            InputStreamReader rdr = new InputStreamReader(is, encoding);
+            rdr = new InputStreamReader(is, encoding);
 
             final char[] buffer = new char[BUF_SIZE];
             int bufferLength = 0;
@@ -172,6 +179,16 @@ public class RdfFileUtil {
             throw new RdfFileException(e, RdfErrorEnum.UNKOWN);
         } catch (IOException e) {
             throw new RdfFileException(e, RdfErrorEnum.UNKOWN);
+        } finally {
+            try {
+                if (null != rdr) {
+                    rdr.close();
+                }
+            } catch (IOException e) {
+                if (RdfFileLogUtil.common.isWarn()) {
+                    RdfFileLogUtil.common.warn("TemplateLoader reader.close 错误", e);
+                }
+            }
         }
     }
 

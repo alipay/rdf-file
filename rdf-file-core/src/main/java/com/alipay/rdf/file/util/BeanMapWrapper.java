@@ -3,6 +3,7 @@ package com.alipay.rdf.file.util;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,9 +17,10 @@ import com.alipay.rdf.file.exception.RdfFileException;
  * @version $Id: BeanMapWrapper.java, v 0.1 2017年4月7日 下午2:56:25 hongwei.quhw Exp $
  */
 public class BeanMapWrapper {
-    private Map<String, PropertyDescriptor> BEANINFO_CACHE = new ConcurrentHashMap<String, PropertyDescriptor>();
-    private final Object                    bean;
-    private boolean                         isMap;
+    private static final Map<String, Map<String, PropertyDescriptor>> CLASSINFO_CACHE = new ConcurrentHashMap<String, Map<String, PropertyDescriptor>>();
+    private Map<String, PropertyDescriptor>                           beanInfoCache   = null;
+    private final Object                                              bean;
+    private boolean                                                   isMap;
 
     public BeanMapWrapper(Object bean) {
         this.bean = bean;
@@ -44,11 +46,20 @@ public class BeanMapWrapper {
 
     private void initBeanInfo(Class<?> clazz) {
         try {
-            BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
-            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-            for (PropertyDescriptor pd : propertyDescriptors) {
-                BEANINFO_CACHE.put(pd.getName(), pd);
+
+            Map<String, PropertyDescriptor> beanInfoCache = CLASSINFO_CACHE.get(clazz.getName());
+
+            if (null == beanInfoCache) {
+                beanInfoCache = new HashMap<String, PropertyDescriptor>();
+                BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
+                PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+                for (PropertyDescriptor pd : propertyDescriptors) {
+                    beanInfoCache.put(pd.getName(), pd);
+                }
+                CLASSINFO_CACHE.put(clazz.getName(), beanInfoCache);
             }
+
+            this.beanInfoCache = beanInfoCache;
         } catch (Exception e) {
             throw new RdfFileException(e, RdfErrorEnum.INSTANTIATION_ERROR);
         }
@@ -65,10 +76,11 @@ public class BeanMapWrapper {
         if (isMap) {
             ((Map) bean).put(propertyName, value);
         } else {
-            PropertyDescriptor pd = BEANINFO_CACHE.get(propertyName);
+            PropertyDescriptor pd = beanInfoCache.get(propertyName);
             if (null == pd || null == pd.getWriteMethod()) {
-                throw new RuntimeException(
-                    bean.getClass().getName() + "没有" + propertyName + "属性对应的写方法");
+                throw new RdfFileException(
+                    bean.getClass().getName() + "没有" + propertyName + "属性对应的写方法",
+                    RdfErrorEnum.TYPE_GET_PROPERTY_ERROR);
             }
 
             try {
@@ -84,10 +96,11 @@ public class BeanMapWrapper {
         if (isMap) {
             return ((Map) bean).get(propertyName);
         } else {
-            PropertyDescriptor pd = BEANINFO_CACHE.get(propertyName);
+            PropertyDescriptor pd = beanInfoCache.get(propertyName);
             if (null == pd || null == pd.getReadMethod()) {
-                throw new RuntimeException(
-                    bean.getClass().getName() + "没有" + propertyName + "属性对应的读方法");
+                throw new RdfFileException(
+                    bean.getClass().getName() + "没有" + propertyName + "属性对应的读方法",
+                    RdfErrorEnum.TYPE_GET_PROPERTY_ERROR);
             }
 
             try {
@@ -100,5 +113,10 @@ public class BeanMapWrapper {
 
     public Object getBean() {
         return bean;
+    }
+
+    @Override
+    public String toString() {
+        return bean.toString();
     }
 }

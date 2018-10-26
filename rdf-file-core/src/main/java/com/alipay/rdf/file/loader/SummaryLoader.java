@@ -2,6 +2,7 @@ package com.alipay.rdf.file.loader;
 
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
+import com.alipay.rdf.file.meta.FileBodyMeta;
 import com.alipay.rdf.file.meta.FileColumnMeta;
 import com.alipay.rdf.file.meta.FileMeta;
 import com.alipay.rdf.file.meta.SummaryPairMeta;
@@ -104,21 +105,43 @@ public class SummaryLoader {
             }
         }
 
-        FileColumnMeta bodyColMeta = fileMeta.getBodyColumn(columnKey);
+        boolean exsitBodyColumn = false;
+        for (FileBodyMeta bodyMeta : fileMeta.getBodyMetas()) {
+            FileColumnMeta colMeta = null;
+            try {
+                colMeta = bodyMeta.getColumn(columnKey);
+            } catch (RdfFileException e) {
+                if (RdfErrorEnum.COLUMN_NOT_DEFINED.equals(e.getErrorEnum())
+                    && fileMeta.isMultiBody()) {
+                    continue;
+                }
+            }
 
-        //校验
-        RdfFileColumnTypeSpi summaryType = ExtensionLoader
-            .getExtensionLoader(RdfFileColumnTypeSpi.class)
-            .getExtension(summaryColMeta.getType().getName());
-        RdfFileColumnTypeSpi column = ExtensionLoader.getExtensionLoader(RdfFileColumnTypeSpi.class)
-            .getExtension(bodyColMeta.getType().getName());
+            if (null != colMeta) {
+                exsitBodyColumn = true;
+            }
 
-        if (!summaryType.getClass().getName().equals(column.getClass().getName())) {
-            throw new RdfFileException(
-                "rdf-file#SummaryPair定义的head=[" + summaryType.getClass().getName() + "]和Column=["
-                                       + column.getClass().getName() + "]字段类型不一致",
-                RdfErrorEnum.SUMMARY_DEFINED_ERROR);
+            //校验
+            RdfFileColumnTypeSpi summaryType = ExtensionLoader
+                .getExtensionLoader(RdfFileColumnTypeSpi.class)
+                .getExtension(summaryColMeta.getType().getName());
+            RdfFileColumnTypeSpi column = ExtensionLoader
+                .getExtensionLoader(RdfFileColumnTypeSpi.class)
+                .getExtension(colMeta.getType().getName());
+
+            if (!summaryType.getClass().getName().equals(column.getClass().getName())) {
+                throw new RdfFileException("rdf-file#SummaryPair定义的head=["
+                                           + summaryType.getClass().getName() + "]和Column=["
+                                           + column.getClass().getName() + "]字段类型不一致",
+                    RdfErrorEnum.SUMMARY_DEFINED_ERROR);
+            }
+
         }
+
+        RdfFileUtil.assertTrue(exsitBodyColumn,
+            "rdf-file#SummaryPair body模板中么有定义 templatePath=[" + fileMeta.getTemplatePath()
+                                                + "],column=[" + columnKey + "]",
+            RdfErrorEnum.COLUMN_NOT_DEFINED);
 
         return new SummaryPairMeta(summaryKey, columnKey, summaryColMeta, summaryDataType);
     }

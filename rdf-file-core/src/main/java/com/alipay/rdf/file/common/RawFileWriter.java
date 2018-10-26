@@ -57,16 +57,20 @@ public class RawFileWriter implements RdfFileWriterSpi {
 
     @Override
     public void close() {
+        close(true);
+    }
+
+    @Override
+    public void close(boolean hasError) {
         if (null == writer) {
             return;
         }
 
         try {
-            writer.close();
+            writer.close(hasError);
         } finally {
             writer = null;
         }
-
     }
 
     @Override
