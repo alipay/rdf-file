@@ -202,8 +202,8 @@ public class FileSftpStorageTest {
         Assert.assertTrue(list.size() == 1);
         System.out.println("upload[override] ok.");
 
-        System.out.println("rename begin.");
-        fileStorage.rename(buildPath(remoteUploadDst), buildPath(remoteRenameDst));
+        System.out.println("rename[targetfile exists] begin.");
+        fileStorage.rename(buildPath(testFile3), buildPath(remoteRenameDst));
         filePathFilter = new FilePathFilter() {
             @Override
             public boolean accept(String file) {
@@ -212,7 +212,7 @@ public class FileSftpStorageTest {
         };
         list = fileStorage.listFiles(buildPath(remoteRenameDir), filePathFilter);
         Assert.assertTrue(list.size() == 1);
-        System.out.println("rename ok.");
+        System.out.println("rename[targetfile exists] ok.");
     }
 
     private String buildPath(String relativePath){
