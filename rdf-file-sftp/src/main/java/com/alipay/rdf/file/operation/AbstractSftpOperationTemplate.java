@@ -73,11 +73,25 @@ public abstract class AbstractSftpOperationTemplate<T> {
             response.setSuccess(false);
             response.setError(e);
         } finally {
-            closeConnection(sftp, user);
+            if(needCloseConnection(params)){
+                closeConnection(sftp, user);
+            }
         }
         RdfFileLogUtil.common.info("rdf-file#sftpOperation."
                 + this.operationType + ".response,result=" + response + ",params=" + params);
         return response;
+    }
+
+    /**
+     * 是否由模版关闭连接
+     * @param params
+     * @return
+     */
+    private boolean needCloseConnection(Map<String, String> params){
+        if(params == null){
+            return true;
+        }
+        return !params.containsKey(SftpOperationParamEnums.DO_NOT_CLOSE_CONNECTION.toString());
     }
 
     /**
