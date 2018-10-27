@@ -20,5 +20,6 @@ public enum SftpOperationTypeEnums {
     DEL,
     CREATE,
     HEALTH_CHECK,
+    GET_INPUT_STREAM,
 
 }

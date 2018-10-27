@@ -1,0 +1,25 @@
+<protocol name="fund_index" rowsplit="rowSplitByFixedlLength">
+	<head>
+		<row columnLayout="vertical">
+			<column>
+				<output>${column.value()}</output>
+			</column>
+		</row>
+		<row output="${totalCount}" type="Integer|[3,0]" />
+	</head>
+	<body>
+		<!-- 只有一个字段，定义成vertical 是为了避免调用行分割器， 因为fund_index body数据不是定长数据 -->
+		<row columnLayout="vertical">
+			<column>
+				<output>${column.value()}</output>
+			</column>
+		</row>
+	</body>
+	<tail>
+		<row>
+			<column>
+				<output>${column.value()}</output>
+			</column>
+		</row>
+	</tail>
+</protocol>

@@ -20,15 +20,32 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  */
 public class SftpTestUtil {
 
+    private static final Properties pp;
 
-    public static StorageConfig getStorageConfig() {
+    static{
         InputStream is = ResourceLoader.getInputStream("classpath:sftpconfig.properties");
-        Properties pp = new Properties();
+        pp = new Properties();
         try {
             pp.load(is);
         } catch (IOException e) {
             throw new RuntimeException("获取sftpconfig.properties文件失败", e);
         }
+    }
+
+    public static String getHomeDir(){
+        String homedir = pp.getProperty("homedir");
+        if(RdfFileUtil.isBlank(homedir)){
+            throw new RuntimeException("获取homedir失败");
+        }
+        return homedir;
+    }
+
+    public static String combineHomeDir(String relativePath){
+        return RdfFileUtil.combinePath(getHomeDir(), relativePath);
+    }
+
+
+    public static StorageConfig getStorageConfig() {
 
         String host = pp.getProperty("host");
         String password = pp.getProperty("password");
