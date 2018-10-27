@@ -1,0 +1,26 @@
+<protocol name="fund" rowsplit="rowSplitByFixedlLength">
+	<head>
+		<row columnLayout="vertical">
+			<column>
+				<output>${column.value()}</output>
+			</column>
+		</row>
+		<row output="${bodycolumn.count()}" type="Integer|[3,0]" />
+		<row output="${bodycolumn.vertical(name)}" />
+		<row output="${totalCount}" type="Integer|[8,0]" />
+	</head>
+	<body>
+		<row>
+			<column>
+				<output>${column.value()}</output>
+			</column>
+		</row>
+	</body>
+	<tail>
+		<row>
+			<column>
+				<output>${column.value()}</output>
+			</column>
+		</row>
+	</tail>
+</protocol>
