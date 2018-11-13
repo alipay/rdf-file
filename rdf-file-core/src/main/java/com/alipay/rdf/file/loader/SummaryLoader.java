@@ -5,6 +5,7 @@ import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.meta.FileBodyMeta;
 import com.alipay.rdf.file.meta.FileColumnMeta;
 import com.alipay.rdf.file.meta.FileMeta;
+import com.alipay.rdf.file.meta.StatisticPairMeta;
 import com.alipay.rdf.file.meta.SummaryPairMeta;
 import com.alipay.rdf.file.model.FileDataTypeEnum;
 import com.alipay.rdf.file.model.Summary;
@@ -58,7 +59,8 @@ public class SummaryLoader {
         return summary;
     }
 
-    public static SummaryPairMeta parseMeta(FileMeta fileMeta, String summaryColumnPair) {
+    public static SummaryPairMeta parseSummaryPairMeta(FileMeta fileMeta,
+                                                       String summaryColumnPair) {
         String[] pair = summaryColumnPair.split("\\|");
         if (2 != pair.length) {
             throw new RdfFileException(
@@ -145,4 +147,94 @@ public class SummaryLoader {
 
         return new SummaryPairMeta(summaryKey, columnKey, summaryColMeta, summaryDataType);
     }
+
+    public static StatisticPairMeta parseStatisticPairMeta(FileMeta fileMeta,
+                                                           String statisticColumnPair) {
+        String[] pair = statisticColumnPair.split("\\|");
+        if (pair.length != 2 && pair.length != 3) {
+            throw new RdfFileException("statisticColumnPair=" + statisticColumnPair
+                                       + ",配置错误 格式如:\"headKey|columnKey\"  或者 \"headKey|columnKey|condition\"",
+                RdfErrorEnum.STATISTIC_DEFINED_ERROR);
+        }
+
+        String statisticKey = pair[0];
+        String columnKey = pair[1];
+        String condition = pair.length == 3 ? pair[3] : null;
+
+        FileColumnMeta statisticColMeta;
+        FileDataTypeEnum statisticDataType;
+        try {
+            statisticColMeta = fileMeta.getHeadColumn(statisticKey);
+            statisticDataType = FileDataTypeEnum.HEAD;
+
+            try {
+                fileMeta.getTailColumn(statisticKey);
+                throw new RdfFileException(
+                    "rdf-file#SummaryLoader.parseStatisticPairMeta statisticKey=" + statisticKey
+                                           + "在head和tail中重复定义了",
+                    RdfErrorEnum.DUPLICATE_DEFINED);
+            } catch (RdfFileException ex) {
+                if (!RdfErrorEnum.COLUMN_NOT_DEFINED.equals(ex.getErrorEnum())) {
+                    throw ex;
+                }
+            }
+
+        } catch (RdfFileException e) {
+            if (RdfErrorEnum.COLUMN_NOT_DEFINED.equals(e.getErrorEnum())) {
+                try {
+                    statisticColMeta = fileMeta.getTailColumn(statisticKey);
+                    statisticDataType = FileDataTypeEnum.TAIL;
+                } catch (RdfFileException ex) {
+                    if (RdfErrorEnum.COLUMN_NOT_DEFINED.equals(ex.getErrorEnum())) {
+                        throw new RdfFileException(
+                            "rdf-file#SummaryLoader.parseStatisticPairMeta statisticKey="
+                                                   + statisticKey + ", head or tail 没有对应字段定义",
+                            RdfErrorEnum.SUMMARY_DEFINED_ERROR);
+                    } else {
+                        throw e;
+                    }
+                }
+            } else {
+                throw e;
+            }
+        }
+
+        FileColumnMeta colMetaHolder = null;
+        FileBodyMeta bodyMetaHolder = null;
+        for (FileBodyMeta bodyMeta : fileMeta.getBodyMetas()) {
+            FileColumnMeta columnMeta = null;
+            try {
+                columnMeta = bodyMeta.getColumn(columnKey);
+            } catch (RdfFileException e) {
+                if (RdfErrorEnum.COLUMN_NOT_DEFINED.equals(e.getErrorEnum())
+                    && fileMeta.isMultiBody()) {
+                    continue;
+                }
+            }
+
+            if (null != columnMeta) {
+                if (null != colMetaHolder && !columnMeta.getType().getClass().getClass().getName()
+                    .equals(colMetaHolder.getType().getClass().getName())) {
+                    throw new RdfFileException("rdf-file#parseStatisticPairMeta templatePaht=["
+                                               + fileMeta.getTemplatePath() + "] 请检查配置的columName=["
+                                               + columnKey + "] 存在不一致的数据类型",
+                        RdfErrorEnum.TEMPLATE_ERROR);
+                }
+            }
+            colMetaHolder = columnMeta;
+            bodyMetaHolder = bodyMeta;
+        }
+
+        StatisticPairMeta statisticPairMeta = new StatisticPairMeta(statisticKey, columnKey,
+            colMetaHolder, statisticDataType);
+
+        if (RdfFileUtil.isBlank(condition)) {
+            return statisticPairMeta;
+        }
+        
+        
+
+        return null;
+    }
+
 }

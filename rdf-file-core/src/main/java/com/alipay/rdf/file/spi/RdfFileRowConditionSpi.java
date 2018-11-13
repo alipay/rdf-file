@@ -1,8 +1,8 @@
 package com.alipay.rdf.file.spi;
 
 import com.alipay.rdf.file.init.RdfInit;
-import com.alipay.rdf.file.meta.FileBodyMeta;
 import com.alipay.rdf.file.model.FileConfig;
+import com.alipay.rdf.file.model.RowCondition;
 import com.alipay.rdf.file.util.BeanMapWrapper;
 
 /**
@@ -13,7 +13,7 @@ import com.alipay.rdf.file.util.BeanMapWrapper;
  * @author hongwei.quhw
  * @version $Id: RdfFileConditionSpi.java, v 0.1 2018年10月11日 下午8:38:11 hongwei.quhw Exp $
  */
-public interface RdfFileRowConditionSpi extends RdfInit<FileBodyMeta> {
+public interface RdfFileRowConditionSpi extends RdfInit<RowCondition> {
 
     /**
      * 写入文件是条件决策

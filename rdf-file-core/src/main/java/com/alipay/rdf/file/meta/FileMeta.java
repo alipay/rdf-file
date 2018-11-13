@@ -229,6 +229,20 @@ public class FileMeta {
         return this.bodyColumns;
     }
 
+    public FileBodyMeta getBodyMeta(String bodyTemplateName) {
+        if (multiBody) {
+            for (FileBodyMeta bodyMeta : bodyColumns) {
+                if (bodyMeta.getName().equals(bodyTemplateName)) {
+                    return bodyMeta;
+                }
+            }
+        } else {
+            return bodyColumns.get(0);
+        }
+
+        return null;
+    }
+
     /**
      * Getter method for property <tt>tailColumns</tt>.
      * 

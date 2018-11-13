@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.alibaba.fastjson.JSON;
+import com.alipay.rdf.file.condition.RowConditionType;
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.interfaces.RowValidator;
@@ -19,7 +20,7 @@ import com.alipay.rdf.file.meta.TemplateConfig;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.FileDataTypeEnum;
 import com.alipay.rdf.file.model.FileDefaultConfig;
-import com.alipay.rdf.file.spi.RdfFileRowConditionSpi;
+import com.alipay.rdf.file.model.RowCondition;
 import com.alipay.rdf.file.util.RdfFileUtil;
 
 /**
@@ -118,6 +119,9 @@ public class TemplateLoader {
                 for (MultiBodyConfig bodyConfig : templateConfig.getMultiBodys()) {
                     // body
                     FileBodyMeta bodyMeta = new FileBodyMeta();
+                    RdfFileUtil.assertNotBlank(
+                        bodyConfig.getName(), "rdf-file#multiTempalte config templatePath="
+                                              + templatePath + ", bodyConfig name is blank");
                     bodyMeta.setName(bodyConfig.getName());
                     bodyMeta.setTemplatePath(templatePath);
                     colIndex = 0;
@@ -125,11 +129,16 @@ public class TemplateLoader {
                         bodyMeta.getColumns()
                             .add(parseFileColumn(templatePath, body, colIndex++, fileMeta));
                     }
+                    fileMeta.addBodyColumn(bodyMeta);
 
                     // 解析行条件
-                    parseRowConditon(bodyMeta, bodyConfig.getCondition(), templatePath);
-
-                    fileMeta.addBodyColumn(bodyMeta);
+                    RdfFileUtil.assertNotBlank(bodyConfig.getCondition(),
+                        "rdf-file#TemplateLoader 多模板配置 path=" + templatePath + " bodyTempateName="
+                                                                          + bodyMeta.getName()
+                                                                          + " 没有配置condition");
+                    RowCondition rowCondition = new RowCondition(fileMeta, bodyConfig.getName(),
+                        bodyConfig.getCondition(), RowConditionType.MULTI_BODY_TEMPLATE);
+                    bodyMeta.setRowCondition(RowConditionLoader.loadRowCondition(rowCondition));
                 }
             }
 
@@ -158,7 +167,8 @@ public class TemplateLoader {
 
             //解析汇总字段
             for (String summaryColumnPair : templateConfig.getSummaryColumnPairs()) {
-                fileMeta.addSummaryColumnPair(SummaryLoader.parseMeta(fileMeta, summaryColumnPair));
+                fileMeta.addSummaryColumnPair(
+                    SummaryLoader.parseSummaryPairMeta(fileMeta, summaryColumnPair));
             }
 
             //解析协议
@@ -189,35 +199,11 @@ public class TemplateLoader {
         }
     }
 
-    private static void parseRowConditon(FileBodyMeta bodyMeta, String conditionConfig,
-                                         String templatePath) {
-        RdfFileUtil.assertNotBlank(conditionConfig,
-            "rdf-file#TemplateLoader 多模板配置 path=" + templatePath + " bodyTempateName="
-                                                    + bodyMeta.getName() + " 没有配置condition");
+    /**
+     * 解析统计字段配置
+     */
+    private static void parseStatisticPair(FileMeta fileMeta, String config) {
 
-        String[] conditions = conditionConfig.split(":");
-        if (conditions.length > 2) {
-            throw new RdfFileException(
-                "rdf-file#TemplateLoader 多模板配置 path=" + templatePath + " bodyTempateName="
-                                       + bodyMeta.getName() + " condition配置格式错误",
-                RdfErrorEnum.COLUMN_TYPE_ERROR);
-        }
-
-        // 默认使用基于表达式行条件计算器
-        String conditionType = conditions.length == 2 ? conditions[0] : "match";
-        String conditionParam = conditions.length == 2 ? conditions[1] : conditions[0];
-
-        RdfFileRowConditionSpi rowCondition = ExtensionLoader
-            .getExtensionLoader(RdfFileRowConditionSpi.class).getNewExtension(conditionType);
-        RdfFileUtil.assertNotNull(rowCondition,
-            "rdf-file#TemplateLoader 多模板配置 path=" + templatePath + " bodyTempateName="
-                                                + bodyMeta.getName() + " conditionType="
-                                                + conditionType + "没有对应实现类");
-
-        bodyMeta.setRowCondition(rowCondition);
-        bodyMeta.setRowConditionParam(conditionParam);
-
-        rowCondition.init(bodyMeta);
     }
 
     private static void parseStartWithSplit(FileMeta fileMeta, String startSplit) {
