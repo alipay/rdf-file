@@ -17,25 +17,27 @@ public class TemplateConfig {
     /** 文件编码*/
     private String                fileEncoding;
     /** 字段分割*/
-    private String                columnSplit        = "|";
+    private String                columnSplit          = "|";
     /** 换行符*/
-    private String                lineBreak          = "\r\n";
+    private String                lineBreak            = "\r\n";
     /** 文件以分隔符开始   head|body|tail*/
     private String                startWithSplit;
     /** 文件以分隔符结束   head|body|tail*/
     private String                endWithSplit;
     /** 头信息定义*/
-    private List<String>          head               = new ArrayList<String>();
+    private List<String>          head                 = new ArrayList<String>();
     /** 文件体信息定义*/
-    private List<String>          body               = new ArrayList<String>();
+    private List<String>          body                 = new ArrayList<String>();
     /** 文件体支持多模板*/
-    private List<MultiBodyConfig> multiBodys         = new ArrayList<MultiBodyConfig>();
+    private List<MultiBodyConfig> multiBodys           = new ArrayList<MultiBodyConfig>();
     /** 文件尾部信息定义*/
-    private List<String>          tail               = new ArrayList<String>();
+    private List<String>          tail                 = new ArrayList<String>();
     /** 配置汇总字段*/
-    private List<String>          summaryColumnPairs = new ArrayList<String>();
+    private List<String>          summaryColumnPairs   = new ArrayList<String>();
+    /**配置统计字段*/
+    private List<String>          statisticColumnPairs = new ArrayList<String>();
     /** 行校验器*/
-    private List<String>          rowValidators      = new ArrayList<String>();
+    private List<String>          rowValidators        = new ArrayList<String>();
 
     public String getProtocol() {
         return protocol;
@@ -132,4 +134,13 @@ public class TemplateConfig {
     public void setMultiBodys(List<MultiBodyConfig> multiBodys) {
         this.multiBodys = multiBodys;
     }
+
+    public List<String> getStatisticColumnPairs() {
+        return statisticColumnPairs;
+    }
+
+    public void setStatisticColumnPairs(List<String> statisticColumnPairs) {
+        this.statisticColumnPairs = statisticColumnPairs;
+    }
+
 }

@@ -17,13 +17,11 @@ import com.alipay.rdf.file.spi.RdfFileRowConditionSpi;
  */
 public class FileBodyMeta {
     /**body模板名*/
-    private String                 name;
+    private String                 name    = "singleBody";
     /**模板路径*/
     private String                 templatePath;
     /**行条件计算器*/
     private RdfFileRowConditionSpi rowCondition;
-    /**行条件计算器入参*/
-    private String                 rowConditionParam;
     /**定义的body字段*/
     private List<FileColumnMeta>   columns = new ArrayList<FileColumnMeta>();
 
@@ -41,14 +39,6 @@ public class FileBodyMeta {
 
     public void setRowCondition(RdfFileRowConditionSpi rowCondition) {
         this.rowCondition = rowCondition;
-    }
-
-    public String getRowConditionParam() {
-        return rowConditionParam;
-    }
-
-    public void setRowConditionParam(String rowConditionParam) {
-        this.rowConditionParam = rowConditionParam;
     }
 
     public List<FileColumnMeta> getColumns() {

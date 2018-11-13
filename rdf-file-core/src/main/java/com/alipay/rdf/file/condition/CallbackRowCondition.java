@@ -1,7 +1,7 @@
 package com.alipay.rdf.file.condition;
 
-import com.alipay.rdf.file.meta.FileBodyMeta;
 import com.alipay.rdf.file.model.FileConfig;
+import com.alipay.rdf.file.model.RowCondition;
 import com.alipay.rdf.file.spi.RdfFileRowConditionSpi;
 import com.alipay.rdf.file.util.BeanMapWrapper;
 import com.alipay.rdf.file.util.RdfFileUtil;
@@ -18,9 +18,9 @@ public class CallbackRowCondition implements RdfFileRowConditionSpi {
     private RdfFileRowConditionSpi callbackRowCondition;
 
     @Override
-    public void init(FileBodyMeta bodyMeta) {
+    public void init(RowCondition rowCondition) {
         this.callbackRowCondition = (RdfFileRowConditionSpi) RdfFileUtil
-            .newInstance(bodyMeta.getRowConditionParam());
+            .newInstance(rowCondition.getConditionParam());
     }
 
     @Override

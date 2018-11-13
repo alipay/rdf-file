@@ -9,6 +9,7 @@ import com.alipay.rdf.file.loader.ExtensionLoader;
 import com.alipay.rdf.file.meta.FileBodyMeta;
 import com.alipay.rdf.file.meta.FileColumnMeta;
 import com.alipay.rdf.file.model.FileConfig;
+import com.alipay.rdf.file.model.RowCondition;
 import com.alipay.rdf.file.spi.RdfFileColumnTypeSpi;
 import com.alipay.rdf.file.spi.RdfFileRowConditionSpi;
 import com.alipay.rdf.file.util.BeanMapWrapper;
@@ -75,17 +76,20 @@ public class MatchRowCondition implements RdfFileRowConditionSpi {
     }
 
     @Override
-    public void init(FileBodyMeta bodyMeta) {
-        String[] params = bodyMeta.getRowConditionParam().split("\\|");
+    public void init(RowCondition rowCondition) {
+        String[] params = rowCondition.getConditionParam().split("\\|");
+        FileBodyMeta bodyMeta = rowCondition.getFileMeta()
+            .getBodyMeta(rowCondition.getBodyTemplateName());
 
         for (String param : params) {
             MatchHolder matchHolder = new MatchHolder();
             String[] pair = param.split("=");
             if (pair.length != 2) {
                 throw new RdfFileException("rdf-file#MatchRowCondition.init tempaltePath=["
-                                           + bodyMeta.getTemplatePath() + "], bodyTemplateName=["
-                                           + bodyMeta.getName() + "], condition参数["
-                                           + bodyMeta.getRowConditionParam() + "]配置格式错误",
+                                           + rowCondition.getFileMeta().getTemplatePath()
+                                           + "], bodyTemplateName=["
+                                           + rowCondition.getBodyTemplateName() + "], condition参数["
+                                           + rowCondition.getConditionParam() + "]配置格式错误",
                     RdfErrorEnum.TEMPLATE_ERROR);
             }
 
@@ -105,25 +109,30 @@ public class MatchRowCondition implements RdfFileRowConditionSpi {
                 matchHolder.strValue = pair[1].trim();
             } catch (Exception e) {
                 throw new RdfFileException("rdf-file#MatchRowCondition.init tempaltePath=["
-                                           + bodyMeta.getTemplatePath() + "], bodyTemplateName=["
-                                           + bodyMeta.getName() + "], condition参数["
-                                           + bodyMeta.getRowConditionParam() + "]配置格式错误",
+                                           + rowCondition.getFileMeta().getTemplatePath()
+                                           + "], bodyTemplateName=["
+                                           + rowCondition.getBodyTemplateName() + "], condition参数["
+                                           + rowCondition.getConditionParam() + "]配置格式错误",
                     e, RdfErrorEnum.TEMPLATE_ERROR);
             }
 
             FileColumnMeta column = bodyMeta.getColumn(matchHolder.name);
-            RdfFileUtil.assertNotNull(column,
-                "rdf-file#MatchRowCondition.init tempaltePath=[" + bodyMeta.getTemplatePath()
-                                              + "], bodyTemplateName=[" + bodyMeta.getName()
-                                              + "], condition参数[" + bodyMeta.getRowConditionParam()
-                                              + "], columnName=[" + matchHolder.name + "] 字段没有定义");
+            RdfFileUtil.assertNotNull(
+                column,
+                "rdf-file#MatchRowCondition.init tempaltePath=["
+                        + rowCondition.getFileMeta().getTemplatePath() + "], bodyTemplateName=["
+                        + rowCondition.getFileMeta().getTemplatePath() + "], condition参数["
+                        + rowCondition.getConditionParam() + "], columnName=[" + matchHolder.name
+                        + "] 字段没有定义");
             if (matchHolder.subString
                 && !STRING_TYPE_NAME.equalsIgnoreCase(column.getType().getName())) {
                 throw new RdfFileException("rdf-file#MatchRowCondition.init tempaltePath=["
-                                           + bodyMeta.getTemplatePath() + "], bodyTemplateName=["
-                                           + bodyMeta.getName() + "], condition参数["
-                                           + bodyMeta.getRowConditionParam() + "] columType=["
-                                           + matchHolder.name + "]不是string类型不支持字符串截取",
+                                           + rowCondition.getFileMeta().getTemplatePath()
+                                           + "], bodyTemplateName=["
+                                           + rowCondition.getFileMeta().getTemplatePath()
+                                           + "], condition参数[" + rowCondition.getConditionParam()
+                                           + "] columType=[" + matchHolder.name
+                                           + "]不是string类型不支持字符串截取",
                     RdfErrorEnum.TEMPLATE_ERROR);
             }
 
