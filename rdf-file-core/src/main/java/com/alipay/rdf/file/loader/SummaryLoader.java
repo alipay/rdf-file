@@ -54,6 +54,7 @@ public class SummaryLoader {
                     RdfErrorEnum.SUMMARY_DEFINED_ERROR);
             }
             summaryPair.setColumnKey(pair.getColumnKey());
+            summaryPair.setRowCondition(pair.getRowCondition());
 
             summary.addSummaryPair(summaryPair);
         }
@@ -68,14 +69,15 @@ public class SummaryLoader {
     public static SummaryPairMeta parseSummaryPairMeta(FileMeta fileMeta,
                                                        String summaryColumnPair) {
         String[] pair = summaryColumnPair.split("\\|");
-        if (2 != pair.length) {
-            throw new RdfFileException(
-                "summaryColumnPair=" + summaryColumnPair + ",配置错误 格式如:\"headKey|columnKey\" ",
+        if (2 != pair.length && 3 != pair.length) {
+            throw new RdfFileException("summaryColumnPair=" + summaryColumnPair
+                                       + ",配置错误 格式如:\"headKey|columnKey\" 或者 \"headKey|columnKey|condition\" ",
                 RdfErrorEnum.SUMMARY_DEFINED_ERROR);
         }
 
         String summaryKey = pair[0];
         String columnKey = pair[1];
+        String condition = pair.length == 3 ? pair[3] : null;
 
         FileColumnMeta summaryColMeta;
         FileDataTypeEnum summaryDataType;
@@ -114,6 +116,7 @@ public class SummaryLoader {
         }
 
         boolean exsitBodyColumn = false;
+        FileBodyMeta bodyMetaHolder = null;
         for (FileBodyMeta bodyMeta : fileMeta.getBodyMetas()) {
             FileColumnMeta colMeta = null;
             try {
@@ -127,6 +130,7 @@ public class SummaryLoader {
 
             if (null != colMeta) {
                 exsitBodyColumn = true;
+                bodyMetaHolder = bodyMeta;
             }
 
             //校验
@@ -151,7 +155,18 @@ public class SummaryLoader {
                                                 + "],column=[" + columnKey + "]",
             RdfErrorEnum.COLUMN_NOT_DEFINED);
 
-        return new SummaryPairMeta(summaryKey, columnKey, summaryColMeta, summaryDataType);
+        SummaryPairMeta summaryPairMeta = new SummaryPairMeta(summaryKey, columnKey, summaryColMeta,
+            summaryDataType);
+
+        if (RdfFileUtil.isBlank(condition)) {
+            return summaryPairMeta;
+        }
+
+        RowCondition rowCondition = new RowCondition(fileMeta, bodyMetaHolder.getName(), condition,
+            RowConditionType.STATISTIC);
+        summaryPairMeta.setRowCondition(RowConditionLoader.loadRowCondition(rowCondition));
+
+        return summaryPairMeta;
     }
 
     public static StatisticPairMeta parseStatisticPairMeta(FileMeta fileMeta,

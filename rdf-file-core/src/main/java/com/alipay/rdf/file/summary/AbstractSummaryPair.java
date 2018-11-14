@@ -1,5 +1,6 @@
 package com.alipay.rdf.file.summary;
 
+import com.alipay.rdf.file.spi.RdfFileRowConditionSpi;
 import com.alipay.rdf.file.spi.RdfFileSummaryPairSpi;
 import com.alipay.rdf.file.util.RdfFileUtil;
 
@@ -10,13 +11,15 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  * @version $Id: AbstractSummaryPair.java, v 0.1 2018年3月12日 下午4:27:24 hongwei.quhw Exp $
  */
 public abstract class AbstractSummaryPair<T> implements RdfFileSummaryPairSpi<T> {
-    protected String headKey;
-    protected String columnKey;
-    protected String tailKey;
+    protected String               headKey;
+    protected String               columnKey;
+    protected String               tailKey;
 
-    protected T      headValue;
-    protected T      summaryValue;
-    protected T      tailValue;
+    protected T                    headValue;
+    protected T                    summaryValue;
+    protected T                    tailValue;
+
+    private RdfFileRowConditionSpi conditon;
 
     @Override
     public String summaryMsg() {
@@ -139,4 +142,14 @@ public abstract class AbstractSummaryPair<T> implements RdfFileSummaryPairSpi<T>
      * @return
      */
     protected abstract T initDefaultColumnValue();
+
+    public RdfFileRowConditionSpi getRowCondition() {
+        return conditon;
+    }
+
+    public void setRowCondition(RdfFileRowConditionSpi conditon) {
+        this.conditon = conditon;
+    }
+    
+    
 }
