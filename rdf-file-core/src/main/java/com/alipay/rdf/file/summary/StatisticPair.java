@@ -95,7 +95,6 @@ public class StatisticPair {
             builder.append("headValue=").append(null == headValue ? "为空" : headValue);
             builder.append(" ");
         }
-        builder.append("columnKey=").append(pairMeta.getColumnKey());
         builder.append(" ");
         builder.append("staticsticValue=").append(staticsticValue == null ? "为空" : staticsticValue);
 
@@ -135,10 +134,6 @@ public class StatisticPair {
 
     public RdfFileRowConditionSpi getRowCondition() {
         return pairMeta.getRowCondition();
-    }
-
-    public String getColumnKey() {
-        return pairMeta.getColumnKey();
     }
 
     public Object getHeadValue() {
