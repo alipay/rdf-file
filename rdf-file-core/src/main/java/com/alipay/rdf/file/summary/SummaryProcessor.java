@@ -10,6 +10,7 @@ import com.alipay.rdf.file.model.SummaryPair;
 import com.alipay.rdf.file.processor.ProcessCotnext;
 import com.alipay.rdf.file.processor.ProcessorTypeEnum;
 import com.alipay.rdf.file.spi.RdfFileProcessorSpi;
+import com.alipay.rdf.file.spi.RdfFileRowConditionSpi;
 import com.alipay.rdf.file.spi.RdfFileSummaryPairSpi;
 import com.alipay.rdf.file.util.BeanMapWrapper;
 import com.alipay.rdf.file.util.RdfFileConstants;
@@ -66,11 +67,22 @@ public class SummaryProcessor implements RdfFileProcessorSpi {
                 summary.addTotalCount(1);
 
                 for (SummaryPair pair : summary.getSummaryPairs()) {
+                    RdfFileRowConditionSpi rowCondition = pair.getRowCondition();
+                    //不满足条件的行不汇总
+                    if (null != rowCondition && !rowCondition.serialize(pc.getFileConfig(), bmw)) {
+                        return;
+                    }
+
                     Object colValue = bmw.getProperty(pair.getColumnKey());
                     ((RdfFileSummaryPairSpi) pair).addColValue(colValue);
                 }
 
                 for (StatisticPair pair : summary.getStatisticPairs()) {
+                    RdfFileRowConditionSpi rowCondition = pair.getRowCondition();
+                    // 不满足条件的行不统计
+                    if (null != rowCondition && !rowCondition.serialize(pc.getFileConfig(), bmw)) {
+                        return;
+                    }
                     pair.increment(pc.getFileConfig(), bmw);
                 }
 

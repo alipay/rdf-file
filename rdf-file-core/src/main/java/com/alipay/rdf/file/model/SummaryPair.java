@@ -1,5 +1,7 @@
 package com.alipay.rdf.file.model;
 
+import com.alipay.rdf.file.spi.RdfFileRowConditionSpi;
+
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
  *
@@ -45,4 +47,9 @@ public interface SummaryPair<T> {
      * 头部汇总值
      */
     T getHeadValue();
+
+    /**
+     * 行条件判定
+     */
+    RdfFileRowConditionSpi getRowCondition();
 }
