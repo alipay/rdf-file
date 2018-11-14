@@ -124,24 +124,11 @@ public abstract class AbstractSummaryPair<T> implements RdfFileSummaryPairSpi<T>
         }
 
         if (null != headValue) {
-            return doIsSummaryEquals(headValue, summaryValue);
+            return RdfFileUtil.compare(headValue, summaryValue);
         } else {
-            return doIsSummaryEquals(tailValue, summaryValue);
+            return RdfFileUtil.compare(tailValue, summaryValue);
         }
 
-    }
-
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    protected boolean doIsSummaryEquals(T headOrtailValue, T summaryValue) {
-        if (headOrtailValue instanceof Comparable) {
-            if (((Comparable) headOrtailValue).compareTo((Comparable) summaryValue) == 0) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        return headOrtailValue.equals(summaryValue);
     }
 
     protected abstract void doAddColValue(T columnValue);

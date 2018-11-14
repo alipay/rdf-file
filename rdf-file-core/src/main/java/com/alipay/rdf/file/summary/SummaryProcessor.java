@@ -50,29 +50,43 @@ public class SummaryProcessor implements RdfFileProcessorSpi {
         switch (processorType) {
             case AFTER_READ_HEAD:
             case AFTER_WRITE_HEAD:
-                List<SummaryPair> summaryPairs = summary.getHeadSummaryPairs();
-                for (SummaryPair pair : summaryPairs) {
+                for (SummaryPair pair : summary.getHeadSummaryPairs()) {
                     Object headValue = bmw.getProperty(pair.getHeadKey());
                     ((RdfFileSummaryPairSpi) pair).setHeadValue(headValue);
                 }
+
+                for (StatisticPair pair : summary.getHeadStatisticPairs()) {
+                    Object headValue = bmw.getProperty(pair.getHeadKey());
+                    pair.setHeadValue(headValue);
+                }
+
                 break;
             case AFTER_READ_ROW:
             case AFTER_WRITE_ROW:
                 summary.addTotalCount(1);
 
-                summaryPairs = summary.getSummaryPairs();
-                for (SummaryPair pair : summaryPairs) {
+                for (SummaryPair pair : summary.getSummaryPairs()) {
                     Object colValue = bmw.getProperty(pair.getColumnKey());
                     ((RdfFileSummaryPairSpi) pair).addColValue(colValue);
                 }
+
+                for (StatisticPair pair : summary.getStatisticPairs()) {
+                    pair.increment(pc.getFileConfig(), bmw);
+                }
+
                 break;
             case AFTER_READ_TAIL:
             case AFTER_WRITE_TAIL:
-                summaryPairs = summary.getTailSummaryPairs();
-                for (SummaryPair pair : summaryPairs) {
+                for (SummaryPair pair : summary.getTailSummaryPairs()) {
                     Object tailValue = bmw.getProperty(pair.getTailKey());
                     ((RdfFileSummaryPairSpi) pair).setTailValue(tailValue);
                 }
+
+                for (StatisticPair pair : summary.getTailStatisticPairs()) {
+                    Object tailValue = bmw.getProperty(pair.getTailKey());
+                    pair.setTailValue(tailValue);
+                }
+
                 break;
             default:
                 throw new RdfFileException(

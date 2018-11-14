@@ -36,6 +36,8 @@ public class FileMeta {
 
     private final List<SummaryPairMeta>    summaryPairs          = new ArrayList<SummaryPairMeta>();
 
+    private final List<StatisticPairMeta>  statisticPairs        = new ArrayList<StatisticPairMeta>();
+
     private final List<RowValidator>       validators            = new ArrayList<RowValidator>();
 
     private String                         lineBreak;
@@ -322,6 +324,14 @@ public class FileMeta {
      */
     public void addSummaryColumnPair(SummaryPairMeta pair) {
         this.summaryPairs.add(pair);
+    }
+
+    public List<StatisticPairMeta> getStatisticPairMetas() {
+        return statisticPairs;
+    }
+
+    public void addStatisticPair(StatisticPairMeta pair) {
+        this.statisticPairs.add(pair);
     }
 
     /**

@@ -10,7 +10,7 @@ public enum RowConditionType {
                               /**body 多模板配置*/
                               MULTI_BODY_TEMPLATE,
                               /**汇总配置条件值*/
-                              Summary,
+                              SUMMARY,
                               /**统计条件值*/
-                              Statistic
+                              STATISTIC
 }
