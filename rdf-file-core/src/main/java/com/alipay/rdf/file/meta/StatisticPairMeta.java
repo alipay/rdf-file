@@ -14,19 +14,16 @@ import com.alipay.rdf.file.spi.RdfFileRowConditionSpi;
 public class StatisticPairMeta {
     private final String           statisticKey;
 
-    private final String           columnKey;
-
     private final FileColumnMeta   columnMeta;
 
     private final FileDataTypeEnum statisticdataType;
 
     private RdfFileRowConditionSpi rowCondition;
 
-    public StatisticPairMeta(String statisticKey, String columnKey, FileColumnMeta columnMeta,
+    public StatisticPairMeta(String statisticKey, FileColumnMeta columnMeta,
                              FileDataTypeEnum statisticdataType) {
         super();
         this.statisticKey = statisticKey;
-        this.columnKey = columnKey;
         this.columnMeta = columnMeta;
         this.statisticdataType = statisticdataType;
     }
@@ -41,10 +38,6 @@ public class StatisticPairMeta {
 
     public String getStatisticKey() {
         return statisticKey;
-    }
-
-    public String getColumnKey() {
-        return columnKey;
     }
 
     public FileColumnMeta getColumnMeta() {

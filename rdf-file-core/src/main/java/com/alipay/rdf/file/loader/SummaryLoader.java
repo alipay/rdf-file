@@ -13,6 +13,7 @@ import com.alipay.rdf.file.model.RowCondition;
 import com.alipay.rdf.file.model.Summary;
 import com.alipay.rdf.file.spi.RdfFileColumnTypeSpi;
 import com.alipay.rdf.file.spi.RdfFileSummaryPairSpi;
+import com.alipay.rdf.file.util.RdfFileLogUtil;
 import com.alipay.rdf.file.util.RdfFileUtil;
 
 /**
@@ -66,18 +67,37 @@ public class SummaryLoader {
         return summary;
     }
 
+    public static void main(String[] args) {
+        //String summaryColumnPair = "a|a|successCount|count|bol=true|seq(0,4)=aaa|age=15";
+        String summaryColumnPair = "successCount|count";
+        int firstIdx = summaryColumnPair.indexOf("|");
+        int secIdx = summaryColumnPair.indexOf("|", firstIdx + 1);
+        System.out.println(firstIdx);
+        System.out.println(secIdx);
+        System.out.println(summaryColumnPair.substring(0, firstIdx));
+        System.out.println(summaryColumnPair.substring(firstIdx + 1, secIdx));
+        System.out.println(summaryColumnPair.substring(secIdx + 1));
+    }
+
     public static SummaryPairMeta parseSummaryPairMeta(FileMeta fileMeta,
                                                        String summaryColumnPair) {
-        String[] pair = summaryColumnPair.split("\\|");
-        if (2 != pair.length && 3 != pair.length) {
+        int firstIdx = summaryColumnPair.indexOf("|");
+        int secIdx = summaryColumnPair.indexOf("|", firstIdx + 1);
+        if (firstIdx < 1) {
             throw new RdfFileException("summaryColumnPair=" + summaryColumnPair
                                        + ",配置错误 格式如:\"headKey|columnKey\" 或者 \"headKey|columnKey|condition\" ",
                 RdfErrorEnum.SUMMARY_DEFINED_ERROR);
         }
 
-        String summaryKey = pair[0];
-        String columnKey = pair[1];
-        String condition = pair.length == 3 ? pair[3] : null;
+        String summaryKey = summaryColumnPair.substring(0, firstIdx);
+        String columnKey = secIdx == -1 ? summaryColumnPair.substring(firstIdx + 1)
+            : summaryColumnPair.substring(firstIdx + 1, secIdx);
+        String condition = secIdx == -1 ? null : summaryColumnPair.substring(secIdx + 1);
+
+        RdfFileLogUtil.common
+            .info("rdf-file#SummaryLoader.parseSummaryPairMeta templatePath=["
+                  + fileMeta.getTemplatePath() + "] summaryKey=[" + summaryKey + "], columnKey=["
+                  + columnKey + "], condition=[" + (condition == null ? "null" : condition) + "]");
 
         FileColumnMeta summaryColMeta;
         FileDataTypeEnum summaryDataType;
@@ -171,16 +191,20 @@ public class SummaryLoader {
 
     public static StatisticPairMeta parseStatisticPairMeta(FileMeta fileMeta,
                                                            String statisticColumnPair) {
-        String[] pair = statisticColumnPair.split("\\|");
-        if (pair.length != 2 && pair.length != 3) {
-            throw new RdfFileException("statisticColumnPair=" + statisticColumnPair
-                                       + ",配置错误 格式如:\"headKey|columnKey\"  或者 \"headKey|columnKey|condition\"",
+
+        int idx = statisticColumnPair.indexOf("|");
+        if (idx < 1) {
+            throw new RdfFileException(
+                "statisticColumnPair=" + statisticColumnPair + ",配置错误 格式如:\"headKey|condition\" ",
                 RdfErrorEnum.STATISTIC_DEFINED_ERROR);
         }
 
-        String statisticKey = pair[0];
-        String columnKey = pair[1];
-        String condition = pair.length == 3 ? pair[3] : null;
+        String statisticKey = statisticColumnPair.substring(0, idx);
+        String condition = statisticColumnPair.substring(idx + 1);
+
+        RdfFileLogUtil.common.info("rdf-file#SummaryLoader.parseStatisticPairMeta templatePath=["
+                                   + fileMeta.getTemplatePath() + "], statisticKey=[" + statisticKey
+                                   + "], condition=[" + condition + "]");
 
         FileColumnMeta statisticColMeta;
         FileDataTypeEnum statisticDataType;
@@ -210,7 +234,7 @@ public class SummaryLoader {
                         throw new RdfFileException(
                             "rdf-file#SummaryLoader.parseStatisticPairMeta statisticKey="
                                                    + statisticKey + ", head or tail 没有对应字段定义",
-                            RdfErrorEnum.SUMMARY_DEFINED_ERROR);
+                            RdfErrorEnum.STATISTIC_DEFINED_ERROR);
                     } else {
                         throw e;
                     }
@@ -220,45 +244,10 @@ public class SummaryLoader {
             }
         }
 
-        FileColumnMeta colMetaHolder = null;
-        FileBodyMeta bodyMetaHolder = null;
-        for (FileBodyMeta bodyMeta : fileMeta.getBodyMetas()) {
-            FileColumnMeta columnMeta = null;
-            try {
-                columnMeta = bodyMeta.getColumn(columnKey);
-            } catch (RdfFileException e) {
-                if (RdfErrorEnum.COLUMN_NOT_DEFINED.equals(e.getErrorEnum())
-                    && fileMeta.isMultiBody()) {
-                    continue;
-                }
-            }
+        StatisticPairMeta statisticPairMeta = new StatisticPairMeta(statisticKey, statisticColMeta,
+            statisticDataType);
 
-            if (null != columnMeta) {
-                if (null != colMetaHolder && !columnMeta.getType().getClass().getClass().getName()
-                    .equals(colMetaHolder.getType().getClass().getName())) {
-                    throw new RdfFileException("rdf-file#parseStatisticPairMeta templatePaht=["
-                                               + fileMeta.getTemplatePath() + "] 请检查配置的columName=["
-                                               + columnKey + "] 存在不一致的数据类型",
-                        RdfErrorEnum.TEMPLATE_ERROR);
-                }
-            }
-            colMetaHolder = columnMeta;
-            bodyMetaHolder = bodyMeta;
-        }
-
-        RdfFileUtil.assertNotNull(colMetaHolder,
-            "rdf-file#parseStatisticPairMeta templatePaht=[" + fileMeta.getTemplatePath()
-                                                 + "] 请检查配置的columName=[" + columnKey
-                                                 + "] body配置中不存在对应的字段");
-
-        StatisticPairMeta statisticPairMeta = new StatisticPairMeta(statisticKey, columnKey,
-            statisticColMeta, statisticDataType);
-
-        if (RdfFileUtil.isBlank(condition)) {
-            return statisticPairMeta;
-        }
-
-        RowCondition rowCondition = new RowCondition(fileMeta, bodyMetaHolder.getName(), condition,
+        RowCondition rowCondition = new RowCondition(fileMeta, null, condition,
             RowConditionType.STATISTIC);
         statisticPairMeta.setRowCondition(RowConditionLoader.loadRowCondition(rowCondition));
 
