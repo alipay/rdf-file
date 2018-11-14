@@ -716,4 +716,25 @@ public class RdfFileUtil {
 
         return TemplateLoader.load(fileConfig).getColumnSplit();
     }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static boolean compare(Object left, Object right) {
+        if (null == left) {
+            if (null == right) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        if (left instanceof Comparable) {
+            if (((Comparable) left).compareTo((Comparable) right) == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        return left.equals(right);
+    }
 }

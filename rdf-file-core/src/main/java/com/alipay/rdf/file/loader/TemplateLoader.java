@@ -171,6 +171,12 @@ public class TemplateLoader {
                     SummaryLoader.parseSummaryPairMeta(fileMeta, summaryColumnPair));
             }
 
+            //解析统计字段
+            for (String statisticColumnPair : templateConfig.getStatisticColumnPairs()) {
+                fileMeta.addStatisticPair(
+                    SummaryLoader.parseStatisticPairMeta(fileMeta, statisticColumnPair));
+            }
+
             //解析协议
             fileMeta.setProtocol(RdfFileUtil.assertTrimNotBlank(templateConfig.getProtocol()));
 
@@ -197,13 +203,6 @@ public class TemplateLoader {
 
             return fileMeta;
         }
-    }
-
-    /**
-     * 解析统计字段配置
-     */
-    private static void parseStatisticPair(FileMeta fileMeta, String config) {
-
     }
 
     private static void parseStartWithSplit(FileMeta fileMeta, String startSplit) {

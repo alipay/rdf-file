@@ -1,5 +1,6 @@
 package com.alipay.rdf.file.loader;
 
+import com.alipay.rdf.file.condition.RowConditionType;
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.meta.FileBodyMeta;
@@ -8,6 +9,7 @@ import com.alipay.rdf.file.meta.FileMeta;
 import com.alipay.rdf.file.meta.StatisticPairMeta;
 import com.alipay.rdf.file.meta.SummaryPairMeta;
 import com.alipay.rdf.file.model.FileDataTypeEnum;
+import com.alipay.rdf.file.model.RowCondition;
 import com.alipay.rdf.file.model.Summary;
 import com.alipay.rdf.file.spi.RdfFileColumnTypeSpi;
 import com.alipay.rdf.file.spi.RdfFileSummaryPairSpi;
@@ -54,6 +56,10 @@ public class SummaryLoader {
             summaryPair.setColumnKey(pair.getColumnKey());
 
             summary.addSummaryPair(summaryPair);
+        }
+
+        for (StatisticPairMeta pair : fileMeta.getStatisticPairMetas()) {
+            summary.addStatisticPair(pair);
         }
 
         return summary;
@@ -225,16 +231,23 @@ public class SummaryLoader {
             bodyMetaHolder = bodyMeta;
         }
 
+        RdfFileUtil.assertNotNull(colMetaHolder,
+            "rdf-file#parseStatisticPairMeta templatePaht=[" + fileMeta.getTemplatePath()
+                                                 + "] 请检查配置的columName=[" + columnKey
+                                                 + "] body配置中不存在对应的字段");
+
         StatisticPairMeta statisticPairMeta = new StatisticPairMeta(statisticKey, columnKey,
-            colMetaHolder, statisticDataType);
+            statisticColMeta, statisticDataType);
 
         if (RdfFileUtil.isBlank(condition)) {
             return statisticPairMeta;
         }
-        
-        
 
-        return null;
+        RowCondition rowCondition = new RowCondition(fileMeta, bodyMetaHolder.getName(), condition,
+            RowConditionType.STATISTIC);
+        statisticPairMeta.setRowCondition(RowConditionLoader.loadRowCondition(rowCondition));
+
+        return statisticPairMeta;
     }
 
 }

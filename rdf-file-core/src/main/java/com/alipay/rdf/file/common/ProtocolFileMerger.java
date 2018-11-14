@@ -29,6 +29,7 @@ import com.alipay.rdf.file.spi.RdfFileReaderSpi;
 import com.alipay.rdf.file.spi.RdfFileSummaryPairSpi;
 import com.alipay.rdf.file.spi.RdfFileWriterSpi;
 import com.alipay.rdf.file.storage.FileInnterStorage;
+import com.alipay.rdf.file.summary.StatisticPair;
 import com.alipay.rdf.file.util.RdfFileLogUtil;
 import com.alipay.rdf.file.util.RdfFileUtil;
 import com.alipay.rdf.file.util.RdfProfiler;
@@ -199,6 +200,10 @@ public class ProtocolFileMerger implements RdfFileMergerSpi {
                     ((RdfFileSummaryPairSpi) pair).addColValue(head.get(pair.getHeadKey()));
                 }
 
+                for (StatisticPair pair : summary.getHeadStatisticPairs()) {
+                    pair.addColValue(head.get(pair.getHeadKey()));
+                }
+
             } finally {
                 if (null != reader) {
                     reader.close();
@@ -234,6 +239,9 @@ public class ProtocolFileMerger implements RdfFileMergerSpi {
                 }
                 for (SummaryPair pair : summary.getTailSummaryPairs()) {
                     ((RdfFileSummaryPairSpi) pair).addColValue(tail.get(pair.getTailKey()));
+                }
+                for (StatisticPair pair : summary.getStatisticPairs()) {
+                    pair.addColValue(tail.get(pair.getTailKey()));
                 }
             } finally {
                 if (null != reader) {

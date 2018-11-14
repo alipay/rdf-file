@@ -8,6 +8,8 @@ import java.util.Map;
 
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
+import com.alipay.rdf.file.meta.StatisticPairMeta;
+import com.alipay.rdf.file.summary.StatisticPair;
 import com.alipay.rdf.file.util.RdfFileUtil;
 
 /**
@@ -18,13 +20,17 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  */
 @SuppressWarnings("rawtypes")
 public class Summary {
-    private String                  totalCountKey;
+    private String                    totalCountKey;
     /** 总记录数*/
-    private Object                  totalCount;
+    private Object                    totalCount;
     /** 汇总字段*/
-    private final List<SummaryPair> headSummaryPairs = new ArrayList<SummaryPair>();
-    private final List<SummaryPair> tailSummaryPairs = new ArrayList<SummaryPair>();
-    private final List<SummaryPair> summaryPairs     = new ArrayList<SummaryPair>();
+    private final List<SummaryPair>   headSummaryPairs   = new ArrayList<SummaryPair>();
+    private final List<SummaryPair>   tailSummaryPairs   = new ArrayList<SummaryPair>();
+    private final List<SummaryPair>   summaryPairs       = new ArrayList<SummaryPair>();
+
+    private final List<StatisticPair> headStatisticPairs = new ArrayList<StatisticPair>();
+    private final List<StatisticPair> tailStatisticPairs = new ArrayList<StatisticPair>();
+    private final List<StatisticPair> statisticPairs     = new ArrayList<StatisticPair>();
 
     public void addSummaryPair(SummaryPair pair) {
         if (RdfFileUtil.isNotBlank(pair.getHeadKey())) {
@@ -37,6 +43,18 @@ public class Summary {
         summaryPairs.add(pair);
     }
 
+    public void addStatisticPair(StatisticPairMeta pairMeta) {
+        StatisticPair pair = new StatisticPair(pairMeta);
+        if (FileDataTypeEnum.HEAD.equals(pairMeta.getStatisticdataType())) {
+            headStatisticPairs.add(pair);
+        }
+        if (FileDataTypeEnum.TAIL.equals(pairMeta.getStatisticdataType())) {
+            tailStatisticPairs.add(pair);
+        }
+
+        statisticPairs.add(pair);
+    }
+
     public List<SummaryPair> getHeadSummaryPairs() {
         return headSummaryPairs;
     }
@@ -47,6 +65,18 @@ public class Summary {
 
     public List<SummaryPair> getSummaryPairs() {
         return summaryPairs;
+    }
+
+    public List<StatisticPair> getHeadStatisticPairs() {
+        return headStatisticPairs;
+    }
+
+    public List<StatisticPair> getTailStatisticPairs() {
+        return tailStatisticPairs;
+    }
+
+    public List<StatisticPair> getStatisticPairs() {
+        return statisticPairs;
     }
 
     /**
@@ -87,18 +117,8 @@ public class Summary {
         return totalCount;
     }
 
-    public Long getTotalCountToLong() {
-        if (totalCount instanceof BigDecimal) {
-            return ((BigDecimal) totalCount).longValue();
-        } else if (totalCount instanceof Long) {
-            return (Long) totalCount;
-        } else if (totalCount instanceof Integer) {
-            return new Long(totalCount.toString());
-        } else {
-            throw new RdfFileException(
-                "rdf-file#Summary.addTotalCount  不支持计算类型为:" + totalCount.getClass().getName(),
-                RdfErrorEnum.COLUMN_TYPE_ERROR);
-        }
+    public Object getTotalCountWithoutNull() {
+        return totalCount == null ? 0L : totalCount;
     }
 
     public Map<String, Object> summaryHeadToMap() {
@@ -107,6 +127,10 @@ public class Summary {
 
         for (SummaryPair summaryPair : headSummaryPairs) {
             map.put(summaryPair.getHeadKey(), summaryPair.getSummaryValue());
+        }
+
+        for (StatisticPair pair : headStatisticPairs) {
+            map.put(pair.getHeadKey(), pair.getStaticsticValue());
         }
 
         return map;
@@ -120,6 +144,11 @@ public class Summary {
             map.put(summaryPair.getTailKey(), summaryPair.getSummaryValue());
         }
 
+        for (StatisticPair pair : tailStatisticPairs) {
+            map.put(pair.getTailKey(), pair.getStaticsticValue());
+        }
+
         return map;
     }
+
 }
