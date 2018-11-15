@@ -67,18 +67,6 @@ public class SummaryLoader {
         return summary;
     }
 
-    public static void main(String[] args) {
-        //String summaryColumnPair = "a|a|successCount|count|bol=true|seq(0,4)=aaa|age=15";
-        String summaryColumnPair = "successCount|count";
-        int firstIdx = summaryColumnPair.indexOf("|");
-        int secIdx = summaryColumnPair.indexOf("|", firstIdx + 1);
-        System.out.println(firstIdx);
-        System.out.println(secIdx);
-        System.out.println(summaryColumnPair.substring(0, firstIdx));
-        System.out.println(summaryColumnPair.substring(firstIdx + 1, secIdx));
-        System.out.println(summaryColumnPair.substring(secIdx + 1));
-    }
-
     public static SummaryPairMeta parseSummaryPairMeta(FileMeta fileMeta,
                                                        String summaryColumnPair) {
         int firstIdx = summaryColumnPair.indexOf("|");
