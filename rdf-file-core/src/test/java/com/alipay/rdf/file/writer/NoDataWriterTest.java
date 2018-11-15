@@ -117,7 +117,7 @@ public class NoDataWriterTest {
         Assert.assertEquals("总笔数:0|总金额:0", reader.readLine());
         Assert.assertEquals("流水号|基金公司订单号|订单申请时间|普通日期|普通日期时间|普通数字|金额|年龄|长整型|布尔值|备注",
             reader.readLine());
-        Assert.assertEquals("0", reader.readLine());
+        Assert.assertEquals("0|0", reader.readLine());
         Assert.assertNull(reader.readLine());
         reader.close();
     }
