@@ -83,7 +83,7 @@ public class SummaryProcessor implements RdfFileProcessorSpi {
                                        + ", templatePath=" + pc.getFileConfig().getTemplatePath()
                                        + ", data=[" + data + "] 不满足条件的行不汇总");
                         }
-                        return;
+                        continue;
                     }
 
                     Object colValue = bmw.getProperty(pair.getColumnKey());
@@ -100,9 +100,9 @@ public class SummaryProcessor implements RdfFileProcessorSpi {
                                        + ", templatePath=" + pc.getFileConfig().getTemplatePath()
                                        + ", data=[" + data + "] 不满足条件的行不统计");
                         }
-                        return;
+                        continue;
                     }
-                    pair.increment(pc.getFileConfig(), bmw);
+                    pair.increment();
                 }
 
                 break;

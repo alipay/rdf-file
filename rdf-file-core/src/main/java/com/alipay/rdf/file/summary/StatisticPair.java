@@ -2,11 +2,9 @@ package com.alipay.rdf.file.summary;
 
 import com.alipay.rdf.file.loader.ExtensionLoader;
 import com.alipay.rdf.file.meta.StatisticPairMeta;
-import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.FileDataTypeEnum;
 import com.alipay.rdf.file.spi.RdfFileColumnTypeSpi;
 import com.alipay.rdf.file.spi.RdfFileRowConditionSpi;
-import com.alipay.rdf.file.util.BeanMapWrapper;
 import com.alipay.rdf.file.util.RdfFileUtil;
 
 /**
@@ -33,8 +31,8 @@ public class StatisticPair {
         this.pairMeta = pairMeta;
 
         String columnName = pairMeta.getColumnMeta().getType().getName();
-        RdfFileColumnTypeSpi columnTypeCodec = ExtensionLoader
-            .getExtensionLoader(RdfFileColumnTypeSpi.class).getExtension(columnName);
+        columnTypeCodec = ExtensionLoader.getExtensionLoader(RdfFileColumnTypeSpi.class)
+            .getExtension(columnName);
         RdfFileUtil.assertNotNull(columnTypeCodec,
             "rdf-file#StatisticPair 没有type=[" + columnName + "] 对应的类型codec");
 
@@ -43,14 +41,7 @@ public class StatisticPair {
     /**
      * 计数累加
      */
-    public void increment(FileConfig config, BeanMapWrapper bmw) {
-        RdfFileRowConditionSpi rowCondition = pairMeta.getRowCondition();
-        if (null != rowCondition) {
-            if (rowCondition.serialize(config, bmw)) {
-                return;
-            }
-        }
-
+    public void increment() {
         if (null == staticsticValue) {
             staticsticValue = 1L;
         } else {
