@@ -168,8 +168,22 @@ public class TemplateLoaderTest {
 
     @Test
     public void testSummary_condition() {
-        FileMeta fileMeta = TemplateLoader.load("/meta/template6.json", "UTF-8");
+        TemplateLoader.load("/meta/template6.json", "UTF-8");
 
-        StatisticPairMeta pair = fileMeta.getStatisticPairMetas().get(0);
+        try {
+            TemplateLoader.load("/meta/template7.json", "UTF-8");
+            Assert.fail();
+        } catch (RdfFileException e) {
+            Assert.assertEquals(RdfErrorEnum.COLUMN_NOT_DEFINED, e.getErrorEnum());
+        }
+
+        try {
+            TemplateLoader.load("/meta/template8.json", "UTF-8");
+            Assert.fail();
+        } catch (RdfFileException e) {
+            Assert.assertEquals(RdfErrorEnum.STATISTIC_DEFINED_ERROR, e.getErrorEnum());
+        }
+
+        TemplateLoader.load("/meta/template9.json", "UTF-8");
     }
 }
