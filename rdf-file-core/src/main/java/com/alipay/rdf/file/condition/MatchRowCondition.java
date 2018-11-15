@@ -121,7 +121,9 @@ public class MatchRowCondition implements RdfFileRowConditionSpi {
                         + rowCondition.getFileMeta().getTemplatePath() + "], bodyTemplateName=["
                         + rowCondition.getBodyTemplateName() + "], condition参数["
                         + rowCondition.getConditionParam() + "], columnName=[" + matchHolder.name
-                        + "] 字段没有定义");
+                        + "] 字段没有定义",
+                RdfErrorEnum.COLUMN_NOT_DEFINED);
+
             if (matchHolder.subString
                 && !STRING_TYPE_NAME.equalsIgnoreCase(column.getType().getName())) {
                 throw new RdfFileException("rdf-file#MatchRowCondition.init tempaltePath=["
@@ -157,7 +159,15 @@ public class MatchRowCondition implements RdfFileRowConditionSpi {
         } else {
             FileColumnMeta colMeta = null;
             for (FileBodyMeta bodyMeta : rowCondition.getFileMeta().getBodyMetas()) {
-                colMeta = bodyMeta.getColumn(colName);
+                try {
+                    colMeta = bodyMeta.getColumn(colName);
+                } catch (RdfFileException e) {
+                    if (RdfErrorEnum.COLUMN_NOT_DEFINED.equals(e.getErrorEnum())) {
+                        continue;
+                    } else {
+                        throw e;
+                    }
+                }
                 if (null != colMeta) {
                     break;
                 }

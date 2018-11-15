@@ -29,7 +29,7 @@
     ],
     "statisticColumnPairs":[
     	"successCount|bol=true|seq(0,4)=aaa|age=15",
-    	"failcount|match:seq(3,6)=jjjj"
+    	"failcount|match:seqxx(3,6)=jjjj"
     ]
 }
     
