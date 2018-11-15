@@ -136,13 +136,6 @@ public abstract class AbstractSummaryPair<T> implements RdfFileSummaryPairSpi<T>
 
     protected abstract void doAddColValue(T columnValue);
 
-    /**
-     * body数据为空时初始化默认值
-     * 
-     * @return
-     */
-    protected abstract T initDefaultColumnValue();
-
     public RdfFileRowConditionSpi getRowCondition() {
         return conditon;
     }
@@ -150,6 +143,5 @@ public abstract class AbstractSummaryPair<T> implements RdfFileSummaryPairSpi<T>
     public void setRowCondition(RdfFileRowConditionSpi conditon) {
         this.conditon = conditon;
     }
-    
-    
+
 }

@@ -52,4 +52,12 @@ public interface SummaryPair<T> {
      * 行条件判定
      */
     RdfFileRowConditionSpi getRowCondition();
+
+    /**
+     * body数据为空时初始化默认值
+     * 
+     * @return
+     */
+    T initDefaultColumnValue();
+
 }

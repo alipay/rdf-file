@@ -118,15 +118,19 @@ public class Summary {
     }
 
     public Object getTotalCountWithoutNull() {
-        return totalCount == null ? 0L : totalCount;
+        return totalCount == null ? 0 : totalCount;
     }
 
     public Map<String, Object> summaryHeadToMap() {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put(totalCountKey, totalCount);
+        map.put(totalCountKey, getTotalCountWithoutNull());
 
         for (SummaryPair summaryPair : headSummaryPairs) {
-            map.put(summaryPair.getHeadKey(), summaryPair.getSummaryValue());
+            if (null == summaryPair.getSummaryValue()) {
+                map.put(summaryPair.getHeadKey(), summaryPair.initDefaultColumnValue());
+            } else {
+                map.put(summaryPair.getHeadKey(), summaryPair.getSummaryValue());
+            }
         }
 
         for (StatisticPair pair : headStatisticPairs) {
@@ -138,10 +142,14 @@ public class Summary {
 
     public Map<String, Object> summaryTailToMap() {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put(totalCountKey, totalCount);
+        map.put(totalCountKey, getTotalCountWithoutNull());
 
         for (SummaryPair summaryPair : tailSummaryPairs) {
-            map.put(summaryPair.getTailKey(), summaryPair.getSummaryValue());
+            if (null == summaryPair.getSummaryValue()) {
+                map.put(summaryPair.getTailKey(), summaryPair.initDefaultColumnValue());
+            } else {
+                map.put(summaryPair.getTailKey(), summaryPair.getSummaryValue());
+            }
         }
 
         for (StatisticPair pair : tailStatisticPairs) {

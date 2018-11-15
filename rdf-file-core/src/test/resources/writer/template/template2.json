@@ -1,8 +1,7 @@
 {
  	"head":[
 	     "totalCount|总笔数|Required|Integer",
-	     "totalAmount|总金额|BigDecimal|Required",
-	     "inst_1|机构1|Integer"
+	     "totalAmount|总金额|BigDecimal|Required"
  	],
  	"body":[
 	     "seq|流水号",
@@ -10,27 +9,23 @@
 	     "gmtApply|订单申请时间|Date:yyyy-MM-dd HH:mm:ss",
 	     "date|普通日期|Date:yyyyMMdd",
 	     "dateTime|普通日期时间|Date:yyyyMMdd HH:mm:ss",
-	     "applyNumber|普通数字|BigDecimal",
+	     "applyNumber|普通数字|Long",
 	     "amount|金额|BigDecimal",
 	     "age|年龄|Integer",
 	     "longN|长整型|Long",
 	     "bol|布尔值|Boolean",
 	     "memo|备注"
     ],
-    "tail": [
-    	"fileEnd|数据文件尾部字符",
-    	"date|普通日期|Date:yyyyMMdd",
-    	"amount|总金额|BigDecimal",
-    	"inst_0|机构2|long"
+    "tail":[
+    	"successCount|成功笔数|integer"
     ],
     "protocol":"DE",
+    "lineBreak":"\r\n",
     "summaryColumnPairs":[
-    	"totalAmount|amount",
-    	"amount|amount"
+    	"totalAmount|amount|amount=100"
     ],
     "statisticColumnPairs":[
-    	"inst_1|instSeq=inst_seq_1",
-    	"inst_0|bol=true"
+    	"successCount|match:bol=true"
     ]
 }
     
