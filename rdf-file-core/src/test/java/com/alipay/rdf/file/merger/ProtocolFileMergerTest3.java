@@ -62,6 +62,10 @@ public class ProtocolFileMergerTest3 {
         headFilePaths.add(File.class.getResource("/meger/summary/de_head1.txt").getPath());
         mergerConfig.setHeadFilePaths(headFilePaths);
 
+        List<String> tailFilePaths = new ArrayList<String>();
+        tailFilePaths.add(File.class.getResource("/meger/summary/de_tail1.txt").getPath());
+        mergerConfig.setTailFilePaths(tailFilePaths);
+
         fileMerger.merge(mergerConfig);
 
         FileReader reader = FileFactory.createReader(fileConfig);
@@ -88,7 +92,8 @@ public class ProtocolFileMergerTest3 {
         Map<String, Object> tail = reader.readTail(HashMap.class);
         Assert.assertEquals("OFDCFEND", tail.get("fileEnd"));
         Assert.assertEquals("20131109", DateUtil.format((Date) tail.get("date"), "yyyyMMdd"));
-        Assert.assertEquals(new BigDecimal("323"), tail.get("amount"));
+        Assert.assertEquals(new BigDecimal("423"), tail.get("amount"));
+        Assert.assertEquals(new Long(61), tail.get("inst_0"));
     }
 
     @After
