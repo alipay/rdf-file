@@ -26,11 +26,10 @@
     ],
     "protocol":"sp",
     "summaryColumnPairs":[
-    	"totalAmount|amount",
-    	"count|count|callback:com.alipay.rdf.file.multiBodyTempalte.BizCallbackRowCondition"
+    	"totalAmount|amount|amount=100",
+    	"count|count|bol=true"
     ],
     "statisticColumnPairs":[
-    	"count|bol=true|seq(0,4)=aaa|amount=15",
     	"successCount|match:count=22"
     ]
 }

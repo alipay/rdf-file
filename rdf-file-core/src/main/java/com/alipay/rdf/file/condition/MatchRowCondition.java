@@ -21,7 +21,9 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  * 基于字段值匹配的行条件计算器
  * 
  * match:bol=true|seq(0,4)=aaa|age=15
- *
+ * 
+ * 决策值null  返回false
+ * 
  * @author hongwei.quhw
  * @version $Id: ExpressionRowCondition.java, v 0.1 2018年10月11日 下午8:48:10 hongwei.quhw Exp $
  */
@@ -35,9 +37,9 @@ public class MatchRowCondition implements RdfFileRowConditionSpi {
         for (MatchHolder match : matches) {
             Object value = row.getProperty(match.name);
 
-            RdfFileUtil.assertNotNull(value,
-                "rdf-file#MatchRowCondition columName=[" + match.name + "]值为null不能进行条件计算",
-                RdfErrorEnum.ILLEGAL_ARGUMENT);
+            if (null == value) {
+                return false;
+            }
 
             if (match.subString) {
                 value = ((String) value).substring(match.start, match.end);
