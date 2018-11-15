@@ -17,15 +17,17 @@
 	     "memo|备注"
     ],
     "tail":[
-    	"successCount|成功笔数|integer"
+    	"successAmount|成功金额|BigDecimal",
+    	"failCount|失败笔数|integer"
     ],
     "protocol":"DE",
     "lineBreak":"\r\n",
     "summaryColumnPairs":[
-    	"totalAmount|amount|amount=100"
+    	"totalAmount|amount",
+    	"successAmount|amount|bol=true"
     ],
     "statisticColumnPairs":[
-    	"successCount|match:bol=true"
+    	"failCount|match:bol=false"
     ]
 }
     

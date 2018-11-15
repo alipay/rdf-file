@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.alipay.rdf.file.interfaces.FileFactory;
+import com.alipay.rdf.file.interfaces.FileStorage;
 import com.alipay.rdf.file.interfaces.FileWriter;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.StorageConfig;
@@ -100,6 +101,49 @@ public class SummaryWriterTest {
 
         reader.close();
 
+    }
+
+    @Test
+    public void testWriter2() throws Exception {
+        String filePath = tf.getRoot().getAbsolutePath();
+        System.out.println(filePath);
+
+        FileConfig config = new FileConfig(new File(filePath, "test.txt").getAbsolutePath(),
+            "/writer/template/template3.json", new StorageConfig("nas"));
+        config.setCreateEmptyFile(true);
+        config.setSummaryEnable(true);
+        FileStorage fileStorage = FileFactory.createStorage(new StorageConfig("nas"));
+
+        FileWriter fileWriter = FileFactory.createWriter(config);
+
+        Map<String, Object> row = new HashMap<String, Object>();
+        row.put("amount", new BigDecimal("100.1"));
+        row.put("bol", true);
+        row.put("memo", "test");
+        fileWriter.writeRow(row);
+
+        row.put("amount", new BigDecimal("100"));
+        row.put("bol", false);
+        fileWriter.writeRow(row);
+
+        row.put("amount", new BigDecimal("11"));
+        row.put("bol", true);
+        fileWriter.writeRow(row);
+
+        fileWriter.writeTail(fileWriter.getSummary().summaryTailToMap());
+
+        fileWriter.close();
+        Assert.assertTrue(fileStorage.getFileInfo(config.getFilePath()).isExists());
+
+        //校验文件
+        BufferedReader reader = new BufferedReader(
+            new InputStreamReader(new FileInputStream(new File(config.getFilePath())), "UTF-8"));
+        Assert.assertEquals("100.1|true|test", reader.readLine());
+        Assert.assertEquals("100|false|test", reader.readLine());
+        Assert.assertEquals("11|true|test", reader.readLine());
+        Assert.assertEquals("3|211.1|111.1|1", reader.readLine());
+        Assert.assertNull(reader.readLine());
+        reader.close();
     }
 
     @After
