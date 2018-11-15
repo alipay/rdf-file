@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
@@ -725,6 +726,11 @@ public class RdfFileUtil {
             } else {
                 return false;
             }
+        }
+
+        if (!left.getClass().getName().equals(right.getClass().getName())) {
+            left = new BigDecimal(left.toString());
+            right = new BigDecimal(right.toString());
         }
 
         if (left instanceof Comparable) {
