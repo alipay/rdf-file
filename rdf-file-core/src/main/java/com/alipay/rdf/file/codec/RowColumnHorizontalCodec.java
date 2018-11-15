@@ -115,9 +115,9 @@ public class RowColumnHorizontalCodec {
         splitLength = endWithSplit ? splitLength + 1 : splitLength;
 
         if (column.length != splitLength) {
-            throw new RdfFileException(
-                "rdf-file#RowColumnHorizontalCodec.deserialize fileConfig=" + fileConfig + ", line="
-                                       + line + "模板定义列数=" + column.length + ", 实际列数=" + splitLength,
+            throw new RdfFileException("rdf-file#RowColumnHorizontalCodec.deserialize fileConfig="
+                                       + fileConfig + ", line=[" + line + "],模板定义列数=" + splitLength
+                                       + ", 实际列数=" + column.length,
                 RdfErrorEnum.DESERIALIZE_ERROR);
         }
 
