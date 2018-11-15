@@ -94,10 +94,12 @@ public class SummaryLoader {
             : summaryColumnPair.substring(firstIdx + 1, secIdx);
         String condition = secIdx == -1 ? null : summaryColumnPair.substring(secIdx + 1);
 
-        RdfFileLogUtil.common
-            .info("rdf-file#SummaryLoader.parseSummaryPairMeta templatePath=["
-                  + fileMeta.getTemplatePath() + "] summaryKey=[" + summaryKey + "], columnKey=["
-                  + columnKey + "], condition=[" + (condition == null ? "null" : condition) + "]");
+        if (RdfFileLogUtil.common.isInfo()) {
+            RdfFileLogUtil.common.info("rdf-file#SummaryLoader.parseSummaryPairMeta templatePath=["
+                                       + fileMeta.getTemplatePath() + "] summaryKey=[" + summaryKey
+                                       + "], columnKey=[" + columnKey + "], condition=["
+                                       + (condition == null ? "null" : condition) + "]");
+        }
 
         FileColumnMeta summaryColMeta;
         FileDataTypeEnum summaryDataType;
@@ -202,9 +204,12 @@ public class SummaryLoader {
         String statisticKey = statisticColumnPair.substring(0, idx);
         String condition = statisticColumnPair.substring(idx + 1);
 
-        RdfFileLogUtil.common.info("rdf-file#SummaryLoader.parseStatisticPairMeta templatePath=["
-                                   + fileMeta.getTemplatePath() + "], statisticKey=[" + statisticKey
-                                   + "], condition=[" + condition + "]");
+        if (RdfFileLogUtil.common.isInfo()) {
+            RdfFileLogUtil.common
+                .info("rdf-file#SummaryLoader.parseStatisticPairMeta templatePath=["
+                      + fileMeta.getTemplatePath() + "], statisticKey=[" + statisticKey
+                      + "], condition=[" + condition + "]");
+        }
 
         FileColumnMeta statisticColMeta;
         FileDataTypeEnum statisticDataType;
