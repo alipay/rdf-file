@@ -14,6 +14,7 @@ import com.alipay.rdf.file.spi.RdfFileRowConditionSpi;
 import com.alipay.rdf.file.spi.RdfFileSummaryPairSpi;
 import com.alipay.rdf.file.util.BeanMapWrapper;
 import com.alipay.rdf.file.util.RdfFileConstants;
+import com.alipay.rdf.file.util.RdfFileLogUtil;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
@@ -44,6 +45,12 @@ public class SummaryProcessor implements RdfFileProcessorSpi {
         Object data = pc.getBizData(RdfFileConstants.DATA);
 
         if (null == data) {
+            if (RdfFileLogUtil.common.isWarn()) {
+                RdfFileLogUtil.common
+                    .warn("rdf-file#SummaryProcessor processorType=" + processorType
+                          + ", templatePath=" + pc.getFileConfig().getTemplatePath()
+                          + ", data== null");
+            }
             return;
         }
 
@@ -70,6 +77,12 @@ public class SummaryProcessor implements RdfFileProcessorSpi {
                     RdfFileRowConditionSpi rowCondition = pair.getRowCondition();
                     //不满足条件的行不汇总
                     if (null != rowCondition && !rowCondition.serialize(pc.getFileConfig(), bmw)) {
+                        if (RdfFileLogUtil.common.isDebug()) {
+                            RdfFileLogUtil.common
+                                .debug("rdf-file#SummaryProcessor processorType=" + processorType
+                                       + ", templatePath=" + pc.getFileConfig().getTemplatePath()
+                                       + ", data=[" + data + "] 不满足条件的行不汇总");
+                        }
                         return;
                     }
 
@@ -81,6 +94,12 @@ public class SummaryProcessor implements RdfFileProcessorSpi {
                     RdfFileRowConditionSpi rowCondition = pair.getRowCondition();
                     // 不满足条件的行不统计
                     if (null != rowCondition && !rowCondition.serialize(pc.getFileConfig(), bmw)) {
+                        if (RdfFileLogUtil.common.isDebug()) {
+                            RdfFileLogUtil.common
+                                .debug("rdf-file#SummaryProcessor processorType=" + processorType
+                                       + ", templatePath=" + pc.getFileConfig().getTemplatePath()
+                                       + ", data=[" + data + "] 不满足条件的行不统计");
+                        }
                         return;
                     }
                     pair.increment(pc.getFileConfig(), bmw);
