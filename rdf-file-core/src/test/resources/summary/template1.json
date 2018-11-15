@@ -2,6 +2,7 @@
  	"head":[
 	     "totalCount|总笔数|Required|BigDecimal",
 	     "totalAmount|总金额|BigDecimal|Required",
+	     "successAmount|成功总金额|BigDecimal|Required",
 	     "successCount|成功笔数|Long"
  	],
  	"body":[
@@ -25,11 +26,11 @@
     "protocol":"DE",
     "summaryColumnPairs":[
     	"totalAmount|amount",
-    	"successCount|longN|bol=true|seq(0,4)=aaa|age=15"
+    	"successAmount|amount|bol=true|seq(0,4)=abcd|age=15"
     ],
     "statisticColumnPairs":[
-    	"successCount|bol=true|seq(0,4)=aaa|age=15",
-    	"failcount|match:seq(3,6)=jjjj"
+    	"successCount|bol=true|seq(0,4)=eabc|age=15",
+    	"failcount|match:seq(4,5)=d"
     ]
 }
     
