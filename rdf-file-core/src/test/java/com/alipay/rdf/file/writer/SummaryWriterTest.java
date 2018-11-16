@@ -146,6 +146,81 @@ public class SummaryWriterTest {
         reader.close();
     }
 
+    @Test
+    public void testWriter3() throws Exception {
+        String filePath = tf.getRoot().getAbsolutePath();
+        System.out.println(filePath);
+        FileConfig config = new FileConfig(new File(filePath, "test.txt").getAbsolutePath(),
+            "/writer/template/template4.json", new StorageConfig("nas"));
+        config.setCreateEmptyFile(true);
+        config.setSummaryEnable(true);
+        FileWriter fileWriter = FileFactory.createWriter(config);
+
+        Map<String, Object> row = new HashMap<String, Object>();
+        row.put("type", "B");
+        row.put("amount", new BigDecimal("100"));
+        row.put("status", "S");
+        fileWriter.writeRow(row);
+
+        row = new HashMap<String, Object>();
+        row.put("type", "A");
+        row.put("amount", new BigDecimal("100"));
+        row.put("status", "S");
+        row.put("applyAmount", new BigDecimal("100"));
+        fileWriter.writeRow(row);
+
+        row = new HashMap<String, Object>();
+        row.put("type", "A");
+        row.put("amount", new BigDecimal("100"));
+        row.put("status", "F");
+        row.put("applyAmount", new BigDecimal("100"));
+        fileWriter.writeRow(row);
+        row = new HashMap<String, Object>();
+        row.put("type", "A");
+        row.put("amount", new BigDecimal("100"));
+        row.put("status", "F");
+        row.put("applyAmount", new BigDecimal("100"));
+        fileWriter.writeRow(row);
+
+        row = new HashMap<String, Object>();
+        row.put("type", "B");
+        row.put("amount", new BigDecimal("100"));
+        row.put("status", "F");
+        fileWriter.writeRow(row);
+
+        row = new HashMap<String, Object>();
+        row.put("type", "B");
+        row.put("amount", new BigDecimal("100"));
+        row.put("status", "S");
+        fileWriter.writeRow(row);
+
+        fileWriter.writeTail(fileWriter.getSummary().summaryTailToMap());
+
+        fileWriter.close();
+
+        /*
+        B|100|S
+        A|100|S|100
+        A|100|F|100
+        A|100|F|100
+        B|100|F
+        B|100|S
+        600|300|300|300|200|100|200|300|300|6|3|3|2|1|3|3
+         */
+
+        BufferedReader reader = new BufferedReader(
+            new InputStreamReader(new FileInputStream(new File(config.getFilePath())), "UTF-8"));
+        Assert.assertEquals("B|100|S", reader.readLine());
+        Assert.assertEquals("A|100|S|100", reader.readLine());
+        Assert.assertEquals("A|100|F|100", reader.readLine());
+        Assert.assertEquals("A|100|F|100", reader.readLine());
+        Assert.assertEquals("B|100|F", reader.readLine());
+        Assert.assertEquals("B|100|S", reader.readLine());
+        Assert.assertEquals("600|300|300|300|200|100|200|300|300|6|3|3|2|1|3|3", reader.readLine());
+        Assert.assertNull(reader.readLine());
+        reader.close();
+    }
+
     @After
     public void after() {
         tf.delete();
