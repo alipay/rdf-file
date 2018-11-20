@@ -76,9 +76,9 @@ public class SFTPHelper {
 		String separator = "/"; // File.separator;
 		String[] names = dir.split(separator);
 		if (names != null && names.length > 0) {
-			String parent = separator;
 			boolean success = false;
 			while (!success && --retryTime >= 0) {
+				String parent = separator;
 				String current = null;
 				success = true;
 				for (int i = 0; i < names.length; i++) {
@@ -121,9 +121,10 @@ public class SFTPHelper {
 		} catch (SftpException e) {
 			// 如目录不存在，则创建之
 			try {
+				sftp.cd("/");
 				sftp.mkdir(currentPath);
 				RdfFileLogUtil.common.info("rdf-file#SFTPHelper"
-						+ ".mkdirIfNotExist,create path={" + currentPath + "} success.");
+						+ ".mkdirIfNotExist,create path={" + currentPath + "} success.", e);
 			} catch (SftpException e1) {
 				RdfFileLogUtil.common.warn("rdf-file#SFTPHelper"
 						+ ".mkdirIfNotExist,create path={" + currentPath + "} failed.");
