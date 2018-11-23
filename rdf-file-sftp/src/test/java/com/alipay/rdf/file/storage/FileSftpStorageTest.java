@@ -23,9 +23,9 @@ import com.alipay.rdf.file.operation.SftpOperationParamEnums;
 import com.alipay.rdf.file.operation.SftpOperationResponse;
 import com.alipay.rdf.file.operation.SftpOperationTypeEnums;
 import com.alipay.rdf.file.sftp.SftpTestUtil;
+import com.alipay.rdf.file.sftp.TemporaryFolderUtil;
 import com.alipay.rdf.file.sftp.TestInitOperation;
 import com.alipay.rdf.file.util.RdfFileUtil;
-import com.alipay.rdf.file.sftp.TemporaryFolderUtil;
 
 /**
  * 测试用例
@@ -44,7 +44,7 @@ public class FileSftpStorageTest {
 
     AbstractSftpOperationTemplate<Boolean> initOperation = new TestInitOperation();
 
-    String ROOT_PATH = "/files/testcase";
+    String ROOT_PATH = SftpTestUtil.combineHomeDir("testcase");
 
     String dir1 = "dir1";
     String dir2 = "dir2";
@@ -202,8 +202,8 @@ public class FileSftpStorageTest {
         Assert.assertTrue(list.size() == 1);
         System.out.println("upload[override] ok.");
 
-        System.out.println("rename begin.");
-        fileStorage.rename(buildPath(remoteUploadDst), buildPath(remoteRenameDst));
+        System.out.println("rename[targetfile exists] begin.");
+        fileStorage.rename(buildPath(testFile3), buildPath(remoteRenameDst));
         filePathFilter = new FilePathFilter() {
             @Override
             public boolean accept(String file) {
@@ -212,7 +212,7 @@ public class FileSftpStorageTest {
         };
         list = fileStorage.listFiles(buildPath(remoteRenameDir), filePathFilter);
         Assert.assertTrue(list.size() == 1);
-        System.out.println("rename ok.");
+        System.out.println("rename[targetfile exists] ok.");
     }
 
     private String buildPath(String relativePath){

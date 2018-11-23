@@ -1,7 +1,10 @@
 package com.alipay.rdf.file.writer;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -85,6 +88,38 @@ public class NoDataWriterTest {
         fileWriter.close();
         Assert.assertTrue(fileStorage.getFileInfo(config.getFilePath()).isExists());
 
+    }
+
+    /**
+     * 带汇总信息  数据内容为空
+     */
+    @Test
+    public void testWriter4() throws Exception {
+        String filePath = tf.getRoot().getAbsolutePath();
+        System.out.println(filePath);
+
+        FileConfig config = new FileConfig(new File(filePath, "test.txt").getAbsolutePath(),
+            "/writer/template/template2.json", new StorageConfig("nas"));
+        config.setCreateEmptyFile(true);
+        config.setSummaryEnable(true);
+        FileStorage fileStorage = FileFactory.createStorage(new StorageConfig("nas"));
+
+        FileWriter fileWriter = FileFactory.createWriter(config);
+        fileWriter.writeHead(fileWriter.getSummary().summaryHeadToMap());
+        fileWriter.writeTail(fileWriter.getSummary().summaryTailToMap());
+
+        fileWriter.close();
+        Assert.assertTrue(fileStorage.getFileInfo(config.getFilePath()).isExists());
+
+        //校验文件
+        BufferedReader reader = new BufferedReader(
+            new InputStreamReader(new FileInputStream(new File(config.getFilePath())), "UTF-8"));
+        Assert.assertEquals("总笔数:0|总金额:0", reader.readLine());
+        Assert.assertEquals("流水号|基金公司订单号|订单申请时间|普通日期|普通日期时间|普通数字|金额|年龄|长整型|布尔值|备注",
+            reader.readLine());
+        Assert.assertEquals("0|0", reader.readLine());
+        Assert.assertNull(reader.readLine());
+        reader.close();
     }
 
     @After

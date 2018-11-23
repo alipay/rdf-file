@@ -170,6 +170,13 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 
 	@Override
 	public void rename(String srcFile, String toFile) {
+
+		FileInfo targetFileInfo = getFileInfo(toFile);
+		if(targetFileInfo.isExists()){
+			//如果rename到的文件存在，先删除
+			delete(toFile);
+		}
+
 		Map<String, String> params = new HashMap<String, String>();
 
 		params.put(SftpOperationParamEnums.SOURCE_FILE.toString(), srcFile);
@@ -193,23 +200,36 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 
 		boolean result = false;
 		try {
-
 			if (!isExist || override) {
-				Map<String, String> params = new HashMap<String, String>();
+				File localFile = new File(srcFile);
+				if(localFile.isDirectory()){
+					File[] files = localFile.listFiles();
+					if (files != null && files.length > 0) {
+						for (File f : files) {
+							String temp = f.getAbsolutePath();
+							if (!RdfFileUtil.equals(srcFile, toFile)) {
+								temp = RdfFileUtil.combinePath(toFile, f.getName());
+							}
+							upload(f.getAbsolutePath(), temp, override);
+						}
+					}
+					result = true;
+				}else{
+					Map<String, String> params = new HashMap<String, String>();
 
-				params.put(SftpOperationParamEnums.SOURCE_FILE.toString(), srcFile);
-				params.put(SftpOperationParamEnums.TARGET_FILE.toString(), toFile);
+					params.put(SftpOperationParamEnums.SOURCE_FILE.toString(), srcFile);
+					params.put(SftpOperationParamEnums.TARGET_FILE.toString(), toFile);
 
-				AbstractSftpOperationTemplate operationTemplate
-						= SftpOperationFactory.getOperation(SftpOperationTypeEnums.UPLOAD);
+					AbstractSftpOperationTemplate operationTemplate
+							= SftpOperationFactory.getOperation(SftpOperationTypeEnums.UPLOAD);
 
-				SftpOperationResponse<Boolean> response = operationTemplate.handle(sftpUserInfo, params);
-
-				if(!response.isSuccess()){
-					throw new RdfFileException("rdf-file#FileSftpStorage.upload,sftp upload file fail"
-							+ "，srcFile=" + srcFile + ",toFile=" + toFile, response.getError(), RdfErrorEnum.UNKOWN);
+					SftpOperationResponse<Boolean> response = operationTemplate.handle(sftpUserInfo, params);
+					if(!response.isSuccess()){
+						throw new RdfFileException("rdf-file#FileSftpStorage.upload,sftp upload file fail"
+								+ "，srcFile=" + srcFile + ",toFile=" + toFile, response.getError(), RdfErrorEnum.UNKOWN);
+					}
+					result = true;
 				}
-				result = response.getData();
 			} else {
 				RdfFileLogUtil.common.warn("rdf-file#FileSftpStorage.upload,file already exist,abort.toFile=" + toFile);
 
@@ -229,7 +249,21 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 
 	@Override
 	public InputStream getInputStream(String filename) {
-		throw new RdfFileException("rdf-file#FileSftpStorage.getInputStream", RdfErrorEnum.UNSUPPORTED_OPERATION);
+		Map<String, String> params = new HashMap<String, String>();
+
+		params.put(SftpOperationParamEnums.TARGET_FILE.toString(), filename);
+		params.put(SftpOperationParamEnums.DO_NOT_CLOSE_CONNECTION.toString(), "T");
+
+		AbstractSftpOperationTemplate operationTemplate
+				= SftpOperationFactory.getOperation(SftpOperationTypeEnums.GET_INPUT_STREAM);
+
+		SftpOperationResponse<InputStream> response = operationTemplate.handle(sftpUserInfo, params);
+
+		if(!response.isSuccess()){
+			throw new RdfFileException("rdf-file#FileSftpStorage.getInputStream,sftp getInputStream fail"
+					+ "，filename=" + filename, response.getError(), RdfErrorEnum.NOT_EXSIT);
+		}
+		return response.getData();
 	}
 
 	@Override

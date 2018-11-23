@@ -38,6 +38,11 @@ public enum SftpOperationParamEnums {
      */
     RECURSIVE_LIST,
 
+    /**
+     * 是否在框架层面关闭连接
+     * 如果选择否注意手动关闭
+     */
+    DO_NOT_CLOSE_CONNECTION,
 
     ;
 

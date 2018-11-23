@@ -11,7 +11,7 @@ import com.alipay.rdf.file.interfaces.FileReader;
 import com.alipay.rdf.file.interfaces.FileWriter;
 import com.alipay.rdf.file.loader.ProtocolLoader;
 import com.alipay.rdf.file.loader.TemplateLoader;
-import com.alipay.rdf.file.meta.FileColumnMeta;
+import com.alipay.rdf.file.meta.FileBodyMeta;
 import com.alipay.rdf.file.meta.FileMeta;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.FileDataTypeEnum;
@@ -36,7 +36,7 @@ public class BodyCodec implements FileCodec {
     public void serialize(Object bean, FileConfig config, FileWriter writer,
                           Map<ProcessorTypeEnum, List<RdfFileProcessorSpi>> processors) {
         FileMeta fileMeta = TemplateLoader.load(config);
-        List<FileColumnMeta> columnMetas = fileMeta.getBodyColumns();
+        List<FileBodyMeta> columnMetas = fileMeta.getBodyMetas();
 
         if (columnMetas.size() == 0) {
             throw new RdfFileException("rdf-file#BodyCodec.deserialize 数据模板templatePath="
@@ -63,7 +63,7 @@ public class BodyCodec implements FileCodec {
     public <T> T deserialize(Class<?> clazz, FileConfig config, FileReader reader,
                              Map<ProcessorTypeEnum, List<RdfFileProcessorSpi>> processors) {
         FileMeta fileMeta = TemplateLoader.load(config);
-        List<FileColumnMeta> columnMetas = fileMeta.getBodyColumns();
+        List<FileBodyMeta> columnMetas = fileMeta.getBodyMetas();
 
         if (columnMetas.size() == 0) {
             throw new RdfFileException("rdf-file#BodyCodec.deserialize 数据模板templatePath="

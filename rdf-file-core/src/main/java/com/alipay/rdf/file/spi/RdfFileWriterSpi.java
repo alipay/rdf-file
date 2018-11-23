@@ -23,4 +23,9 @@ public interface RdfFileWriterSpi extends FileWriter, RdfInit<FileConfig> {
 
     /**返回配置对象*/
     FileConfig getFileConfig();
+
+    /**
+     * 关闭流
+     */
+    void close(boolean hasError);
 }

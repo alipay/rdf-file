@@ -1,25 +1,26 @@
 package com.alipay.rdf.file.loader;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.alibaba.fastjson.JSON;
+import com.alipay.rdf.file.condition.RowConditionType;
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.interfaces.RowValidator;
+import com.alipay.rdf.file.meta.FileBodyMeta;
 import com.alipay.rdf.file.meta.FileColumnAttribute;
 import com.alipay.rdf.file.meta.FileColumnMeta;
 import com.alipay.rdf.file.meta.FileColumnRangeMeta;
 import com.alipay.rdf.file.meta.FileColumnTypeMeta;
 import com.alipay.rdf.file.meta.FileMeta;
+import com.alipay.rdf.file.meta.MultiBodyConfig;
 import com.alipay.rdf.file.meta.TemplateConfig;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.FileDataTypeEnum;
 import com.alipay.rdf.file.model.FileDefaultConfig;
-import com.alipay.rdf.file.util.RdfFileLogUtil;
+import com.alipay.rdf.file.model.RowCondition;
 import com.alipay.rdf.file.util.RdfFileUtil;
 
 /**
@@ -84,7 +85,6 @@ public class TemplateLoader {
         templatePath = ResourceLoader.buildResource(templatePath,
             FileDefaultConfig.RDF_TEMPLATE_PATH);
 
-        InputStreamReader reader = null;
         FileMeta fileMeta = CACHE.get(templatePath);
 
         if (null != fileMeta) {
@@ -97,76 +97,107 @@ public class TemplateLoader {
                 return fileMeta;
             }
 
-            try {
-                InputStream is = ResourceLoader.getInputStream(templatePath);
+            InputStream is = ResourceLoader.getInputStream(templatePath);
 
-                RdfFileUtil.assertNotNull(is, "rdf-file#模板不存在 templatePath=" + templatePath);
+            RdfFileUtil.assertNotNull(is, "rdf-file#模板不存在 templatePath=" + templatePath);
 
-                String content = RdfFileUtil.safeReadFully(is, templateEncoding);
-                TemplateConfig templateConfig = JSON.parseObject(content, TemplateConfig.class);
+            String content = RdfFileUtil.safeReadFully(is, templateEncoding);
+            TemplateConfig templateConfig = JSON.parseObject(content, TemplateConfig.class);
 
-                fileMeta = new FileMeta();
-                fileMeta.setTemplatePath(templatePath);
+            fileMeta = new FileMeta();
+            fileMeta.setTemplatePath(templatePath);
 
-                int colIndex = 0;
-                //head
-                for (String head : templateConfig.getHead()) {
-                    fileMeta
-                        .addHeadColumn(parseFileColumn(templatePath, head, colIndex++, fileMeta));
-                }
+            int colIndex = 0;
+            //head
+            for (String head : templateConfig.getHead()) {
+                fileMeta.addHeadColumn(parseFileColumn(templatePath, head, colIndex++, fileMeta));
+            }
 
-                colIndex = 0;
-                // body
-                for (String body : templateConfig.getBody()) {
-                    fileMeta
-                        .addBodyColumn(parseFileColumn(templatePath, body, colIndex++, fileMeta));
-                }
-
-                colIndex = 0;
-                //tail
-                for (String tail : templateConfig.getTail()) {
-                    fileMeta
-                        .addTailColumn(parseFileColumn(templatePath, tail, colIndex++, fileMeta));
-                }
-
-                //解析汇总字段
-                for (String summaryColumnPair : templateConfig.getSummaryColumnPairs()) {
-                    fileMeta
-                        .addSummaryColumnPair(SummaryLoader.parseMeta(fileMeta, summaryColumnPair));
-                }
-
-                //解析协议
-                fileMeta.setProtocol(RdfFileUtil.assertTrimNotBlank(templateConfig.getProtocol()));
-
-                //解析行校验器
-                for (String rowValidator : templateConfig.getRowValidators()) {
-                    fileMeta.addRowValidator((RowValidator) RdfFileUtil.newInstance(rowValidator));
-                }
-
-                //解析startWithSplit
-                if (RdfFileUtil.isNotBlank(templateConfig.getStartWithSplit())) {
-                    parseStartWithSplit(fileMeta, templateConfig.getStartWithSplit());
-                }
-
-                //解析endWithSplit
-                if (RdfFileUtil.isNotBlank(templateConfig.getEndWithSplit())) {
-                    parseEndWithSplit(fileMeta, templateConfig.getEndWithSplit());
-                }
-
-                fileMeta.setColumnSplit(templateConfig.getColumnSplit());
-                fileMeta.setFileEncoding(templateConfig.getFileEncoding());
-                fileMeta.setLineBreak(templateConfig.getLineBreak());
-            } finally {
-                if (null != reader) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        if (RdfFileLogUtil.common.isWarn()) {
-                            RdfFileLogUtil.common.warn("TemplateLoader reader.close 错误", e);
-                        }
+            // body 配置多模板解析
+            if (templateConfig.getMultiBodys().size() > 0) {
+                fileMeta.setMultiBody(true);
+                for (MultiBodyConfig bodyConfig : templateConfig.getMultiBodys()) {
+                    // body
+                    FileBodyMeta bodyMeta = new FileBodyMeta();
+                    RdfFileUtil.assertNotBlank(
+                        bodyConfig.getName(), "rdf-file#multiTempalte config templatePath="
+                                              + templatePath + ", bodyConfig name is blank");
+                    bodyMeta.setName(bodyConfig.getName());
+                    bodyMeta.setTemplatePath(templatePath);
+                    colIndex = 0;
+                    for (String body : bodyConfig.getBodyColumns()) {
+                        bodyMeta.getColumns()
+                            .add(parseFileColumn(templatePath, body, colIndex++, fileMeta));
                     }
+                    fileMeta.addBodyColumn(bodyMeta);
+
+                    // 解析行条件
+                    RdfFileUtil.assertNotBlank(bodyConfig.getCondition(),
+                        "rdf-file#TemplateLoader 多模板配置 path=" + templatePath + " bodyTempateName="
+                                                                          + bodyMeta.getName()
+                                                                          + " 没有配置condition");
+                    RowCondition rowCondition = new RowCondition(fileMeta, bodyConfig.getName(),
+                        bodyConfig.getCondition(), RowConditionType.MULTI_BODY_TEMPLATE);
+                    bodyMeta.setRowCondition(RowConditionLoader.loadRowCondition(rowCondition));
                 }
             }
+
+            // body单模板解析
+            if (templateConfig.getBody().size() > 0) {
+                if (fileMeta.isMultiBody()) {
+                    throw new RdfFileException(
+                        "rdf-file#TemplateLoader 数据定义模板,不支持同时定义body和multiBodys属性",
+                        RdfErrorEnum.TEMPLATE_ERROR);
+                }
+                colIndex = 0;
+                // body
+                FileBodyMeta bodyMeta = new FileBodyMeta();
+                for (String body : templateConfig.getBody()) {
+                    bodyMeta.getColumns()
+                        .add(parseFileColumn(templatePath, body, colIndex++, fileMeta));
+                }
+                fileMeta.addBodyColumn(bodyMeta);
+            }
+
+            colIndex = 0;
+            //tail
+            for (String tail : templateConfig.getTail()) {
+                fileMeta.addTailColumn(parseFileColumn(templatePath, tail, colIndex++, fileMeta));
+            }
+
+            //解析汇总字段
+            for (String summaryColumnPair : templateConfig.getSummaryColumnPairs()) {
+                fileMeta.addSummaryColumnPair(
+                    SummaryLoader.parseSummaryPairMeta(fileMeta, summaryColumnPair));
+            }
+
+            //解析统计字段
+            for (String statisticColumnPair : templateConfig.getStatisticColumnPairs()) {
+                fileMeta.addStatisticPair(
+                    SummaryLoader.parseStatisticPairMeta(fileMeta, statisticColumnPair));
+            }
+
+            //解析协议
+            fileMeta.setProtocol(RdfFileUtil.assertTrimNotBlank(templateConfig.getProtocol()));
+
+            //解析行校验器
+            for (String rowValidator : templateConfig.getRowValidators()) {
+                fileMeta.addRowValidator((RowValidator) RdfFileUtil.newInstance(rowValidator));
+            }
+
+            //解析startWithSplit
+            if (RdfFileUtil.isNotBlank(templateConfig.getStartWithSplit())) {
+                parseStartWithSplit(fileMeta, templateConfig.getStartWithSplit());
+            }
+
+            //解析endWithSplit
+            if (RdfFileUtil.isNotBlank(templateConfig.getEndWithSplit())) {
+                parseEndWithSplit(fileMeta, templateConfig.getEndWithSplit());
+            }
+
+            fileMeta.setColumnSplit(templateConfig.getColumnSplit());
+            fileMeta.setFileEncoding(templateConfig.getFileEncoding());
+            fileMeta.setLineBreak(templateConfig.getLineBreak());
 
             CACHE.put(templatePath, fileMeta);
 

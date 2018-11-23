@@ -1,5 +1,6 @@
 package com.alipay.rdf.file.interfaces;
 
+import com.alipay.rdf.file.common.FileWriterWrapper;
 import com.alipay.rdf.file.loader.FileSplitterLoader;
 import com.alipay.rdf.file.loader.FileStorageLoader;
 import com.alipay.rdf.file.loader.FileToolLoader;
@@ -57,7 +58,8 @@ public class FileFactory {
      * @return
      */
     public static FileWriter createWriter(FileConfig fileConfig) {
-        return FileToolLoader.loader(fileConfig, RdfFileWriterSpi.class);
+        RdfFileWriterSpi fileWriter = FileToolLoader.loader(fileConfig, RdfFileWriterSpi.class);
+        return new FileWriterWrapper(fileWriter);
     }
 
     /**

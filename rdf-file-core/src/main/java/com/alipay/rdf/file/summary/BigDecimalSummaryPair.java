@@ -16,7 +16,7 @@ public class BigDecimalSummaryPair extends AbstractSummaryPair<BigDecimal> {
     }
 
     @Override
-    protected BigDecimal initDefaultColumnValue() {
+    public BigDecimal initDefaultColumnValue() {
         return new BigDecimal("0");
     }
 }

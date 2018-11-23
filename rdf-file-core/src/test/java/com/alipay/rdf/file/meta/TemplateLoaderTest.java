@@ -3,12 +3,15 @@ package com.alipay.rdf.file.meta;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.loader.TemplateLoader;
 import com.alipay.rdf.file.model.FileDataTypeEnum;
+import com.alipay.rdf.file.model.FileDefaultConfig;
+import com.alipay.rdf.file.util.TestLog;
 
 /**
  * 模板加载测试
@@ -17,6 +20,11 @@ import com.alipay.rdf.file.model.FileDataTypeEnum;
  * @version $Id: TemplateLoaderTest.java, v 0.1 2016-12-22 下午2:01:39 hongwei.quhw Exp $
  */
 public class TemplateLoaderTest {
+
+    @Before
+    public void setUp() {
+        new FileDefaultConfig().setCommonLog(new TestLog());
+    }
 
     /**
      * 加载gbk编码的模板
@@ -156,5 +164,26 @@ public class TemplateLoaderTest {
     public void testFileEncoding() {
         FileMeta fileMeta = TemplateLoader.load("/meta/fileconding.json", "UTF-8");
         Assert.assertEquals("UTF-8", fileMeta.getFileEncoding());
+    }
+
+    @Test
+    public void testSummary_condition() {
+        TemplateLoader.load("/meta/template6.json", "UTF-8");
+
+        try {
+            TemplateLoader.load("/meta/template7.json", "UTF-8");
+            Assert.fail();
+        } catch (RdfFileException e) {
+            Assert.assertEquals(RdfErrorEnum.COLUMN_NOT_DEFINED, e.getErrorEnum());
+        }
+
+        try {
+            TemplateLoader.load("/meta/template8.json", "UTF-8");
+            Assert.fail();
+        } catch (RdfFileException e) {
+            Assert.assertEquals(RdfErrorEnum.STATISTIC_DEFINED_ERROR, e.getErrorEnum());
+        }
+
+        TemplateLoader.load("/meta/template9.json", "UTF-8");
     }
 }

@@ -45,6 +45,8 @@ public enum RdfErrorEnum {
 
                           SUMMARY_DEFINED_ERROR("汇总字段定义错误"),
 
+                          STATISTIC_DEFINED_ERROR("统计字段定义错误"),
+
                           UNSUPPORT_LINEBREAK("不支持换行符"),
 
                           DUPLICATE_DEFINED("重复定义"),
@@ -71,7 +73,11 @@ public enum RdfErrorEnum {
 
                           TYPE_CONVERTION_ERROR("类型转换失败"),
 
-                          FORMAT_ERROR("格式化错误");
+                          TYPE_GET_PROPERTY_ERROR("类型转换属性获取失败"),
+
+                          FORMAT_ERROR("格式化错误"),
+
+                          CONDITION_ERROR("条件值配置错误");
 
     private final String desc;
 
