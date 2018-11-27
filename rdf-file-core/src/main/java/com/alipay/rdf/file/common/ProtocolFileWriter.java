@@ -110,6 +110,11 @@ public class ProtocolFileWriter implements RdfFileWriterSpi {
      */
     @Override
     public void close() {
+        close(true);
+    }
+
+    @Override
+    public void close(boolean hasError) {
         if (null == writer) {
             if (fileConfig.isCreateEmptyFile()) {
                 ensureOpen();
@@ -119,7 +124,7 @@ public class ProtocolFileWriter implements RdfFileWriterSpi {
         }
 
         try {
-            writer.close();
+            writer.close(hasError);
         } finally {
             writer = null;
         }

@@ -27,7 +27,7 @@ public class FileMeta {
     /** 头部字段*/
     private final List<FileColumnMeta>     headColumns           = new ArrayList<FileColumnMeta>();
     /** 行记录字段*/
-    private final List<FileColumnMeta>     bodyColumns           = new ArrayList<FileColumnMeta>();
+    private final List<FileBodyMeta>       bodyColumns           = new ArrayList<FileBodyMeta>();
     /** 尾部字段*/
     private final List<FileColumnMeta>     tailColumns           = new ArrayList<FileColumnMeta>();
 
@@ -35,6 +35,8 @@ public class FileMeta {
     private String                         templatePath;
 
     private final List<SummaryPairMeta>    summaryPairs          = new ArrayList<SummaryPairMeta>();
+
+    private final List<StatisticPairMeta>  statisticPairs        = new ArrayList<StatisticPairMeta>();
 
     private final List<RowValidator>       validators            = new ArrayList<RowValidator>();
 
@@ -49,6 +51,8 @@ public class FileMeta {
     private Map<FileDataTypeEnum, Boolean> startWithSplit        = new HashMap<FileDataTypeEnum, Boolean>();
 
     private Map<FileDataTypeEnum, Boolean> endWithSplit          = new HashMap<FileDataTypeEnum, Boolean>();
+    /**body是否是多模板配置*/
+    private boolean                        multiBody             = false;
 
     public boolean isStartWithSplit(FileDataTypeEnum rowType) {
         Boolean startSplit = startWithSplit.get(rowType);
@@ -158,19 +162,8 @@ public class FileMeta {
      * 
      * @param column
      */
-    public void addBodyColumn(FileColumnMeta column) {
-        bodyColumns.add(column);
-    }
-
-    public FileColumnMeta getBodyColumn(String name) {
-        for (FileColumnMeta colMeta : bodyColumns) {
-            if (colMeta.getName().equals(name)) {
-                return colMeta;
-            }
-        }
-
-        throw new RdfFileException("rdf-file#FileMeta.getBodyColumn(name=" + name + ") 有没有定义",
-            RdfErrorEnum.COLUMN_NOT_DEFINED);
+    public void addBodyColumn(FileBodyMeta bodyMeta) {
+        bodyColumns.add(bodyMeta);
     }
 
     /**
@@ -226,7 +219,30 @@ public class FileMeta {
      * @return property value of bodyColumns
      */
     public List<FileColumnMeta> getBodyColumns() {
-        return bodyColumns;
+        if (multiBody) {
+            throw new RdfFileException(
+                "rdf-file#FileMeta.getBodyColumns() protocol=" + protocol + " 不支持body多模板配置.",
+                RdfErrorEnum.UNSUPPORTED_OPERATION);
+        }
+        return bodyColumns.get(0).getColumns();
+    }
+
+    public List<FileBodyMeta> getBodyMetas() {
+        return this.bodyColumns;
+    }
+
+    public FileBodyMeta getBodyMeta(String bodyTemplateName) {
+        if (multiBody) {
+            for (FileBodyMeta bodyMeta : bodyColumns) {
+                if (bodyMeta.getName().equals(bodyTemplateName)) {
+                    return bodyMeta;
+                }
+            }
+        } else {
+            return bodyColumns.get(0);
+        }
+
+        return null;
     }
 
     /**
@@ -310,6 +326,14 @@ public class FileMeta {
         this.summaryPairs.add(pair);
     }
 
+    public List<StatisticPairMeta> getStatisticPairMetas() {
+        return statisticPairs;
+    }
+
+    public void addStatisticPair(StatisticPairMeta pair) {
+        this.statisticPairs.add(pair);
+    }
+
     /**
      * Setter method for property <tt>protocol</tt>.
      * 
@@ -343,6 +367,14 @@ public class FileMeta {
 
     public String getLineBreak() {
         return lineBreak;
+    }
+
+    public boolean isMultiBody() {
+        return multiBody;
+    }
+
+    public void setMultiBody(boolean multiBody) {
+        this.multiBody = multiBody;
     }
 
     public void setLineBreak(String lineBreak) {

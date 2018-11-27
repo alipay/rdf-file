@@ -14,7 +14,7 @@ public class LongSummaryPair extends AbstractSummaryPair<Long> {
     }
 
     @Override
-    protected Long initDefaultColumnValue() {
+    public Long initDefaultColumnValue() {
         return new Long("0");
     }
 }

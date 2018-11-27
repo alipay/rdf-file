@@ -88,7 +88,7 @@ class RdfBufferedWriter {
     /**
      * 关闭流
      */
-    public void close() {
+    public void close(boolean hasError) {
         try {
             outStream.close();
         } catch (IOException e) {
@@ -98,7 +98,8 @@ class RdfBufferedWriter {
             }
         }
 
-        ProcessExecutor.execute(ProcessorTypeEnum.AFTER_CLOSE_WRITER, processors, fileConfig);
+        ProcessExecutor.execute(ProcessorTypeEnum.AFTER_CLOSE_WRITER, processors, fileConfig,
+            new BizData("hasError", hasError));
     }
 
     /**

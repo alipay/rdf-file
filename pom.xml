@@ -11,13 +11,15 @@
 	<url>https://github.com/alipay/rdf-file</url>
 
 	<properties>
-		<rdf.file.core.version>2.1.3</rdf.file.core.version>
-		<rdf.file.oss.version>2.1.3</rdf.file.oss.version>
+		<rdf.file.core.version>2.2.0</rdf.file.core.version>
+		<rdf.file.oss.version>2.2.0</rdf.file.oss.version>
+		<rdf.file.sftp.version>2.2.0</rdf.file.sftp.version>
 	</properties>
 
 	<modules>
 		<module>rdf-file-core</module>
 		<module>rdf-file-oss</module>
+		<module>rdf-file-sftp</module>
 		<module>rdf-file-test</module>
 	</modules>
 
@@ -35,10 +37,17 @@
 				<artifactId>rdf-file-core</artifactId>
 				<version>${rdf.file.core.version}</version>
 			</dependency>
+
 			<dependency>
 				<groupId>com.alipay.rdf.file</groupId>
 				<artifactId>rdf-file-oss</artifactId>
 				<version>${rdf.file.oss.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.alipay.rdf.file</groupId>
+				<artifactId>rdf-file-sftp</artifactId>
+				<version>${rdf.file.sftp.version}</version>
 			</dependency>
 
 			<dependency>
@@ -88,13 +97,18 @@
 		<developer>
 			<id>zhanqiu</id>
 			<name>斩秋</name>
-			<email>hongwei.quhw@antfin.com  444846366@qq.com</email>
+			<email>hongwei.quhw@antfin.com</email>
+		</developer>
+		<developer>
+			<id>chongyang</id>
+			<name>重扬</name>
+			<email>haofan.whf@alibaba-inc.com</email>
 		</developer>
 	</developers>
-	
+
 	<scm>
-        <connection>scm:git:git@github.com:alipay/rdf-file.git</connection>
-        <developerConnection>scm:git:ssh://github.com:alipay/rdf-file.git</developerConnection>
-        <url>https://github.com/alipay/rdf-file/tree/master</url>
-    </scm>
+		<connection>scm:git:git@github.com:alipay/rdf-file.git</connection>
+		<developerConnection>scm:git:ssh://github.com:alipay/rdf-file.git</developerConnection>
+		<url>https://github.com/alipay/rdf-file/tree/master</url>
+	</scm>
 </project>
