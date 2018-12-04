@@ -1,6 +1,7 @@
 package com.alipay.rdf.file.meta;
 
 import com.alipay.rdf.file.model.FileDataTypeEnum;
+import com.alipay.rdf.file.spi.RdfFileRowConditionSpi;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
@@ -19,6 +20,8 @@ public class SummaryPairMeta {
     private final FileColumnMeta   columnMeta;
 
     private final FileDataTypeEnum summaryDataType;
+
+    private RdfFileRowConditionSpi rowCondition;
 
     public SummaryPairMeta(String summaryKey, String columnKey, FileColumnMeta columnMeta,
                            FileDataTypeEnum summaryDataType) {
@@ -43,6 +46,14 @@ public class SummaryPairMeta {
 
     public FileDataTypeEnum getSummaryDataType() {
         return summaryDataType;
+    }
+
+    public RdfFileRowConditionSpi getRowCondition() {
+        return rowCondition;
+    }
+
+    public void setRowCondition(RdfFileRowConditionSpi rowCondition) {
+        this.rowCondition = rowCondition;
     }
 
     @Override

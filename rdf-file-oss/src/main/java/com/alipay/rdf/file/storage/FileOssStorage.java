@@ -58,9 +58,8 @@ public class FileOssStorage implements RdfFileStorageSpi {
         RdfFileUtil.assertNotNull(config, "rdf-file#StorageConfig中没有传递key="
                                           + OssConfig.OSS_STORAGE_CONFIG_KEY + " 的OssConfig对象参数",
             RdfErrorEnum.ILLEGAL_ARGUMENT);
-
         this.client = new OSSClient(config.getEndpoint(), config.getAccessKeyId(),
-            config.getAccessKeySecret());
+            config.getAccessKeySecret(), config.getClientConfiguration());
         if (!client.doesBucketExist(config.getBucketName())) {
             client.createBucket(config.getBucketName());
         }

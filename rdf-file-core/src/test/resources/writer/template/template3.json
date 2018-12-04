@@ -1,0 +1,23 @@
+{
+ 	"body":[
+	     "amount|金额|BigDecimal",
+	     "bol|布尔值|Boolean",
+	     "memo|备注"
+    ],
+    "tail":[
+    	"totalCount|总笔数|Required|Integer",
+	    "totalAmount|总金额|BigDecimal|Required",
+    	"successAmount|成功金额|BigDecimal",
+    	"failCount|失败笔数|integer"
+    ],
+    "protocol":"DE",
+    "lineBreak":"\r\n",
+    "summaryColumnPairs":[
+    	"totalAmount|amount",
+    	"successAmount|amount|bol=true"
+    ],
+    "statisticColumnPairs":[
+    	"failCount|match:bol=false"
+    ]
+}
+    

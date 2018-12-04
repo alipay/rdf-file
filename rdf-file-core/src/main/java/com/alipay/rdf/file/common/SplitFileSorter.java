@@ -76,7 +76,7 @@ public class SplitFileSorter extends AbstractFileSort {
                     datas.add(path);
                 }
             } catch (InterruptedException e) {
-                throw new RdfFileException("rdf-file#文件排序被打断, future=" + future,
+                throw new RdfFileException("rdf-file#文件排序被打断, future=" + future, e,
                     RdfErrorEnum.SORT_ERROR);
             } catch (ExecutionException e) {
                 throw new RdfFileException("rdf-file#文件排序异常, future=" + future, e,

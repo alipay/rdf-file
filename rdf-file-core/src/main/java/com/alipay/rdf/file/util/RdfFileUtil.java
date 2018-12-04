@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,6 +108,12 @@ public class RdfFileUtil {
         }
     }
 
+    public static void assertTrue(boolean bol, String str2, RdfErrorEnum errorcode) {
+        if (!bol) {
+            throw new RdfFileException(str2, errorcode);
+        }
+    }
+
     public static String assertTrimNotBlank(String text) {
         if (null == text || 0 == text.trim().length()) {
             throw new RdfFileException("rdf-file#字符串不能为空", RdfErrorEnum.ILLEGAL_ARGUMENT);
@@ -154,8 +161,9 @@ public class RdfFileUtil {
     }
 
     public static String safeReadFully(InputStream is, String encoding) {
+        InputStreamReader rdr = null;
         try {
-            InputStreamReader rdr = new InputStreamReader(is, encoding);
+            rdr = new InputStreamReader(is, encoding);
 
             final char[] buffer = new char[BUF_SIZE];
             int bufferLength = 0;
@@ -172,6 +180,16 @@ public class RdfFileUtil {
             throw new RdfFileException(e, RdfErrorEnum.UNKOWN);
         } catch (IOException e) {
             throw new RdfFileException(e, RdfErrorEnum.UNKOWN);
+        } finally {
+            try {
+                if (null != rdr) {
+                    rdr.close();
+                }
+            } catch (IOException e) {
+                if (RdfFileLogUtil.common.isWarn()) {
+                    RdfFileLogUtil.common.warn("TemplateLoader reader.close 错误", e);
+                }
+            }
         }
     }
 
@@ -698,5 +716,31 @@ public class RdfFileUtil {
         }
 
         return TemplateLoader.load(fileConfig).getColumnSplit();
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static boolean compare(Object left, Object right) {
+        if (null == left) {
+            if (null == right) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        if (!left.getClass().getName().equals(right.getClass().getName())) {
+            left = new BigDecimal(left.toString());
+            right = new BigDecimal(right.toString());
+        }
+
+        if (left instanceof Comparable) {
+            if (((Comparable) left).compareTo((Comparable) right) == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        return left.equals(right);
     }
 }

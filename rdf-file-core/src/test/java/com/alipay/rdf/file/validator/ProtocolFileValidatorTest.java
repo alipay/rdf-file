@@ -97,6 +97,19 @@ public class ProtocolFileValidatorTest {
         Assert.assertTrue(result.isSuccess());
     }
 
+    @Test
+    public void test5() {
+        String filePath = File.class.getResource("/validator/data/data2.txt").getPath();
+        FileConfig config = new FileConfig(filePath, "/validator/template/data1.cfg",
+            new StorageConfig("nas"));
+
+        FileValidator fileValidator = FileFactory.createValidator(config);
+
+        ValidateResult result = fileValidator.validate();
+
+        Assert.assertTrue(result.isSuccess());
+    }
+
     @After
     public void after() {
         tf.delete();

@@ -10,9 +10,11 @@ import com.alipay.rdf.file.model.SummaryPair;
 import com.alipay.rdf.file.processor.ProcessCotnext;
 import com.alipay.rdf.file.processor.ProcessorTypeEnum;
 import com.alipay.rdf.file.spi.RdfFileProcessorSpi;
+import com.alipay.rdf.file.spi.RdfFileRowConditionSpi;
 import com.alipay.rdf.file.spi.RdfFileSummaryPairSpi;
 import com.alipay.rdf.file.util.BeanMapWrapper;
 import com.alipay.rdf.file.util.RdfFileConstants;
+import com.alipay.rdf.file.util.RdfFileLogUtil;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
@@ -43,6 +45,12 @@ public class SummaryProcessor implements RdfFileProcessorSpi {
         Object data = pc.getBizData(RdfFileConstants.DATA);
 
         if (null == data) {
+            if (RdfFileLogUtil.common.isWarn()) {
+                RdfFileLogUtil.common
+                    .warn("rdf-file#SummaryProcessor processorType=" + processorType
+                          + ", templatePath=" + pc.getFileConfig().getTemplatePath()
+                          + ", data== null");
+            }
             return;
         }
 
@@ -50,29 +58,66 @@ public class SummaryProcessor implements RdfFileProcessorSpi {
         switch (processorType) {
             case AFTER_READ_HEAD:
             case AFTER_WRITE_HEAD:
-                List<SummaryPair> summaryPairs = summary.getHeadSummaryPairs();
-                for (SummaryPair pair : summaryPairs) {
+                for (SummaryPair pair : summary.getHeadSummaryPairs()) {
                     Object headValue = bmw.getProperty(pair.getHeadKey());
                     ((RdfFileSummaryPairSpi) pair).setHeadValue(headValue);
                 }
+
+                for (StatisticPair pair : summary.getHeadStatisticPairs()) {
+                    Object headValue = bmw.getProperty(pair.getHeadKey());
+                    pair.setHeadValue(headValue);
+                }
+
                 break;
             case AFTER_READ_ROW:
             case AFTER_WRITE_ROW:
                 summary.addTotalCount(1);
 
-                summaryPairs = summary.getSummaryPairs();
-                for (SummaryPair pair : summaryPairs) {
+                for (SummaryPair pair : summary.getSummaryPairs()) {
+                    RdfFileRowConditionSpi rowCondition = pair.getRowCondition();
+                    //不满足条件的行不汇总
+                    if (null != rowCondition && !rowCondition.serialize(pc.getFileConfig(), bmw)) {
+                        if (RdfFileLogUtil.common.isDebug()) {
+                            RdfFileLogUtil.common
+                                .debug("rdf-file#SummaryProcessor processorType=" + processorType
+                                       + ", templatePath=" + pc.getFileConfig().getTemplatePath()
+                                       + ", data=[" + data + "] 不满足条件的行不汇总");
+                        }
+                        continue;
+                    }
+
                     Object colValue = bmw.getProperty(pair.getColumnKey());
                     ((RdfFileSummaryPairSpi) pair).addColValue(colValue);
                 }
+
+                for (StatisticPair pair : summary.getStatisticPairs()) {
+                    RdfFileRowConditionSpi rowCondition = pair.getRowCondition();
+                    // 不满足条件的行不统计
+                    if (null != rowCondition && !rowCondition.serialize(pc.getFileConfig(), bmw)) {
+                        if (RdfFileLogUtil.common.isDebug()) {
+                            RdfFileLogUtil.common
+                                .debug("rdf-file#SummaryProcessor processorType=" + processorType
+                                       + ", templatePath=" + pc.getFileConfig().getTemplatePath()
+                                       + ", data=[" + data + "] 不满足条件的行不统计");
+                        }
+                        continue;
+                    }
+                    pair.increment();
+                }
+
                 break;
             case AFTER_READ_TAIL:
             case AFTER_WRITE_TAIL:
-                summaryPairs = summary.getTailSummaryPairs();
-                for (SummaryPair pair : summaryPairs) {
+                for (SummaryPair pair : summary.getTailSummaryPairs()) {
                     Object tailValue = bmw.getProperty(pair.getTailKey());
                     ((RdfFileSummaryPairSpi) pair).setTailValue(tailValue);
                 }
+
+                for (StatisticPair pair : summary.getTailStatisticPairs()) {
+                    Object tailValue = bmw.getProperty(pair.getTailKey());
+                    pair.setTailValue(tailValue);
+                }
+
                 break;
             default:
                 throw new RdfFileException(

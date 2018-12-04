@@ -29,4 +29,6 @@ public interface RdfFileSummaryPairSpi<T> extends SummaryPair<T> {
     void setTailKey(String tailKey);
 
     void setColumnKey(String columnKey);
+
+    void setRowCondition(RdfFileRowConditionSpi condition);
 }

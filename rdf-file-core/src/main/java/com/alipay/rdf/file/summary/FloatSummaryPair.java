@@ -14,7 +14,7 @@ public class FloatSummaryPair extends AbstractSummaryPair<Float> {
     }
 
     @Override
-    protected Float initDefaultColumnValue() {
+    public Float initDefaultColumnValue() {
         return new Float("0");
     }
 }

@@ -1,0 +1,36 @@
+{
+ 	"multiBodys":[
+ 		{
+ 			"name":"columnTemplate1",
+ 			"condition":"bol=true",
+ 			"bodyColumns":[ 
+	     		"seq|流水号",
+	     		"bol|布尔值|Boolean",
+	     		"count|计数|Integer"
+	     	]
+	     }, {
+ 			"name":"columnTemplate2",
+ 			"condition":"match:bol=false",
+ 			"bodyColumns":[ 
+	     		"seq|流水号",
+	     		"bol|布尔值|Boolean",
+	     		"amount|金额|BigDecimal"
+	     	]
+	     }
+    ],
+    "tail":[
+    	"totalCount|总笔数|Required|Integer",
+	    "totalAmount|总金额|BigDecimal|Required",
+      	"count|计数|Integer",
+      	"successCount|成功数|Long"
+    ],
+    "protocol":"sp",
+    "summaryColumnPairs":[
+    	"totalAmount|amount|amount=100",
+    	"count|count|bol=true"
+    ],
+    "statisticColumnPairs":[
+    	"successCount|match:count=22"
+    ]
+}
+    

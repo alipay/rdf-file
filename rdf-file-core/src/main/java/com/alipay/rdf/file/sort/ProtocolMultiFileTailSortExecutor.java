@@ -15,6 +15,7 @@ import com.alipay.rdf.file.model.SortConfig;
 import com.alipay.rdf.file.model.Summary;
 import com.alipay.rdf.file.model.SummaryPair;
 import com.alipay.rdf.file.spi.RdfFileSummaryPairSpi;
+import com.alipay.rdf.file.summary.StatisticPair;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
@@ -51,7 +52,9 @@ public class ProtocolMultiFileTailSortExecutor implements SortExecutor {
                 for (SummaryPair pair : summary.getTailSummaryPairs()) {
                     ((RdfFileSummaryPairSpi) pair).addColValue(tail.get(pair.getTailKey()));
                 }
-
+                for (StatisticPair pair : summary.getStatisticPairs()) {
+                    pair.addColValue(tail.get(pair.getTailKey()));
+                }
             } finally {
                 if (null != reader) {
                     reader.close();
