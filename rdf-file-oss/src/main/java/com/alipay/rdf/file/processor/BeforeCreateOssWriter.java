@@ -49,7 +49,7 @@ public class BeforeCreateOssWriter extends AbstractOssProcessor {
 
         // oss 构建本地路径
         String localPath = RdfFileUtil.combinePath(ossConfig.getOssTempRoot(),
-            fileConfig.getFilePath());
+            String.valueOf(Thread.currentThread().getId()), fileConfig.getFilePath());
         if (RdfFileLogUtil.common.isInfo()) {
             RdfFileLogUtil.common.info("rdf-file# BeforeCreateOssWriter 本地写路径：" + localPath);
         }

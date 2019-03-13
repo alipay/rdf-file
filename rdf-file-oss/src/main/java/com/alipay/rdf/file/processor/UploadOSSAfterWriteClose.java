@@ -43,7 +43,7 @@ public class UploadOSSAfterWriteClose extends AbstractOssProcessor {
         OssConfig ossConfig = (OssConfig) config.getStorageConfig()
             .getParam(OssConfig.OSS_STORAGE_CONFIG_KEY);
         String localFilePath = RdfFileUtil.combinePath(ossConfig.getOssTempRoot(),
-            config.getFilePath());
+            String.valueOf(Thread.currentThread().getId()), config.getFilePath());
 
         try {
             File localFile = new File(localFilePath);
