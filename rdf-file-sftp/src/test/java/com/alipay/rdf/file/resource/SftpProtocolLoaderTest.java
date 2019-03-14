@@ -19,7 +19,6 @@ import com.alipay.rdf.file.loader.FormatLoader;
 import com.alipay.rdf.file.loader.ProtocolLoader;
 import com.alipay.rdf.file.model.FileDefaultConfig;
 import com.alipay.rdf.file.model.StorageConfig;
-import com.alipay.rdf.file.protocol.ProtocolDefinition;
 import com.alipay.rdf.file.sftp.SftpTestUtil;
 
 /**

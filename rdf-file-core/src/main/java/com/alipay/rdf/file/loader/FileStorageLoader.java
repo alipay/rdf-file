@@ -1,7 +1,8 @@
 package com.alipay.rdf.file.loader;
 
+import java.util.Collections;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.WeakHashMap;
 
 import com.alipay.rdf.file.init.RdfInit;
 import com.alipay.rdf.file.interfaces.FileStorage;
@@ -16,7 +17,8 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  * @version $Id: FileStorageLoader.java, v 0.1 2017年4月7日 下午4:16:50 hongwei.quhw Exp $
  */
 public class FileStorageLoader {
-    private static final Map<StorageConfig, FileStorage> STORAGE_CACHE = new ConcurrentHashMap<StorageConfig, FileStorage>();
+    private static final Map<StorageConfig, FileStorage> STORAGE_CACHE = Collections
+        .synchronizedMap(new WeakHashMap<StorageConfig, FileStorage>());
 
     private static final Object                          LOCK          = new Object();
 

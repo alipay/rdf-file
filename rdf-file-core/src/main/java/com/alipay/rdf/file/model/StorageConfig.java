@@ -3,6 +3,9 @@ package com.alipay.rdf.file.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.alipay.rdf.file.exception.RdfErrorEnum;
+import com.alipay.rdf.file.util.RdfFileUtil;
+
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
  * 
@@ -19,6 +22,13 @@ public class StorageConfig {
     private Map<String, Object> param = new HashMap<String, Object>();
 
     public void addParam(String key, Object value) {
+        RdfFileUtil.assertNotNull(RdfFileUtil.findMethod(value.getClass(), "hashCode"),
+            "rdf-file#StorageConfig.addParam value 必须实现Object对象中的hashCode方法",
+            RdfErrorEnum.ILLEGAL_ARGUMENT);
+        RdfFileUtil.assertNotNull(RdfFileUtil.findMethod(value.getClass(), "equals"),
+            "rdf-file#StorageConfig.addParam value 必须实现Object对象中的equals方法",
+            RdfErrorEnum.ILLEGAL_ARGUMENT);
+        param.put(key, value);
         param.put(key, value);
     }
 

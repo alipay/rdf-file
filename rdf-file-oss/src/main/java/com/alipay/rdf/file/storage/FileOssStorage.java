@@ -28,6 +28,8 @@ import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.AppendObjectRequest;
 import com.aliyun.oss.model.AppendObjectResult;
 import com.aliyun.oss.model.CompleteMultipartUploadRequest;
+import com.aliyun.oss.model.CompleteMultipartUploadResult;
+import com.aliyun.oss.model.CopyObjectResult;
 import com.aliyun.oss.model.GetObjectRequest;
 import com.aliyun.oss.model.InitiateMultipartUploadRequest;
 import com.aliyun.oss.model.InitiateMultipartUploadResult;
@@ -37,6 +39,7 @@ import com.aliyun.oss.model.OSSObjectSummary;
 import com.aliyun.oss.model.ObjectListing;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PartETag;
+import com.aliyun.oss.model.PutObjectResult;
 import com.aliyun.oss.model.UploadFileRequest;
 import com.aliyun.oss.model.UploadPartCopyRequest;
 import com.aliyun.oss.model.UploadPartCopyResult;
@@ -66,6 +69,17 @@ public class FileOssStorage implements RdfFileStorageSpi {
         this.ossConfig = config;
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        if (null != client) {
+            client.shutdown();
+            if (RdfFileLogUtil.common.isInfo()) {
+                RdfFileLogUtil.common.info("rdf-file#FileOssStorage.finalize ");
+            }
+        }
+    }
+
     /** 
      * @see com.alipay.rdf.file.storage.FileInnterStorage#getInputStream(java.lang.String)
      */
@@ -74,6 +88,10 @@ public class FileOssStorage implements RdfFileStorageSpi {
         filePath = toOSSPath(filePath);
         if (isExist(filePath)) {
             OSSObject object = client.getObject(ossConfig.getBucketName(), filePath);
+            if (RdfFileLogUtil.common.isInfo()) {
+                RdfFileLogUtil.common.info("rdf-file#FileOssStorage.getInputStream requestId="
+                                           + object.getRequestId() + ", filePath=" + filePath);
+            }
             return new OssInputStream(object);
         } else {
             throw new RdfFileException(
@@ -99,6 +117,12 @@ public class FileOssStorage implements RdfFileStorageSpi {
                 filePath);
             getObjectRequest.setRange(start, start + length - 1);
             OSSObject object = client.getObject(getObjectRequest);
+            if (RdfFileLogUtil.common.isInfo()) {
+                RdfFileLogUtil.common
+                    .info(
+                        "rdf-file#FileOssStorage.getInputStream requestId=" + object.getRequestId()
+                          + ", filePath=" + filePath + ", start=" + start + ", length=" + length);
+            }
             return new OssInputStream(object);
         } else {
             throw new RdfFileException("rdf-file#FileOssStorage.getInputStream(filePath=" + filePath
@@ -134,7 +158,12 @@ public class FileOssStorage implements RdfFileStorageSpi {
         ByteArrayInputStream in = new ByteArrayInputStream(buffer);
         objectMeta.setContentLength(0);
         try {
-            client.putObject(ossConfig.getBucketName(), filePath, in, objectMeta);
+            PutObjectResult result = client.putObject(ossConfig.getBucketName(), filePath, in,
+                objectMeta);
+            if (RdfFileLogUtil.common.isInfo()) {
+                RdfFileLogUtil.common.info("rdf-file#FileOssStorage.getInputStream requestId="
+                                           + result.getRequestId() + ", filePath=" + filePath);
+            }
         } catch (Exception e) {
             throw new RdfFileException("rdf-file#创建OSS文件异常！", e, RdfErrorEnum.IO_ERROR);
         } finally {
@@ -163,6 +192,11 @@ public class FileOssStorage implements RdfFileStorageSpi {
             fileInfo.setExists(true);
             fileInfo.getMetadata().putAll(metaData.getRawMetadata());
             fileInfo.getUserMetadata().putAll(metaData.getUserMetadata());
+
+            if (RdfFileLogUtil.common.isInfo()) {
+                RdfFileLogUtil.common
+                    .info("rdf-file#FileOssStorage.copy requestId=" + metaData.getRequestId());
+            }
         } catch (OSSException e) {
             if (OSSErrorCode.NO_SUCH_KEY.equals(e.getErrorCode())) {
                 fileInfo.setExists(false);
@@ -357,7 +391,12 @@ public class FileOssStorage implements RdfFileStorageSpi {
 
         FileInfo fileInfo = getFileInfo(srcFile);
         if (fileInfo.getSize() < ossConfig.getOssBigFileSize()) {
-            client.copyObject(srcBucketName, srcFile, toBucketName, toFile);
+            CopyObjectResult result = client.copyObject(srcBucketName, srcFile, toBucketName,
+                toFile);
+            if (RdfFileLogUtil.common.isInfo()) {
+                RdfFileLogUtil.common
+                    .info("rdf-file#FileOssStorage.copy requestId=" + result.getRequestId());
+            }
         } else {
             copyBigFile(srcBucketName, srcFile, toBucketName, toFile, fileInfo);
         }
@@ -403,7 +442,12 @@ public class FileOssStorage implements RdfFileStorageSpi {
         // 提交分片拷贝任务
         CompleteMultipartUploadRequest completeMultipartUploadRequest = new CompleteMultipartUploadRequest(
             toBucketName, toFile, uploadId, partETags);
-        client.completeMultipartUpload(completeMultipartUploadRequest);
+        CompleteMultipartUploadResult result = client
+            .completeMultipartUpload(completeMultipartUploadRequest);
+        if (RdfFileLogUtil.common.isInfo()) {
+            RdfFileLogUtil.common
+                .info("rdf-file#FileOssStorage.copyBigFile requestId=" + result.getRequestId());
+        }
     }
 
     /**
@@ -440,7 +484,8 @@ public class FileOssStorage implements RdfFileStorageSpi {
         if (RdfFileLogUtil.common.isInfo()) {
             RdfFileLogUtil.common
                 .info("rdf-file#FileOssStorage.appendUploadFile(srcFile=" + srcFile
-                      + ",ossFilePath=" + ossFilePath + ") 上传objectCRC=" + result.getObjectCRC());
+                      + ",ossFilePath=" + ossFilePath + ") 上传objectCRC=" + result.getObjectCRC()
+                      + ", requestId=" + result.getRequestId());
         }
     }
 
@@ -475,7 +520,12 @@ public class FileOssStorage implements RdfFileStorageSpi {
             meta.setContentMD5(MD5);
         }
         try {
-            client.putObject(ossConfig.getBucketName(), ossFilePath, fileStream, meta);
+            PutObjectResult result = client.putObject(ossConfig.getBucketName(), ossFilePath,
+                fileStream, meta);
+            if (RdfFileLogUtil.common.isInfo()) {
+                RdfFileLogUtil.common.info("rdf-file#FileOssStorage.uploadFile requestId="
+                                           + result.getRequestId() + ", filePath=" + ossFilePath);
+            }
         } finally {
             if (null != fileStream) {
                 try {
@@ -547,7 +597,11 @@ public class FileOssStorage implements RdfFileStorageSpi {
         if (!localFile.getParentFile().exists()) {
             localFile.getParentFile().mkdirs();
         }
-        client.getObject(getObjectRequest, localFile);
+        ObjectMetadata result = client.getObject(getObjectRequest, localFile);
+        if (RdfFileLogUtil.common.isInfo()) {
+            RdfFileLogUtil.common.info("rdf-file#FileOssStorage.downloadFile requestId="
+                                       + result.getRequestId() + ", filePath=" + filename);
+        }
     }
 
     /**
