@@ -17,6 +17,7 @@ import java.util.List;
 
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
+import com.alipay.rdf.file.loader.ProtocolLoader;
 import com.alipay.rdf.file.loader.TemplateLoader;
 import com.alipay.rdf.file.meta.FileMeta;
 import com.alipay.rdf.file.model.FileConfig;
@@ -364,7 +365,7 @@ public class RdfFileUtil {
     }
 
     public static String[] split(String str, String separator) {
-        if (isBlank(separator)) {
+        if (null == separator) {
             throw new RdfFileException("rdf-file# split 分隔符为空", RdfErrorEnum.ILLEGAL_ARGUMENT);
         }
 
@@ -707,16 +708,27 @@ public class RdfFileUtil {
     }
 
     /**
-     * 获取分隔符
+     * 从配置获取分隔符
      * 
      * @return
      */
     public static String getColumnSplit(FileConfig fileConfig) {
-        if (isNotBlank(fileConfig.getColumnSplit())) {
+        if (null != fileConfig.getColumnSplit()) {
             return fileConfig.getColumnSplit();
         }
 
         return TemplateLoader.load(fileConfig).getColumnSplit();
+    }
+
+    /**
+     * 从协议定义获取分隔符
+     * 
+     * @param fileConfig
+     * @return
+     */
+    public static String getRowSplit(FileConfig fileConfig) {
+        return ProtocolLoader.loadProtocol(TemplateLoader.load(fileConfig).getProtocol())
+            .getRowSplit().getSplit(fileConfig);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

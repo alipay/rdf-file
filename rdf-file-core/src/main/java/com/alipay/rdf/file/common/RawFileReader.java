@@ -52,19 +52,15 @@ public class RawFileReader implements RdfFileReaderSpi {
                 RdfErrorEnum.ILLEGAL_ARGUMENT);
         }
 
-        if (RdfFileUtil.isBlank(fileConfig.getColumnSplit())
-            && (RdfFileUtil.isBlank(fileConfig.getTemplatePath()))
-            || RdfFileUtil.isBlank(TemplateLoader.load(fileConfig).getColumnSplit())) {
-            throw new RdfFileException(
-                "rdf-file#RawFileWriter.readRow 没有配置分隔符 不支持操作， fileConfig=" + fileConfig,
-                RdfErrorEnum.UNSUPPORTED_OPERATION);
-        }
+        RdfFileUtil.assertNotNull(RdfFileUtil.getRowSplit(fileConfig),
+            "rdf-file#RawFileWriter.readRow 没有配置分隔符 不支持操作， fileConfig=" + fileConfig,
+            RdfErrorEnum.UNSUPPORTED_OPERATION);
 
         String line = readLine();
         if (RdfFileUtil.isBlank(line)) {
             return null;
         } else {
-            return (T) RdfFileUtil.split(line, RdfFileUtil.getColumnSplit(fileConfig));
+            return (T) RdfFileUtil.split(line, RdfFileUtil.getRowSplit(fileConfig));
         }
     }
 

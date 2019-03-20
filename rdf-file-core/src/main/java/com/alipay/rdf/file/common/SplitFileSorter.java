@@ -45,7 +45,7 @@ public class SplitFileSorter extends AbstractFileSort {
     public void init(FileConfig fileConfig) {
         super.init(fileConfig);
 
-        RdfFileUtil.assertNotBlank(RdfFileUtil.getColumnSplit(fileConfig),
+        RdfFileUtil.assertNotNull(RdfFileUtil.getRowSplit(fileConfig),
             "rdf-file#SplitFileSorter 必须指定文件分隔符", RdfErrorEnum.ILLEGAL_ARGUMENT);
     }
 

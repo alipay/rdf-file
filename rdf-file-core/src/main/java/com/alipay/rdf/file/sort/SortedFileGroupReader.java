@@ -144,7 +144,7 @@ public class SortedFileGroupReader {
             }
 
             RowData rowData = new RowData(sortConfig.getSortIndexes(), sortConfig.getSortType(),
-                cols, RdfFileUtil.getColumnSplit(fileConfig), sortConfig.getColumnRearrangeIndex());
+                cols, RdfFileUtil.getRowSplit(fileConfig), sortConfig.getColumnRearrangeIndex());
             rowData.setFileReader(reader);
             return rowData;
         } else {
@@ -161,7 +161,7 @@ public class SortedFileGroupReader {
             }
 
             RowData rowData = new RowData(sortConfig.getSortIndexes(), sortConfig.getSortType(),
-                data, RdfFileUtil.getColumnSplit(fileConfig), sortConfig.getColumnRearrangeIndex());
+                data, RdfFileUtil.getRowSplit(fileConfig), sortConfig.getColumnRearrangeIndex());
             rowData.setFileReader(reader);
             return rowData;
         }

@@ -34,19 +34,18 @@ public class BodyColumnHorizontalCodec {
         StringBuilder colHead = new StringBuilder();
         List<FileColumnMeta> colMetas = fileMeta.getBodyColumns();
 
-        if (RdfFileUtil.isNotBlank(fileMeta.getColumnSplit())
+        if (null != RdfFileUtil.getRowSplit(config)
             && fileMeta.isStartWithSplit(FileDataTypeEnum.HEAD)) {
-            colHead.append(fileMeta.getColumnSplit());
+            colHead.append(RdfFileUtil.getRowSplit(config));
         }
 
         for (int i = 0; i < colMetas.size(); i++) {
             FileColumnMeta colMeta = colMetas.get(i);
             colHead.append(getValue(colMeta, method));
             //添加字段分割符
-            if (RdfFileUtil.isNotBlank(fileMeta.getColumnSplit())
+            if (null != RdfFileUtil.getRowSplit(config)
                 && (i < colMetas.size() - 1 || fileMeta.isEndWithSplit(FileDataTypeEnum.HEAD))) {
-                colHead.append(ProtocolLoader.loadProtocol(fileMeta.getProtocol()).getRowSplit()
-                    .getSplit(config));
+                colHead.append(RdfFileUtil.getRowSplit(config));
             }
         }
         writer.writeLine(colHead.toString());
