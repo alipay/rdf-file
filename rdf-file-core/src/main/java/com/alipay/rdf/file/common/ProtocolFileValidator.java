@@ -43,68 +43,74 @@ public class ProtocolFileValidator implements RdfFileValidatorSpi {
     @SuppressWarnings({ "unused", "rawtypes" })
     @Override
     public ValidateResult validate() throws RdfFileException {
-        ValidateResult result = new ValidateResult();
-        String totalCountKey = fileMeta.getTotalCountKey();
-        Object totalCount = null;
-        if (fileMeta.hasHead()) {
-            Map<String, Object> head = reader.readHead(HashMap.class);
-            if (null == head || head.isEmpty()) {
-                result.fail("rdf-file#文件头不存在");
-                return result;
-            }
-
-            if (null != head.get(totalCountKey)) {
-                totalCount = head.get(totalCountKey);
-            }
-        }
-
-        Map<String, Object> row = null;
         try {
-            while (null != (row = reader.readRow(HashMap.class))) {
+            ValidateResult result = new ValidateResult();
+            String totalCountKey = fileMeta.getTotalCountKey();
+            Object totalCount = null;
+            if (fileMeta.hasHead()) {
+                Map<String, Object> head = reader.readHead(HashMap.class);
+                if (null == head || head.isEmpty()) {
+                    result.fail("rdf-file#文件头不存在");
+                    return result;
+                }
+
+                if (null != head.get(totalCountKey)) {
+                    totalCount = head.get(totalCountKey);
+                }
             }
-        } catch (RdfFileException e) {
-            if (RdfErrorEnum.VALIDATE_ERROR.equals(e.getErrorEnum())) {
-                result.fail(e);
-                return result;
-            } else {
-                throw e;
+
+            Map<String, Object> row = null;
+            try {
+                while (null != (row = reader.readRow(HashMap.class))) {
+                }
+            } catch (RdfFileException e) {
+                if (RdfErrorEnum.VALIDATE_ERROR.equals(e.getErrorEnum())) {
+                    result.fail(e);
+                    return result;
+                } else {
+                    throw e;
+                }
+            }
+
+            if (fileMeta.hasTail()) {
+                Map<String, Object> tail = reader.readTail(HashMap.class);
+                if (null == tail || tail.isEmpty()) {
+                    result.fail("rdf-file#文件尾不存在");
+                    return result;
+                }
+
+                if (null != tail.get(totalCountKey)) {
+                    totalCount = tail.get(totalCountKey);
+                }
+            }
+
+            Summary summary = reader.getSummary();
+
+            if (!RdfFileUtil.compare(totalCount, summary.getTotalCountWithoutNull())) {
+                result.fail(String.format("文件笔数错误, 文件头中的总笔数为%d, 实际检测到的行数是%d", totalCount,
+                    summary.getTotalCount()));
+            }
+
+            //校验汇总字段
+            for (SummaryPair pair : summary.getSummaryPairs()) {
+                if (!pair.isSummaryEquals()) {
+                    result.fail(pair.summaryMsg());
+                }
+            }
+
+            // 校验统计字段
+            for (StatisticPair pair : summary.getStatisticPairs()) {
+                if (!pair.isStatisticEquals()) {
+                    result.fail(pair.staticsticMsg());
+                }
+            }
+
+            return result;
+        } finally {
+            if (null != reader) {
+                reader.close();
             }
         }
-
-        if (fileMeta.hasTail()) {
-            Map<String, Object> tail = reader.readTail(HashMap.class);
-            if (null == tail || tail.isEmpty()) {
-                result.fail("rdf-file#文件尾不存在");
-                return result;
-            }
-
-            if (null != tail.get(totalCountKey)) {
-                totalCount = tail.get(totalCountKey);
-            }
-        }
-
-        Summary summary = reader.getSummary();
-
-        if (!RdfFileUtil.compare(totalCount, summary.getTotalCountWithoutNull())) {
-            result.fail(String.format("文件笔数错误, 文件头中的总笔数为%d, 实际检测到的行数是%d", totalCount,
-                summary.getTotalCount()));
-        }
-
-        //校验汇总字段
-        for (SummaryPair pair : summary.getSummaryPairs()) {
-            if (!pair.isSummaryEquals()) {
-                result.fail(pair.summaryMsg());
-            }
-        }
-
-        // 校验统计字段
-        for (StatisticPair pair : summary.getStatisticPairs()) {
-            if (!pair.isStatisticEquals()) {
-                result.fail(pair.staticsticMsg());
-            }
-        }
-
-        return result;
     }
 
 }
