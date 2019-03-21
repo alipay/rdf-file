@@ -1,0 +1,23 @@
+{
+ 	"head":[
+	     "totalCount|总笔数|Required|Integer",
+	     "totalAmount|总金额|BigDecimal|Required"
+ 	],
+ 	"body":[
+	     "seq|流水号",
+	     "instSeq|基金公司订单号|Required",
+	     "gmtApply|订单申请时间|Date:yyyy-MM-dd HH:mm:ss",
+	     "date|普通日期|Date:yyyyMMdd",
+	     "dateTime|普通日期时间|Date:yyyyMMdd HH:mm:ss",
+	     "applyNumber|普通数字|Long",
+	     "amount|金额|BigDecimal",
+	     "age|年龄|Integer",
+	     "longN|长整型|Long",
+	     "bol|布尔值|Boolean",
+	     "memo|备注"
+    ],
+    "protocol":"DE",
+    "lineBreak":"\r\n",
+    "columnSplit":"\u0001"
+}
+    
