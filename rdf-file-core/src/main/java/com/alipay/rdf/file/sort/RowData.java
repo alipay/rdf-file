@@ -134,7 +134,7 @@ public class RowData implements Comparable<RowData> {
 
         if (null == columnSort) {
             for (int i = 0; i < colDatas.length; i++) {
-                if (i == colDatas.length - 1) {
+                if (null == separator || i == colDatas.length - 1) {
                     line.append(colDatas[i]);
                 } else {
                     line.append(colDatas[i]).append(separator);
@@ -142,7 +142,7 @@ public class RowData implements Comparable<RowData> {
             }
         } else {
             for (int i = 0; i < columnSort.length; i++) {
-                if (i == columnSort.length - 1) {
+                if (null == separator || i == columnSort.length - 1) {
                     line.append(colDatas[columnSort[i]]);
                 } else {
                     line.append(colDatas[columnSort[i]]).append(separator);
