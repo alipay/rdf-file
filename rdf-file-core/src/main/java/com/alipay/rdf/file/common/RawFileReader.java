@@ -7,7 +7,6 @@ import java.util.Map;
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.loader.ProcessorLoader;
-import com.alipay.rdf.file.loader.TemplateLoader;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.Summary;
 import com.alipay.rdf.file.processor.ProcessorTypeEnum;
