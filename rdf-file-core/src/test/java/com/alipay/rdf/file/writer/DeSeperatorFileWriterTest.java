@@ -207,7 +207,7 @@ public class DeSeperatorFileWriterTest {
         assertEquals(head.get("totalCount"), validatedHead.get("totalCount"));
         assertEquals(head.get("totalAmount"), validatedHead.get("totalAmount"));
 
-        // 文本中本身存在空格
+        // 字段内容本身存在空格
         try {
             fileReader.readRow(HashMap.class);
         } catch (RdfFileException e) {
