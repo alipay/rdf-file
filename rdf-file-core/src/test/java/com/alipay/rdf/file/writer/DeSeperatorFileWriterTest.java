@@ -210,6 +210,7 @@ public class DeSeperatorFileWriterTest {
         // 字段内容本身存在空格
         try {
             fileReader.readRow(HashMap.class);
+            Assert.fail();
         } catch (RdfFileException e) {
             Assert.assertEquals(RdfErrorEnum.DESERIALIZE_ERROR, e.getErrorEnum());
         }
