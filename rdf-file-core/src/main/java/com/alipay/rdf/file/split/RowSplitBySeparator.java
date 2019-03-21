@@ -1,7 +1,5 @@
 package com.alipay.rdf.file.split;
 
-import com.alipay.rdf.file.loader.TemplateLoader;
-import com.alipay.rdf.file.meta.FileMeta;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.spi.RdfFileRowSplitSpi;
 import com.alipay.rdf.file.util.RdfFileUtil;
@@ -21,12 +19,12 @@ public class RowSplitBySeparator implements RdfFileRowSplitSpi {
      */
     @Override
     public String[] split(SplitContext ctx) {
-        FileMeta fileMeta = TemplateLoader.load(ctx.getFileConfig());
-        return RdfFileUtil.split(ctx.getLine(), fileMeta.getColumnSplit());
+        String columnSplit = RdfFileUtil.getColumnSplit(ctx.getFileConfig());
+        return RdfFileUtil.split(ctx.getLine(), columnSplit);
     }
 
     @Override
     public String getSplit(FileConfig fileConfig) {
-        return TemplateLoader.load(fileConfig).getColumnSplit();
+        return RdfFileUtil.getColumnSplit(fileConfig);
     }
 }

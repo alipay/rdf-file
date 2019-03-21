@@ -41,7 +41,7 @@ public class SplitBodySortExecutor extends AbstractSortExecutor {
             String[] cols = null;
             while (null != (cols = sliceReader.readRow(String[].class))) {
                 RowData rowData = new RowData(sortConfig.getSortIndexes(), sortConfig.getSortType(),
-                    cols, RdfFileUtil.getColumnSplit(fileConfig),
+                    cols, RdfFileUtil.getRowSplit(fileConfig),
                     sortConfig.getColumnRearrangeIndex());
 
                 if (!rowFiler(rowData, sortConfig)) {

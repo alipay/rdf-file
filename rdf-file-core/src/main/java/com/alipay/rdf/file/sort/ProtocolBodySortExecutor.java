@@ -48,7 +48,7 @@ public class ProtocolBodySortExecutor extends AbstractSortExecutor {
                 }
 
                 RowData rowData = new RowData(sortConfig.getSortIndexes(), sortConfig.getSortType(),
-                    data, RdfFileUtil.getColumnSplit(writerConfig),
+                    data, RdfFileUtil.getRowSplit(writerConfig),
                     sortConfig.getColumnRearrangeIndex());
                 rowData.setFileReader(sliceReader);
 

@@ -7,7 +7,6 @@ import java.util.Map;
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.loader.ProcessorLoader;
-import com.alipay.rdf.file.loader.TemplateLoader;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.Summary;
 import com.alipay.rdf.file.processor.ProcessorTypeEnum;
@@ -52,19 +51,15 @@ public class RawFileReader implements RdfFileReaderSpi {
                 RdfErrorEnum.ILLEGAL_ARGUMENT);
         }
 
-        if (RdfFileUtil.isBlank(fileConfig.getColumnSplit())
-            && (RdfFileUtil.isBlank(fileConfig.getTemplatePath()))
-            || RdfFileUtil.isBlank(TemplateLoader.load(fileConfig).getColumnSplit())) {
-            throw new RdfFileException(
-                "rdf-file#RawFileWriter.readRow 没有配置分隔符 不支持操作， fileConfig=" + fileConfig,
-                RdfErrorEnum.UNSUPPORTED_OPERATION);
-        }
+        RdfFileUtil.assertNotNull(RdfFileUtil.getRowSplit(fileConfig),
+            "rdf-file#RawFileWriter.readRow 没有配置分隔符 不支持操作， fileConfig=" + fileConfig,
+            RdfErrorEnum.UNSUPPORTED_OPERATION);
 
         String line = readLine();
         if (RdfFileUtil.isBlank(line)) {
             return null;
         } else {
-            return (T) RdfFileUtil.split(line, RdfFileUtil.getColumnSplit(fileConfig));
+            return (T) RdfFileUtil.split(line, RdfFileUtil.getRowSplit(fileConfig));
         }
     }
 

@@ -48,10 +48,9 @@ public class RowColumnHorizontalCodec {
         List<FileColumnMeta> columnMetas = RowConditionExecutor.serializeRow(fileConfig, bmw,
             rowType);
         StringBuffer line = new StringBuffer();
-        String split = ProtocolLoader.loadProtocol(fileMeta.getProtocol()).getRowSplit()
-            .getSplit(fileConfig);
+        String split = RdfFileUtil.getRowSplit(fileConfig);
 
-        if (RdfFileUtil.isNotBlank(split) && fileMeta.isStartWithSplit(rowType)) {
+        if (null != split && fileMeta.isStartWithSplit(rowType)) {
             line.append(split);
         }
 
@@ -65,7 +64,7 @@ public class RowColumnHorizontalCodec {
                 ctx.fileConfig = fileConfig;
                 line.append(rd.getOutput().execute(ctx));
 
-                if (RdfFileUtil.isNotBlank(split)
+                if (null != split
                     && (i < columnMetas.size() - 1 || fileMeta.isEndWithSplit(rowType))) {
                     line.append(split);
                 }
