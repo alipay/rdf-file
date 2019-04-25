@@ -86,7 +86,8 @@ public class ProtocolFileValidator implements RdfFileValidatorSpi {
 
             Summary summary = reader.getSummary();
 
-            if (!RdfFileUtil.compare(totalCount, summary.getTotalCountWithoutNull())) {
+            if (null != totalCount
+                && !RdfFileUtil.compare(totalCount, summary.getTotalCountWithoutNull())) {
                 result.fail(String.format("文件笔数错误, 文件头中的总笔数为%d, 实际检测到的行数是%d", totalCount,
                     summary.getTotalCount()));
             }
