@@ -350,7 +350,9 @@ public class FileConfig implements Cloneable {
         config.setInputStream(is);
         config.setColumnSplit(columnSplit);
         config.params = params;
-
+        for(String processKey : processorKeys){
+            config.addProcessorKey(processKey);
+        }
         return config;
     }
 
