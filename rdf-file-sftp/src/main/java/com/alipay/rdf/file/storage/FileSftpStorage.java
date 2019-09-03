@@ -38,7 +38,8 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 
 	@Override
 	public void copy(String srcFile, String toFile) {
-
+		srcFile = toSFTPPath(srcFile);
+		toFile = toSFTPPath(toFile);
 		Map<String, String> params = new HashMap<String, String>();
 
 		params.put(SftpOperationParamEnums.SOURCE_FILE.toString(), srcFile);
@@ -58,7 +59,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 
 	@Override
 	public void createNewFile(String fileFullPath) {
-
+		fileFullPath = toSFTPPath(fileFullPath);
 		Map<String, String> params = new HashMap<String, String>();
 
 		params.put(SftpOperationParamEnums.TARGET_FILE.toString(), fileFullPath);
@@ -76,7 +77,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 
 	@Override
 	public void delete(String fileFullPath) {
-
+		fileFullPath = toSFTPPath(fileFullPath);
 		Map<String, String> params = new HashMap<String, String>();
 
 		params.put(SftpOperationParamEnums.TARGET_FILE.toString(), fileFullPath);
@@ -94,7 +95,8 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 
 	@Override
 	public void download(String srcFile, String toFile) {
-
+		srcFile = toSFTPPath(srcFile);
+		toFile = toSFTPPath(toFile);
 		Map<String, String> params = new HashMap<String, String>();
 
 		params.put(SftpOperationParamEnums.SOURCE_FILE.toString(), srcFile);
@@ -113,7 +115,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 
 	@Override
 	public FileInfo getFileInfo(String filePath) {
-
+		filePath = toSFTPPath(filePath);
 		Map<String, String> params = new HashMap<String, String>();
 
 		params.put(SftpOperationParamEnums.TARGET_FILE.toString(), filePath);
@@ -141,6 +143,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 
 	@Override
 	public List<String> listAllFiles(String folderName, String[] regexs) {
+		folderName = toSFTPPath(folderName);
 		SftpOperationResponse<Vector<SftpFileEntry>> response = listFiles(folderName, true);
 
 		return filterPaths(buildPathsFromFileEntries(response.getData()), regexs);
@@ -148,6 +151,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 
 	@Override
 	public List<String> listAllFiles(String folderName, FilePathFilter... fileFilters) {
+		folderName = toSFTPPath(folderName);
 		SftpOperationResponse<Vector<SftpFileEntry>> response = listFiles(folderName, true);
 
 		return filterPaths(buildPathsFromFileEntries(response.getData()), fileFilters);
@@ -155,6 +159,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 
 	@Override
 	public List<String> listFiles(String folderName, String[] regexs) {
+		folderName = toSFTPPath(folderName);
 		SftpOperationResponse<Vector<SftpFileEntry>> response = listFiles(folderName, false);
 
 		return filterPaths(buildPathsFromFileEntries(response.getData()), regexs);
@@ -162,7 +167,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 
 	@Override
 	public List<String> listFiles(String folderName, FilePathFilter... fileFilters) {
-
+		folderName = toSFTPPath(folderName);
 		SftpOperationResponse<Vector<SftpFileEntry>> response = listFiles(folderName, false);
 
 		return filterPaths(buildPathsFromFileEntries(response.getData()), fileFilters);
@@ -170,7 +175,8 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 
 	@Override
 	public void rename(String srcFile, String toFile) {
-
+		srcFile = toSFTPPath(srcFile);
+		toFile = toSFTPPath(toFile);
 		FileInfo targetFileInfo = getFileInfo(toFile);
 		if(targetFileInfo.isExists()){
 			//如果rename到的文件存在，先删除
@@ -195,7 +201,8 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 
 	@Override
 	public void upload(String srcFile, String toFile, boolean override) {
-
+		srcFile = toSFTPPath(srcFile);
+		toFile = toSFTPPath(toFile);
 		boolean isExist = getFileInfo(toFile).isExists();
 
 		boolean result = false;
@@ -249,6 +256,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 
 	@Override
 	public InputStream getInputStream(String filename) {
+		filename = toSFTPPath(filename);
 		Map<String, String> params = new HashMap<String, String>();
 
 		params.put(SftpOperationParamEnums.TARGET_FILE.toString(), filename);
@@ -362,5 +370,15 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 		return this.sftpUserInfo;
 	}
 
+	/**
+	 * oss 存储路径不能以/开始
+	 *
+	 * @param filePath
+	 * @return
+	 */
+	private String toSFTPPath(String filePath) {
+		filePath = filePath.replaceAll("\\\\", "/");
+		return filePath;
+	}
 
 }

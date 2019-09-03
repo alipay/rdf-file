@@ -69,7 +69,7 @@ public class SftpTestUtil {
         sftpConfig.setUserName(userName);
         sftpConfig.setPort(port);
 
-        sftpConfig.addExtraSessionConfig("kex", "diffie-hellman-group1-sha1");
+        sftpConfig.addExtraSessionConfig("kex", "diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group-exchange-sha256");
         storageConfig.addParam(SftpConfig.SFTP_STORAGE_CONFIG_KEY, sftpConfig);
         return storageConfig;
     }
