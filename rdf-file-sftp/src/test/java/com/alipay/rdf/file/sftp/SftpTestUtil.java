@@ -12,6 +12,7 @@ import com.alipay.rdf.file.loader.ResourceLoader;
 import com.alipay.rdf.file.model.StorageConfig;
 import com.alipay.rdf.file.storage.SftpConfig;
 import com.alipay.rdf.file.util.RdfFileUtil;
+import com.alipay.rdf.file.util.SFTPHelper;
 
 /**
  *
@@ -41,7 +42,7 @@ public class SftpTestUtil {
     }
 
     public static String combineHomeDir(String relativePath){
-        return RdfFileUtil.combinePath(getHomeDir(), relativePath);
+        return SFTPHelper.toSFTPPath(RdfFileUtil.combinePath(getHomeDir(), relativePath));
     }
 
 

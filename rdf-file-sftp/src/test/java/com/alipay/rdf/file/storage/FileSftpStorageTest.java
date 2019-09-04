@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alipay.rdf.file.util.SFTPHelper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,8 +50,8 @@ public class FileSftpStorageTest {
     String dir1 = "dir1";
     String dir2 = "dir2";
 
-    String testFile1 = RdfFileUtil.combinePath(dir1, "test_file_1.txt");
-    String testFile2 = RdfFileUtil.combinePath(dir2, "test_file_2.txt");
+    String testFile1 = SFTPHelper.toSFTPPath(RdfFileUtil.combinePath(dir1, "test_file_1.txt"));
+    String testFile2 = SFTPHelper.toSFTPPath(RdfFileUtil.combinePath(dir2, "test_file_2.txt"));
     String testFile3 = "test_file_3.txt";
 
     String remoteCopyDst = "copydir/test_file_1_cp.txt";
@@ -61,11 +62,11 @@ public class FileSftpStorageTest {
 
     String remoteUploadDir = "uploaddir";
     String remoteUploadFileName = "upload_test.txt";
-    String remoteUploadDst = RdfFileUtil.combinePath(remoteUploadDir, remoteUploadFileName);
+    String remoteUploadDst = SFTPHelper.toSFTPPath(RdfFileUtil.combinePath(remoteUploadDir, remoteUploadFileName));
 
     String remoteRenameDir = "renamedir";
     String remoteRenameFileName = "rename_test.txt";
-    String remoteRenameDst = RdfFileUtil.combinePath(remoteRenameDir, remoteRenameFileName);
+    String remoteRenameDst = SFTPHelper.toSFTPPath(RdfFileUtil.combinePath(remoteRenameDir, remoteRenameFileName));
 
 
     @Before

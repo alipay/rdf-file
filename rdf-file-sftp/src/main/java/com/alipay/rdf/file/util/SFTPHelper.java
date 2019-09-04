@@ -196,4 +196,15 @@ public class SFTPHelper {
 		sftp.rmdir(dir);
 	}
 
+	/**
+	 * sftp based on UNIX-like naming scheme for file pathname
+	 * so we translate all filePath into unix-like scheme
+	 * @param filePath
+	 * @return
+	 */
+	public static String toSFTPPath(String filePath) {
+		filePath = filePath.replaceAll("\\\\", "/");
+		return filePath;
+	}
+
 }
