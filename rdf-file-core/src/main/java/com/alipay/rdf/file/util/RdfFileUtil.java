@@ -761,7 +761,7 @@ public class RdfFileUtil {
 
     /**
      * 格式化字节
-     * si true:based on 1000, false:based on 1014
+     * si true:based on 1000, false:based on 1024
      * @param bytes
      * @param si
      * @return
