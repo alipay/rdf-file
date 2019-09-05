@@ -1,32 +1,30 @@
 package com.alipay.rdf.file.storage;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.alipay.rdf.file.util.SFTPHelper;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.alipay.rdf.file.interfaces.FileFactory;
 import com.alipay.rdf.file.interfaces.FileStorage;
 import com.alipay.rdf.file.interfaces.FileStorage.FilePathFilter;
 import com.alipay.rdf.file.model.FileInfo;
 import com.alipay.rdf.file.model.StorageConfig;
-import com.alipay.rdf.file.operation.AbstractSftpOperationTemplate;
-import com.alipay.rdf.file.operation.SftpOperationFactory;
-import com.alipay.rdf.file.operation.SftpOperationParamEnums;
-import com.alipay.rdf.file.operation.SftpOperationResponse;
-import com.alipay.rdf.file.operation.SftpOperationTypeEnums;
+import com.alipay.rdf.file.operation.*;
 import com.alipay.rdf.file.sftp.SftpTestUtil;
 import com.alipay.rdf.file.sftp.TemporaryFolderUtil;
 import com.alipay.rdf.file.sftp.TestInitOperation;
+import com.alipay.rdf.file.util.RdfFileLogUtil;
 import com.alipay.rdf.file.util.RdfFileUtil;
+import com.alipay.rdf.file.util.SFTPHelper;
+import com.alipay.rdf.file.util.SystemPrintLog;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 测试用例
@@ -85,7 +83,7 @@ public class FileSftpStorageTest {
 
     @Test
     public void testAll() throws Exception{
-
+        RdfFileLogUtil.common = new SystemPrintLog();
         checkHealth();
 
         prepare();
@@ -102,7 +100,7 @@ public class FileSftpStorageTest {
                 = SftpOperationFactory.getOperation(SftpOperationTypeEnums.HEALTH_CHECK);
         FileSftpStorage fileSftpStorage = (FileSftpStorage)fileStorage;
         SftpOperationResponse<Boolean> response = healthCheckOperation
-                .handle(fileSftpStorage.getUserInfo(), null);
+                .handle(fileSftpStorage.getUserInfo(), null, null);
         Assert.assertTrue(response.isSuccess());
         Assert.assertTrue(response.getData());
     }
@@ -114,9 +112,9 @@ public class FileSftpStorageTest {
         }catch (Exception e){
             System.out.println("开始设置ROOT_PATH");
             FileSftpStorage sftpStorage = (FileSftpStorage)fileStorage;
-            Map<String, String> params = new HashMap<String, String>();
+            Map<String, Object> params = new HashMap<String, Object>();
             params.put(SftpOperationParamEnums.TARGET_DIR.toString(), buildPath("dummy.txt"));
-            SftpOperationResponse<Boolean> response = initOperation.handle(sftpStorage.getUserInfo(), params);
+            SftpOperationResponse<Boolean> response = initOperation.handle(sftpStorage.getUserInfo(), params, null);
             if(!response.isSuccess()){
                 throw new RuntimeException("设置ROOT_PATH失败,请尝试手动设置");
             }
@@ -174,15 +172,12 @@ public class FileSftpStorageTest {
         System.out.println("upload begin.");
         File localTempFile = new File(localTmpFileName);
         localTempFile.deleteOnExit();
-        FileOutputStream fos = new FileOutputStream(localTempFile);
-        String testStr = "aaa";
-        byte[] testStrByte = testStr.getBytes(Charset.forName("UTF-8"));
-        fos.write(testStrByte);
-        fos.flush();
+        int fileSize = 100 * 1000 * 1000;
+        createLocalFile(localTempFile, fileSize);
         fileStorage.upload(localTmpFileName, buildPath(remoteUploadDst), false);
         FileInfo fileInfo = fileStorage.getFileInfo(buildPath(remoteUploadDst));
         Assert.assertEquals(fileInfo.getFileName(), remoteUploadFileName);
-        Assert.assertEquals(fileInfo.getSize(), testStrByte.length);
+        Assert.assertEquals(fileInfo.getSize(), fileSize);
         Assert.assertTrue(fileInfo.isExists());
         System.out.println("upload ok.");
 
@@ -218,6 +213,24 @@ public class FileSftpStorageTest {
 
     private String buildPath(String relativePath){
         return RdfFileUtil.combinePath(ROOT_PATH, relativePath);
+    }
+
+
+    public static void createLocalFile(File file, long length) throws IOException{
+        long start = System.currentTimeMillis();
+        RandomAccessFile r = null;
+        try {
+            r = new RandomAccessFile(file, "rw");
+            r.setLength(length);
+        } finally{
+            if (r != null) {
+                try {
+                    r.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 }

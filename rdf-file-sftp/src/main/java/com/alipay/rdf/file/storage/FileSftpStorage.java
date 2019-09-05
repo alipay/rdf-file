@@ -1,32 +1,23 @@
 package com.alipay.rdf.file.storage;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-import java.util.regex.Pattern;
-
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.interfaces.FileSftpStorageConstants;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.FileInfo;
 import com.alipay.rdf.file.model.StorageConfig;
-import com.alipay.rdf.file.operation.AbstractSftpOperationTemplate;
-import com.alipay.rdf.file.operation.SftpFileEntry;
-import com.alipay.rdf.file.operation.SftpOperationFactory;
-import com.alipay.rdf.file.operation.SftpOperationParamEnums;
-import com.alipay.rdf.file.operation.SftpOperationResponse;
-import com.alipay.rdf.file.operation.SftpOperationTypeEnums;
+import com.alipay.rdf.file.operation.*;
 import com.alipay.rdf.file.spi.RdfFileStorageSpi;
 import com.alipay.rdf.file.util.RdfFileLogUtil;
 import com.alipay.rdf.file.util.RdfFileUtil;
 import com.alipay.rdf.file.util.SFTPHelper;
 import com.alipay.rdf.file.util.SFTPUserInfo;
 import com.jcraft.jsch.SftpATTRS;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @author haofan.whf
@@ -41,16 +32,15 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 	public void copy(String srcFile, String toFile) {
 		srcFile = SFTPHelper.toSFTPPath(srcFile);
 		toFile = SFTPHelper.toSFTPPath(toFile);
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 
 		params.put(SftpOperationParamEnums.SOURCE_FILE.toString(), srcFile);
 		params.put(SftpOperationParamEnums.TARGET_FILE.toString(), toFile);
-		params.put(SftpOperationParamEnums.LOCAL_TMP_PATH.toString(), sftpConfig.getLocalTmpPath());
 
 		AbstractSftpOperationTemplate operationTemplate
 				= SftpOperationFactory.getOperation(SftpOperationTypeEnums.COPY);
 
-		SftpOperationResponse<Boolean> response = operationTemplate.handle(sftpUserInfo, params);
+		SftpOperationResponse<Boolean> response = operationTemplate.handle(sftpUserInfo, params, sftpConfig);
 
 		if (!response.isSuccess()) {
 			throw new RdfFileException("rdf-file#FileSftpStorage.copy,sftp copy fail"
@@ -68,7 +58,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 		AbstractSftpOperationTemplate operationTemplate
 				= SftpOperationFactory.getOperation(SftpOperationTypeEnums.CREATE);
 
-		SftpOperationResponse<Boolean> response = operationTemplate.handle(sftpUserInfo, params);
+		SftpOperationResponse<Boolean> response = operationTemplate.handle(sftpUserInfo, params, sftpConfig);
 
 		if (!response.isSuccess()) {
 			throw new RdfFileException("rdf-file#FileSftpStorage.createNewFile,sftp createNewFile fail"
@@ -86,7 +76,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 		AbstractSftpOperationTemplate operationTemplate
 				= SftpOperationFactory.getOperation(SftpOperationTypeEnums.DEL);
 
-		SftpOperationResponse<Boolean> response = operationTemplate.handle(sftpUserInfo, params);
+		SftpOperationResponse<Boolean> response = operationTemplate.handle(sftpUserInfo, params, sftpConfig);
 
 		if (!response.isSuccess()) {
 			throw new RdfFileException("rdf-file#FileSftpStorage.del,sftp del fail"
@@ -97,7 +87,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 	@Override
 	public void download(String srcFile, String toFile) {
 		srcFile = SFTPHelper.toSFTPPath(srcFile);
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 
 		params.put(SftpOperationParamEnums.SOURCE_FILE.toString(), srcFile);
 		params.put(SftpOperationParamEnums.TARGET_FILE.toString(), toFile);
@@ -105,7 +95,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 		AbstractSftpOperationTemplate operationTemplate
 				= SftpOperationFactory.getOperation(SftpOperationTypeEnums.DOWNLOAD);
 
-		SftpOperationResponse<Boolean> response = operationTemplate.handle(sftpUserInfo, params);
+		SftpOperationResponse<Boolean> response = operationTemplate.handle(sftpUserInfo, params, sftpConfig);
 
 		if (!response.isSuccess()) {
 			throw new RdfFileException("rdf-file#FileSftpStorage.download,sftp download fail"
@@ -123,7 +113,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 		AbstractSftpOperationTemplate operationTemplate
 				= SftpOperationFactory.getOperation(SftpOperationTypeEnums.FILE_EXISTS);
 
-		SftpOperationResponse<SftpATTRS> response = operationTemplate.handle(sftpUserInfo, params);
+		SftpOperationResponse<SftpATTRS> response = operationTemplate.handle(sftpUserInfo, params, sftpConfig);
 
 		FileInfo fileInfo = new FileInfo();
 
@@ -191,7 +181,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 		AbstractSftpOperationTemplate operationTemplate
 				= SftpOperationFactory.getOperation(SftpOperationTypeEnums.RENAME);
 
-		SftpOperationResponse<Boolean> response = operationTemplate.handle(sftpUserInfo, params);
+		SftpOperationResponse<Boolean> response = operationTemplate.handle(sftpUserInfo, params, sftpConfig);
 
 		if(!response.isSuccess()){
 			throw new RdfFileException("rdf-file#FileSftpStorage.rename,sftp rename file fail"
@@ -221,7 +211,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 					}
 					result = true;
 				}else{
-					Map<String, String> params = new HashMap<String, String>();
+					Map<String, Object> params = new HashMap<String, Object>();
 
 					params.put(SftpOperationParamEnums.SOURCE_FILE.toString(), srcFile);
 					params.put(SftpOperationParamEnums.TARGET_FILE.toString(), toFile);
@@ -229,7 +219,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 					AbstractSftpOperationTemplate operationTemplate
 							= SftpOperationFactory.getOperation(SftpOperationTypeEnums.UPLOAD);
 
-					SftpOperationResponse<Boolean> response = operationTemplate.handle(sftpUserInfo, params);
+					SftpOperationResponse<Boolean> response = operationTemplate.handle(sftpUserInfo, params, sftpConfig);
 					if(!response.isSuccess()){
 						throw new RdfFileException("rdf-file#FileSftpStorage.upload,sftp upload file fail"
 								+ "，srcFile=" + srcFile + ",toFile=" + toFile, response.getError(), RdfErrorEnum.UNKOWN);
@@ -264,7 +254,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 		AbstractSftpOperationTemplate operationTemplate
 				= SftpOperationFactory.getOperation(SftpOperationTypeEnums.GET_INPUT_STREAM);
 
-		SftpOperationResponse<InputStream> response = operationTemplate.handle(sftpUserInfo, params);
+		SftpOperationResponse<InputStream> response = operationTemplate.handle(sftpUserInfo, params, sftpConfig);
 
 		if(!response.isSuccess()){
 			throw new RdfFileException("rdf-file#FileSftpStorage.getInputStream,sftp getInputStream fail"
@@ -304,7 +294,7 @@ public class FileSftpStorage implements RdfFileStorageSpi {
 		AbstractSftpOperationTemplate operationTemplate
 				= SftpOperationFactory.getOperation(SftpOperationTypeEnums.LIST_FILES);
 
-		SftpOperationResponse<Vector<SftpFileEntry>> response = operationTemplate.handle(sftpUserInfo, params);
+		SftpOperationResponse<Vector<SftpFileEntry>> response = operationTemplate.handle(sftpUserInfo, params, sftpConfig);
 
 		if(!response.isSuccess()){
 			throw new RdfFileException("rdf-file#FileSftpStorage.listFiles,sftp ls file fail"

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import com.alipay.rdf.file.enums.SftpProgressLogPrintTypeEnum;
 import com.alipay.rdf.file.interfaces.FileSftpStorageConstants;
 import com.alipay.rdf.file.loader.ResourceLoader;
 import com.alipay.rdf.file.model.StorageConfig;
@@ -70,6 +71,8 @@ public class SftpTestUtil {
         sftpConfig.setUserName(userName);
         sftpConfig.setPort(port);
 
+        sftpConfig.setProgressLogPrintTypeEnum(SftpProgressLogPrintTypeEnum.FIXED_PERIOD);
+        sftpConfig.setProgressPrintLogPeriod(1);
         sftpConfig.addExtraSessionConfig("kex", "diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group-exchange-sha256");
         storageConfig.addParam(SftpConfig.SFTP_STORAGE_CONFIG_KEY, sftpConfig);
         return storageConfig;

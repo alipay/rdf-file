@@ -4,11 +4,11 @@
  */
 package com.alipay.rdf.file.util;
 
+import com.jcraft.jsch.SftpProgressMonitor;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-
-import com.jcraft.jsch.SftpProgressMonitor;
 
 /**
  * SFTP进度监控-日志方式输出。
@@ -20,22 +20,26 @@ public class SFTPLogMonitor implements SftpProgressMonitor {
 
 
     /** 总数 */
-    private long                total            = 0;
+    protected long                total            = 0;
 
     /** 当前 */
-    private long                current          = 0;
+    protected long                current          = 0;
 
     /** op */
-    private int                 op               = -1;
+    protected int                 op               = -1;
 
-    private static final String DOWNLOAD_DESC = "下载操作";
-    private static final String UPLOAD_DESC = "上传操作";
+    protected static final String DOWNLOAD_DESC = "下载操作";
+    protected static final String UPLOAD_DESC = "上传操作";
 
     /** 源文件 */
-    private String srcFile = null;
+    protected String srcFile = null;
 
     /** 目标文件 */
-    private String destFile = null;
+    protected String destFile = null;
+
+    public SFTPLogMonitor(){
+
+    }
 
     private String descOp(){
         return "[" + (this.op == PUT ? UPLOAD_DESC : DOWNLOAD_DESC) + "]";
@@ -46,11 +50,19 @@ public class SFTPLogMonitor implements SftpProgressMonitor {
      */
     public boolean count(long count) {
         this.current += count;
-
-        RdfFileLogUtil.common.info("rdf-file#SFTPLogMonitor.count" + descOp()
-                + ",文件大小：{" + this.total + "},当前进度：{" + this.current + "}");
-
+        doPrint("SFTPLogMonitor");
         return true;
+    }
+
+    protected void doPrint(String logPrefix){
+        if(this.op == PUT){
+            RdfFileLogUtil.common.info("rdf-file#" + logPrefix + ".count" + descOp()
+                    + ",文件大小：{" + RdfFileUtil.humanReadableByteCount(this.total, false) + "}"
+                    + ",当前进度：{" + RdfFileUtil.humanReadableByteCount(this.current, false) + "}");
+        }else{
+            RdfFileLogUtil.common.info("rdf-file#" + logPrefix + ".count" + descOp()
+                    + ",当前进度：{" + RdfFileUtil.humanReadableByteCount(this.current, false) + "}");
+        }
     }
 
     /**
