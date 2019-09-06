@@ -1,20 +1,5 @@
 package com.alipay.rdf.file.util;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.nio.channels.FileChannel;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.loader.ProtocolLoader;
@@ -22,6 +7,13 @@ import com.alipay.rdf.file.loader.TemplateLoader;
 import com.alipay.rdf.file.meta.FileMeta;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.FileDefaultConfig;
+
+import java.io.*;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
@@ -765,5 +757,20 @@ public class RdfFileUtil {
             }
         }
         return null;
+    }
+
+    /**
+     * 格式化字节
+     * si true:based on 1000, false:based on 1024
+     * @param bytes
+     * @param si
+     * @return
+     */
+    public static String humanReadableByteCount(long bytes, boolean si) {
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 }

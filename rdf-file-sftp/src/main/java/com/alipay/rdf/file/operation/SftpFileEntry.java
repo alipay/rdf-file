@@ -6,6 +6,7 @@ package com.alipay.rdf.file.operation;
 
 import com.alipay.rdf.file.interfaces.FileSftpStorageConstants;
 import com.alipay.rdf.file.util.RdfFileUtil;
+import com.alipay.rdf.file.util.SFTPHelper;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 
 /**
@@ -29,7 +30,7 @@ public class SftpFileEntry {
 
     public static SftpFileEntry buildFileEntry(String fullFileName, LsEntry lsEntry){
         SftpFileEntry fileEntry = new SftpFileEntry();
-        fileEntry.setFullFileName(fullFileName);
+        fileEntry.setFullFileName(SFTPHelper.toSFTPPath(fullFileName));
         fileEntry.setLsEntry(lsEntry);
         return fileEntry;
     }

@@ -4,18 +4,16 @@
  */
 package com.alipay.rdf.file.operation;
 
-import java.util.Map;
-
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.interfaces.FileSftpStorageConstants;
-import com.alipay.rdf.file.util.JschFactory;
-import com.alipay.rdf.file.util.RdfFileLogUtil;
-import com.alipay.rdf.file.util.SFTPUserInfo;
-import com.alipay.rdf.file.util.SftpThreadContext;
+import com.alipay.rdf.file.storage.SftpConfig;
+import com.alipay.rdf.file.util.*;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+
+import java.util.Map;
 
 /**
  * sftp操作模版
@@ -37,7 +35,7 @@ public abstract class AbstractSftpOperationTemplate<T> {
      * @throws Exception
      */
     protected abstract SftpOperationResponse<T> doBusiness(SFTPUserInfo user
-            , Map<String, String> params) throws Exception;
+            , Map<String, Object> params) throws Exception;
 
     private void initContext(){
         initOperationType();
@@ -49,10 +47,10 @@ public abstract class AbstractSftpOperationTemplate<T> {
      * @param params
      * @return
      */
-    protected abstract boolean checkBeforeDoBiz(SFTPUserInfo user, Map<String, String> params);
+    protected abstract boolean checkBeforeDoBiz(SFTPUserInfo user, Map<String, Object> params);
 
     public SftpOperationResponse<T> handle(SFTPUserInfo user
-            , Map<String, String> params){
+            , Map<String, Object> params, SftpConfig sftpConfig){
         initContext();
         RdfFileLogUtil.common.info("rdf-file#sftpOperation."
                 + this.operationType + ".request,params=" + params);
@@ -61,6 +59,7 @@ public abstract class AbstractSftpOperationTemplate<T> {
         ChannelSftp sftp = null;
         SftpOperationResponse response = new SftpOperationResponse<T>();
         try {
+            SftpOperationContextHolder.setSftpConfig(sftpConfig);
             if(!checkBeforeDoBiz(user, params)){
                 throw new RdfFileException("rdf-file#sftpOperation." + this.operationType
                         + ".checkParams fail,params=" + params, RdfErrorEnum.ILLEGAL_ARGUMENT);
@@ -73,6 +72,7 @@ public abstract class AbstractSftpOperationTemplate<T> {
             response.setSuccess(false);
             response.setError(e);
         } finally {
+            SftpOperationContextHolder.clearSftpConfig();
             if(needCloseConnection(params)){
                 closeConnection(sftp, user);
             }
@@ -87,7 +87,7 @@ public abstract class AbstractSftpOperationTemplate<T> {
      * @param params
      * @return
      */
-    private boolean needCloseConnection(Map<String, String> params){
+    private boolean needCloseConnection(Map<String, Object> params){
         if(params == null){
             return true;
         }

@@ -4,10 +4,11 @@
  */
 package com.alipay.rdf.file.storage;
 
-import java.util.Properties;
-
 import com.alipay.rdf.file.enums.SftpAuthEnum;
+import com.alipay.rdf.file.enums.SftpProgressLogPrintTypeEnum;
 import com.alipay.rdf.file.util.RdfFileUtil;
+
+import java.util.Properties;
 
 /**
  *
@@ -18,7 +19,7 @@ public class SftpConfig {
 
     public static final String SFTP_STORAGE_CONFIG_KEY = "sftp_storage_config";
 
-    public static final String DEFAULT_LOCAL_TMP_PATH  = "/tmp/rdf-file/sftp";
+    public static final String DEFAULT_LOCAL_TMP_PATH  = System.getProperty("java.io.tmpdir");
 
     private String             password;
 
@@ -33,6 +34,13 @@ public class SftpConfig {
     private SftpAuthEnum       authEnum                = SftpAuthEnum.PASSWORD;
 
     private String             localTmpPath;
+
+    /**
+     * 进度监控日志打印周期
+     */
+    private int                progressPrintLogPeriod          = 3;
+
+    private SftpProgressLogPrintTypeEnum  progressLogPrintTypeEnum  = SftpProgressLogPrintTypeEnum.SYNC;
 
     public void addExtraSessionConfig(String key, String value) {
         this.extraSessionConfig.put(key, value);
@@ -188,4 +196,19 @@ public class SftpConfig {
         return true;
     }
 
+    public SftpProgressLogPrintTypeEnum getProgressLogPrintTypeEnum() {
+        return progressLogPrintTypeEnum;
+    }
+
+    public void setProgressLogPrintTypeEnum(SftpProgressLogPrintTypeEnum progressLogPrintTypeEnum) {
+        this.progressLogPrintTypeEnum = progressLogPrintTypeEnum;
+    }
+
+    public int getProgressPrintLogPeriod() {
+        return progressPrintLogPeriod;
+    }
+
+    public void setProgressPrintLogPeriod(int progressPrintLogPeriod) {
+        this.progressPrintLogPeriod = progressPrintLogPeriod;
+    }
 }

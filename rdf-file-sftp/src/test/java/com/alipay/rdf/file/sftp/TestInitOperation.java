@@ -4,14 +4,14 @@
  */
 package com.alipay.rdf.file.sftp;
 
-import java.util.Map;
-
 import com.alipay.rdf.file.operation.AbstractSftpOperationTemplate;
 import com.alipay.rdf.file.operation.SftpOperationParamEnums;
 import com.alipay.rdf.file.operation.SftpOperationResponse;
 import com.alipay.rdf.file.util.SFTPHelper;
 import com.alipay.rdf.file.util.SFTPUserInfo;
 import com.alipay.rdf.file.util.SftpThreadContext;
+
+import java.util.Map;
 
 /**
  *
@@ -25,17 +25,17 @@ public class TestInitOperation extends AbstractSftpOperationTemplate<Boolean>{
 
     @Override
     protected SftpOperationResponse<Boolean> doBusiness(SFTPUserInfo user
-            , Map<String, String> params) throws Exception {
+            , Map<String, Object> params) throws Exception {
         SftpOperationResponse<Boolean> response = new SftpOperationResponse<Boolean>();
         SFTPHelper.createFTPDirIfnotExist(SftpThreadContext.getChannelSftp()
-                , params.get(SftpOperationParamEnums.TARGET_DIR.toString()));
+                , params.get(SftpOperationParamEnums.TARGET_DIR.toString()).toString());
         response.setData(true);
         response.setSuccess(true);
         return response;
     }
 
     @Override
-    protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<String, String> params) {
+    protected boolean checkBeforeDoBiz(SFTPUserInfo user, Map<String, Object> params) {
         return params.containsKey(SftpOperationParamEnums.TARGET_DIR.toString());
     }
 }
