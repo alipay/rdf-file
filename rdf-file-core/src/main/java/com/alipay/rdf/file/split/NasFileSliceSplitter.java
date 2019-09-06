@@ -149,7 +149,7 @@ public class NasFileSliceSplitter implements RdfFileSplitterSpi {
     public FileSlice getHeadSlice(FileConfig fileConfig) {
         String filePath = fileConfig.getFilePath();
         RdfFileLogUtil.common.info(
-            "rdf-file#OssFileSliceSplitter.getHeadSlice(fileConfig.filePath=" + filePath + ")");
+            "rdf-file#NasFileSliceSplitter.getHeadSlice(fileConfig.filePath=" + filePath + ")");
 
         File file = new File(filePath);
         if (!file.exists()) {
@@ -183,12 +183,12 @@ public class NasFileSliceSplitter implements RdfFileSplitterSpi {
         int headRowsAffected = ProtocolLoader.getRowsAfftected(fileConfig, FileDataTypeEnum.HEAD);
         if (headRowsAffected == 0) {
             RdfFileLogUtil.common
-                .info("rdf-file#OssFileSliceSplitter.getHeadSlice file headRowsAfftected="
+                .info("rdf-file#NasFileSliceSplitter.getHeadSlice file headRowsAfftected="
                       + headRowsAffected);
             return new FileSlice(filePath, FileDataTypeEnum.HEAD, 0, 0);
         } else {
             RdfFileLogUtil.common
-                .debug("rdf-file#OssFileSliceSplitter.getHeadSlice file headRowsAfftected="
+                .debug("rdf-file#NasFileSliceSplitter.getHeadSlice file headRowsAfftected="
                        + headRowsAffected);
         }
 
@@ -420,7 +420,7 @@ public class NasFileSliceSplitter implements RdfFileSplitterSpi {
                 tailLineCount++;
                 if (RdfFileLogUtil.common.isDebug()) {
                     RdfFileLogUtil.common.debug(
-                        "rdf-file#OssFileSliceSplitter.getTailSlice file is not end with \\n or \\r");
+                        "rdf-file#NasFileSliceSplitter.getTailSlice file is not end with \\n or \\r");
                 }
             }
 
