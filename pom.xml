@@ -11,9 +11,9 @@
 	<url>https://github.com/alipay/rdf-file</url>
 
 	<properties>
-		<rdf.file.core.version>2.2.4</rdf.file.core.version>
-		<rdf.file.oss.version>2.2.4</rdf.file.oss.version>
-		<rdf.file.sftp.version>2.2.4</rdf.file.sftp.version>
+		<rdf.file.core.version>2.2.5</rdf.file.core.version>
+		<rdf.file.oss.version>2.2.5</rdf.file.oss.version>
+		<rdf.file.sftp.version>2.2.5</rdf.file.sftp.version>
 	</properties>
 
 	<modules>

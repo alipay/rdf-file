@@ -376,6 +376,46 @@ public class PreheatMergeDeFileTest {
 
         mergedReader.close();
     }
+    
+    @Test
+    public void testNormlMergeEmpty() throws Exception {
+        String ossPath = RdfFileUtil.combinePath(ossPathPrefix, "testMergeEmpty");
+        fileStorage.upload(File.class.getResource("/preheat/de/empty/").getPath(), ossPath, false);
+
+        String targetFilePath = RdfFileUtil.combinePath(ossPath, "normalmergeempty.txt");
+        // 目标文件删除
+        try {
+            fileStorage.delete(targetFilePath);
+        } catch (Exception e) {
+        }
+
+        FileStorage fileStorage = FileFactory.createStorage(storageConfig);
+        List<String> paths = fileStorage.listAllFiles(ossPath);
+        Collections.sort(paths);
+        System.out.println(paths);
+
+        FileConfig normalConfig = new FileConfig(targetFilePath,
+            "/preheat/template_Allocation.json", storageConfig);
+        normalConfig.setFileEncoding("GBK");
+        normalConfig.setSummaryEnable(true);
+
+        FileMerger fileMerger = FileFactory.createMerger(normalConfig);
+        MergerConfig mergerConfig = new MergerConfig();
+        mergerConfig.setExistFilePaths(paths);
+        fileMerger.merge(mergerConfig);
+
+        FileConfig mergedConfig = new FileConfig(targetFilePath,
+            "/preheat/template_Allocation.json", storageConfig);
+        mergedConfig.setFileEncoding("GBK");
+        FileReader mergedReader = FileFactory.createReader(mergedConfig);
+        Map<String, Object> head = mergedReader.readHead(HashMap.class);
+        Assert.assertEquals(new Integer(0), head.get("totalCount"));
+        Assert.assertEquals(new BigDecimal("0.00"), head.get("totalAmount"));
+
+        Assert.assertNull(mergedReader.readRow(HashMap.class));
+
+        mergedReader.close();
+    }
 
     @After
     public void after() {

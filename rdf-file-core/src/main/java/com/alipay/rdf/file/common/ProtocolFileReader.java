@@ -247,6 +247,11 @@ public class ProtocolFileReader implements RdfFileReaderSpi {
             }
         }
 
+        // 返回空
+        if (!ProcessExecutor.execute(ProcessorTypeEnum.BEFORE_READ_ROW, processors, bodyConfig)) {
+            return null;
+        }
+
         ensureOpen(bodyConfig);
         try {
             return reader.readLine();
