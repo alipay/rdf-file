@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.alipay.rdf.file.common.CacheManager;
@@ -23,6 +24,7 @@ import junit.framework.Assert;
 
 public class CacheManagerTest {
 
+    @Ignore
     @Test
     public void testRemoveDataTempalteCache() {
 

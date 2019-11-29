@@ -1,0 +1,26 @@
+<protocol name="cm">
+    <head>
+        <row output="${columnInfo.horizontal(head,head,desc)}" />
+        <row>
+            <column>
+                <output>${column.value()}</output>
+            </column>
+        </row>
+        <row output="${columnInfo.horizontal(head,body,desc)}" />
+    </head>
+    <body>
+        <row>
+            <column>
+                <output>${column.value()}</output>
+            </column>
+        </row>
+    </body>
+    <tail>
+        <row output="${columnInfo.horizontal(tail,tail,desc)}" />
+        <row>
+            <column>
+                <output>${column.value()}</output>
+            </column>
+        </row>
+    </tail>
+</protocol>

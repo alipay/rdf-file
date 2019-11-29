@@ -7,7 +7,7 @@
 				<output>${column.value()}</output>
 			</column>
 		</row>
-		<row output="${bodycolumn.horizontal(desc)}" />
+		<row output="${columnInfo.horizontal(head,body,desc)}" />
 	</head>
 	<body>
 		<row>
