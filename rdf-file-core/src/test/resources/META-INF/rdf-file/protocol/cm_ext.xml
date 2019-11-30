@@ -1,0 +1,26 @@
+<protocol name="cm_ext">
+    <head>
+        <row output="${columnInfo.vertical(head,desc)}" />
+        <row columnLayout="vertical">
+            <column>
+                <output>${column.value()}</output>
+            </column>
+        </row>
+        <row output="${columnInfo.horizontal(body,desc)}" />
+    </head>
+    <body>
+        <row>
+            <column>
+                <output>${column.value()}</output>
+            </column>
+        </row>
+    </body>
+    <tail>
+        <row output="${columnInfo.vertical(tail,desc)}" />
+        <row columnLayout="vertical">
+            <column>
+                <output>${column.value()}</output>
+            </column>
+        </row>
+    </tail>
+</protocol>

@@ -4,9 +4,7 @@ import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.interfaces.FileReader;
 import com.alipay.rdf.file.interfaces.FileWriter;
-import com.alipay.rdf.file.loader.TemplateLoader;
 import com.alipay.rdf.file.meta.FileColumnMeta;
-import com.alipay.rdf.file.meta.FileMeta;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.FileDataTypeEnum;
 import com.alipay.rdf.file.util.RdfFileUtil;
@@ -24,46 +22,17 @@ public class ColumnInfoVerticalCodec extends AbstractColumnInfoCodec {
 
     public static void serialize(FileDataTypeEnum layoutType, FileDataTypeEnum dataType, FileConfig fileConfig,
                                  FileWriter writer, String method) {
-        FileMeta fileMeta = TemplateLoader.load(fileConfig);
-
-        boolean startWithSplit = null != RdfFileUtil.getRowSplit(fileConfig) && fileMeta.isStartWithSplit(layoutType);
-        boolean endtWithSplit = null != RdfFileUtil.getRowSplit(fileConfig) && fileMeta.isEndWithSplit(layoutType);
-
         //按行写入column字段
         for (FileColumnMeta colMeta : getColumnMetas(fileConfig, dataType)) {
-            StringBuilder line = new StringBuilder();
-            if (startWithSplit) {
-                line.append(RdfFileUtil.getRowSplit(fileConfig));
-            }
-
-            line.append(getValue(colMeta, method));
-
-            if (endtWithSplit) {
-                line.append(RdfFileUtil.getRowSplit(fileConfig));
-            }
-
-            writer.writeLine(line.toString());
+            writer.writeLine(getValue(colMeta, method));
         }
     }
 
     public static <T> T deserialize(FileDataTypeEnum layoutType, FileDataTypeEnum dataType, FileConfig fileConfig,
                                     FileReader reader, String method) {
-        FileMeta fileMeta = TemplateLoader.load(fileConfig);
-        boolean startWithSplit = null != RdfFileUtil.getRowSplit(fileConfig) && fileMeta.isStartWithSplit(layoutType);
-        boolean endtWithSplit = null != RdfFileUtil.getRowSplit(fileConfig) && fileMeta.isEndWithSplit(layoutType);
-
         for (FileColumnMeta colMeta : getColumnMetas(fileConfig, dataType)) {
             String columName = RdfFileUtil.assertTrimNotBlank(reader.readLine());
-
             RdfFileUtil.assertNotBlank(columName, "文件=" + fileConfig.getFilePath() + ", " + layoutType.name() + " 内容缺失");
-
-            if (startWithSplit) {
-                columName = columName.substring(RdfFileUtil.getRowSplit(fileConfig).length());
-            }
-
-            if (endtWithSplit) {
-                columName = columName.substring(0, columName.length() - RdfFileUtil.getRowSplit(fileConfig).length());
-            }
 
             String tempalteValue = getValue(colMeta, method);
             if (!tempalteValue.equals(columName)) {
