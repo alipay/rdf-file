@@ -35,10 +35,10 @@ import com.alipay.rdf.file.util.RdfFileUtil;
 public class ColumnInfoFunction extends RdfFunction {
     @Override
     public void checkParams() {
-        if (("horizontal".equals(expression) || "vertical".equals(expression)) && (null == params || params.length != 3)) {
-            throw new RdfFileException("rdf-file#ColumnInfoFunction.checkParams() 指定的参数应该为三个", RdfErrorEnum.FUNCTION_ERROR);
-        } else if ("count".equals(expression) && (null == params || params.length != 2)) {
+        if (("horizontal".equals(expression) || "vertical".equals(expression)) && (null == params || params.length != 2)) {
             throw new RdfFileException("rdf-file#ColumnInfoFunction.checkParams() 指定的参数应该为两个", RdfErrorEnum.FUNCTION_ERROR);
+        } else if ("count".equals(expression) && (null == params || params.length != 1)) {
+            throw new RdfFileException("rdf-file#ColumnInfoFunction.checkParams() 指定的参数应该为一个", RdfErrorEnum.FUNCTION_ERROR);
         }
     }
 
@@ -58,24 +58,22 @@ public class ColumnInfoFunction extends RdfFunction {
     }
 
     public void horizontal(FuncContext ctx) {
-        FileDataTypeEnum layoutType = FileDataTypeEnum.valueOf(params[0].toUpperCase());
-        FileDataTypeEnum dataType = FileDataTypeEnum.valueOf(params[1].toUpperCase());
+        FileDataTypeEnum dataType = FileDataTypeEnum.valueOf(params[0].toUpperCase());
         if (CodecType.SERIALIZE.equals(ctx.codecType)) {
-            ColumnInfoHorizontalCodec.serialize(layoutType, dataType, ctx.fileConfig, ctx.writer, params[2]);
+            ColumnInfoHorizontalCodec.serialize(rowType, dataType, ctx.fileConfig, ctx.writer, params[1]);
 
         } else if (CodecType.DESERIALIZE.equals(ctx.codecType)) {
-            ColumnInfoHorizontalCodec.deserialize(layoutType, dataType, ctx.fileConfig, ctx.reader, params[2]);
+            ColumnInfoHorizontalCodec.deserialize(rowType, dataType, ctx.fileConfig, ctx.reader, params[1]);
         }
     }
 
     public void vertical(FuncContext ctx) {
-        FileDataTypeEnum layoutType = FileDataTypeEnum.valueOf(params[0].toUpperCase());
-        FileDataTypeEnum dataType = FileDataTypeEnum.valueOf(params[1].toUpperCase());
+        FileDataTypeEnum dataType = FileDataTypeEnum.valueOf(params[0].toUpperCase());
 
         if (CodecType.SERIALIZE.equals(ctx.codecType)) {
-            ColumnInfoVerticalCodec.serialize(layoutType, dataType, ctx.fileConfig, ctx.writer, params[2]);
+            ColumnInfoVerticalCodec.serialize(rowType, dataType, ctx.fileConfig, ctx.writer, params[1]);
         } else if (CodecType.DESERIALIZE.equals(ctx.codecType)) {
-            ColumnInfoVerticalCodec.deserialize(layoutType, dataType, ctx.fileConfig, ctx.reader, params[2]);
+            ColumnInfoVerticalCodec.deserialize(rowType, dataType, ctx.fileConfig, ctx.reader, params[1]);
         }
     }
 
@@ -90,9 +88,8 @@ public class ColumnInfoFunction extends RdfFunction {
                 .getExtensionLoader(RdfFileColumnTypeSpi.class).getExtension(typeName);
         RdfFileUtil.assertNotNull(columnTypeCodec, "没有type=" + typeName + " 对应的类型codec");
 
-        FileDataTypeEnum layoutType = FileDataTypeEnum.valueOf(params[0].toUpperCase());
-        boolean startWithSplit = null != RdfFileUtil.getRowSplit(ctx.fileConfig) && fileMeta.isStartWithSplit(layoutType);
-        boolean endtWithSplit = null != RdfFileUtil.getRowSplit(ctx.fileConfig) && fileMeta.isEndWithSplit(layoutType);
+        boolean startWithSplit = null != RdfFileUtil.getRowSplit(ctx.fileConfig) && fileMeta.isStartWithSplit(rowType);
+        boolean endtWithSplit = null != RdfFileUtil.getRowSplit(ctx.fileConfig) && fileMeta.isEndWithSplit(rowType);
 
         switch (ctx.codecType) {
             case SERIALIZE:
@@ -125,7 +122,7 @@ public class ColumnInfoFunction extends RdfFunction {
     }
 
     private int getColumnSize(FileMeta fileMeta) {
-        FileDataTypeEnum dataType = FileDataTypeEnum.valueOf(params[1].toUpperCase());
+        FileDataTypeEnum dataType = FileDataTypeEnum.valueOf(params[0].toUpperCase());
         switch (dataType) {
             case HEAD:
                 return fileMeta.getHeadColumns().size();

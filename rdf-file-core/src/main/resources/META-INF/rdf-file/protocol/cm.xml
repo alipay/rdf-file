@@ -1,12 +1,12 @@
 <protocol name="cm">
     <head>
-        <row output="${columnInfo.horizontal(head,head,desc)}" />
+        <row output="${columnInfo.horizontal(head,desc)}" />
         <row>
             <column>
                 <output>${column.value()}</output>
             </column>
         </row>
-        <row output="${columnInfo.horizontal(head,body,desc)}" />
+        <row output="${columnInfo.horizontal(body,desc)}" />
     </head>
     <body>
         <row>
@@ -16,7 +16,7 @@
         </row>
     </body>
     <tail>
-        <row output="${columnInfo.horizontal(tail,tail,desc)}" />
+        <row output="${columnInfo.horizontal(tail,desc)}" />
         <row>
             <column>
                 <output>${column.value()}</output>

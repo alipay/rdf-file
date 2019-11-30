@@ -5,8 +5,8 @@
 				<output>${column.value()}</output>
 			</column>
 		</row>
-		<row output="${columnInfo.count(head,body)}" type="Integer|[3,0]" />
-		<row output="${columnInfo.vertical(head,body,name)}" />
+		<row output="${columnInfo.count(body)}" type="Integer|[3,0]" />
+		<row output="${columnInfo.vertical(body,name)}" />
 		<row output="${totalCount}" type="Integer|[8,0]" />
 	</head>
 	<body>
