@@ -21,13 +21,12 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  *
  * 参考fund.xml协议
  *
- *  1. ${columnInfo.count(head,body)}           表示在文件头部，计算body的字段数
- *  2. ${columnInfo.vertical(head,body,name)}   表示在文件头部，每个body字段名作为一行
- *  3. ${columnInfo.horizontal(tail,tail,name)} 表示在文件尾部，所有文件尾字段名作为一行数据
+ *  1. ${columnInfo.count(body)}           计算body的字段数
+ *  2. ${columnInfo.vertical(body,name)}   每个body字段名作为一行
+ *  3. ${columnInfo.horizontal(tail,name)} 所有文件尾字段名作为一行数据
  *
- *  函数第一个参数代表函数在文件中的作用域
- *  函数第二个参数代表对文件数据模板中哪个部分的字段进行信息处理
- *  函数第三个参数代表对文件数据模板中name或者desc字段处理
+ *  函数第一个参数代表对文件数据模板中哪个部分的字段进行信息处理
+ *  函数第二个参数代表对文件数据模板中name或者desc字段处理
  *
  * @author quhongwei
  * @version : ColumnInfoFunction.java, v 0.1 2019年11月29日 15:50 quhongwei Exp $
