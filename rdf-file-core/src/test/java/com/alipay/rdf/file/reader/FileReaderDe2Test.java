@@ -22,7 +22,7 @@ import java.util.Map;
  * @author hongwei.quhw
  * @version $Id: FileReaderDeTest.java, v 0.1 2017年4月7日 下午5:38:15 hongwei.quhw Exp $
  */
-public class FileReaderDeTest2 {
+public class FileReaderDe2Test {
     TemporaryFolderUtil tf = new TemporaryFolderUtil();
 
     @Before
