@@ -1,5 +1,7 @@
 package com.alipay.rdf.file.meta;
 
+import com.alipay.rdf.file.model.FileDataTypeEnum;
+
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
  * 
@@ -24,20 +26,12 @@ public class FileColumnMeta {
     /**默认值配置*/
     private final String              defaultValue;
     private final FileMeta            fileMeta;
+    /**数据字段在文件中部位*/
+    private final FileDataTypeEnum    dataType;
 
-    /**
-     * @param colIndex
-     * @param name
-     * @param desc
-     * @param type
-     * @param required
-     * @param range
-     * @param defaultValue
-     * @param fileMeta
-     */
     public FileColumnMeta(int colIndex, String name, String desc, FileColumnTypeMeta type,
                           boolean required, FileColumnRangeMeta range, String defaultValue,
-                          FileMeta fileMeta) {
+                          FileMeta fileMeta, FileDataTypeEnum    dataType) {
         this.colIndex = colIndex;
         this.desc = desc;
         this.name = name;
@@ -46,6 +40,7 @@ public class FileColumnMeta {
         this.required = required;
         this.defaultValue = defaultValue;
         this.fileMeta = fileMeta;
+        this.dataType = dataType;
     }
 
     /**
@@ -120,6 +115,10 @@ public class FileColumnMeta {
         return fileMeta;
     }
 
+    public FileDataTypeEnum getDataType() {
+        return dataType;
+    }
+
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer("FileColumnMeta[");
@@ -129,6 +128,7 @@ public class FileColumnMeta {
         sb.append(",type=").append(type.getName());
         sb.append(",range=").append(range);
         sb.append(",required=").append(required);
+        sb.append(",dataType=").append(dataType.name());
         sb.append("]");
         return sb.toString();
     }

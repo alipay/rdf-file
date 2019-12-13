@@ -127,7 +127,7 @@ public class ColumnFunctionWrapper extends RdfFunction {
     }
 
     private ColumnRegEx getColumnRegEx(FileColumnMeta columnMeta) {
-        String key = columnMeta.getFileMeta().getTemplatePath() + "-" + columnMeta.getName();
+        String key = columnMeta.getFileMeta().getTemplatePath() + "-" + columnMeta.getDataType().name() + "-" + columnMeta.getName();
         ColumnRegEx columnRegEx = columnRegExs.get(key);
         if (null == columnRegEx) {
             columnRegEx = new ColumnRegEx();

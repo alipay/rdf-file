@@ -144,7 +144,7 @@ public class FileDefinitionParser {
             }
 
             FileColumnMeta columnMeta = new FileColumnMeta(-1, output, output, columnTypeMeta,
-                false, columnRangeMeta, null, null);
+                false, columnRangeMeta, null, null, rowType);
             rd.setColumnMeta(columnMeta);
         }
     }
