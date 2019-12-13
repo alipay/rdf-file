@@ -19,10 +19,13 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  * Copyright (C) 2013-2018 Ant Financial Services Group
  * 
  * body 字段
- * 
+ *
+ * 使用更通用的ColumnInfoFunction函数功能替换
+ *
  * @author hongwei.quhw
  * @version $Id: BodyColumnFunction.java, v 0.1 2017年8月19日 下午1:21:38 hongwei.quhw Exp $
  */
+@Deprecated
 @SuppressWarnings("rawtypes")
 public class BodyColumnFunction extends RdfFunction {
     @Override

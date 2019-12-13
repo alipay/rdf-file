@@ -23,6 +23,7 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  * @author hongwei.quhw
  * @version $Id: HeadColumnCodec.java, v 0.1 2017-1-3 下午5:50:00 hongwei.quhw Exp $
  */
+@Deprecated
 public class BodyColumnHorizontalCodec {
 
     /**

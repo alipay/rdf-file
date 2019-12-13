@@ -1,9 +1,5 @@
 package com.alipay.rdf.file.loader;
 
-import java.io.InputStream;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.alibaba.fastjson.JSON;
 import com.alipay.rdf.file.condition.RowConditionType;
 import com.alipay.rdf.file.exception.RdfErrorEnum;
@@ -23,6 +19,10 @@ import com.alipay.rdf.file.model.FileDefaultConfig;
 import com.alipay.rdf.file.model.RowCondition;
 import com.alipay.rdf.file.util.RdfFileUtil;
 
+import java.io.InputStream;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
  * 
@@ -41,7 +41,7 @@ public class TemplateLoader {
     /**
      * 计算行总长度
      * 
-     * @param fileMeta
+     * @param fileConfig
      * @return
      */
     public static int getRowLength(FileConfig fileConfig) {
@@ -72,9 +72,9 @@ public class TemplateLoader {
     /**
      * 加载模板
      * 
-     * @param template
+     * @param templatePath
      * @param templateEncoding
-     * @param fileEncoding
+     * @param templateEncoding
      * @return
      */
     public static FileMeta load(String templatePath, String templateEncoding) {
@@ -110,7 +110,7 @@ public class TemplateLoader {
             int colIndex = 0;
             //head
             for (String head : templateConfig.getHead()) {
-                fileMeta.addHeadColumn(parseFileColumn(templatePath, head, colIndex++, fileMeta));
+                fileMeta.addHeadColumn(parseFileColumn(templatePath, head, colIndex++, fileMeta, FileDataTypeEnum.HEAD));
             }
 
             // body 配置多模板解析
@@ -127,7 +127,7 @@ public class TemplateLoader {
                     colIndex = 0;
                     for (String body : bodyConfig.getBodyColumns()) {
                         bodyMeta.getColumns()
-                            .add(parseFileColumn(templatePath, body, colIndex++, fileMeta));
+                            .add(parseFileColumn(templatePath, body, colIndex++, fileMeta, FileDataTypeEnum.BODY));
                     }
                     fileMeta.addBodyColumn(bodyMeta);
 
@@ -154,7 +154,7 @@ public class TemplateLoader {
                 FileBodyMeta bodyMeta = new FileBodyMeta();
                 for (String body : templateConfig.getBody()) {
                     bodyMeta.getColumns()
-                        .add(parseFileColumn(templatePath, body, colIndex++, fileMeta));
+                        .add(parseFileColumn(templatePath, body, colIndex++, fileMeta, FileDataTypeEnum.BODY));
                 }
                 fileMeta.addBodyColumn(bodyMeta);
             }
@@ -162,7 +162,7 @@ public class TemplateLoader {
             colIndex = 0;
             //tail
             for (String tail : templateConfig.getTail()) {
-                fileMeta.addTailColumn(parseFileColumn(templatePath, tail, colIndex++, fileMeta));
+                fileMeta.addTailColumn(parseFileColumn(templatePath, tail, colIndex++, fileMeta, FileDataTypeEnum.TAIL));
             }
 
             //解析汇总字段
@@ -232,7 +232,7 @@ public class TemplateLoader {
     }
 
     private static FileColumnMeta parseFileColumn(String tempaltePath, String colConfig,
-                                                  int colIndex, FileMeta fileMeta) {
+                                                  int colIndex, FileMeta fileMeta, FileDataTypeEnum dataType) {
         colConfig = RdfFileUtil.assertTrimNotBlank(colConfig, "字段为空 index=" + colIndex);
 
         String[] fields = colConfig.trim().split("\\|");
@@ -304,7 +304,7 @@ public class TemplateLoader {
         }
 
         FileColumnMeta column = new FileColumnMeta(colIndex, key, name, type, required, range,
-            defaultValue, fileMeta);
+            defaultValue, fileMeta, dataType);
 
         return column;
     }

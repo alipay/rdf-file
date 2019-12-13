@@ -1,2 +1,3 @@
 column=com.alipay.rdf.file.function.ColumnFunction
 bodycolumn=com.alipay.rdf.file.function.BodyColumnFunction
+columnInfo=com.alipay.rdf.file.function.ColumnInfoFunction
