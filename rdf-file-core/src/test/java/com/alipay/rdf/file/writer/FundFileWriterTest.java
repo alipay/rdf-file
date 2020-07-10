@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.alipay.rdf.file.interfaces.FileReader;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -82,6 +83,64 @@ public class FundFileWriterTest {
         Assert.assertEquals("00000001", reader.readLine());
 
         Assert.assertEquals("20151204中国1 004211", reader.readLine());
+
+        Assert.assertEquals("OFDCFEND", reader.readLine());
+
+        reader.close();
+    }
+
+    @Test
+    public void testWriterNegative() throws Exception {
+        String filePath = temporaryFolder.getRoot().getAbsolutePath();
+        System.out.println(filePath);
+
+        FileConfig config = new FileConfig(new File(filePath, "test.txt").getAbsolutePath(),
+                "/writer/template/fund2.cfg", new StorageConfig("nas"));
+        FileWriter fileWriter = FileFactory.createWriter(config);
+
+        Map<String, Object> head = new HashMap<String, Object>();
+        head.put("msgRecipient", "xxx");
+        head.put("sendDate", DateUtil.parse("20151204", "yyyyMMdd"));
+        head.put("summaryTableNo", "aa");
+        head.put("fileTypeCode", "bb");
+        head.put("recipient", "ll");
+        head.put("totalCount", 1);
+
+        fileWriter.writeHead(head);
+
+        Map<String, Object> row = new HashMap<String, Object>();
+        row.put("TransactionCfmDate", DateUtil.parse("20151204", "yyyyMMdd"));
+        row.put("FundCode", "中国1");
+        row.put("AvailableVol", -42.11);
+        fileWriter.writeRow(row);
+
+        fileWriter.writeTail(new HashMap<String, Object>());
+
+        fileWriter.close();
+
+        FileReader fileReader = FileFactory.createReader(config);
+        row = fileReader.readRow(HashMap.class);
+        Assert.assertEquals(-42.11, row.get("AvailableVol"));
+
+        //校验文件
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(new FileInputStream(new File(filePath, "test.txt")), "UTF-8"));
+        Assert.assertEquals("OFDCFDAT", reader.readLine());
+        Assert.assertEquals("20  ", reader.readLine());
+        Assert.assertEquals("H0       ", reader.readLine());
+        Assert.assertEquals("xxx      ", reader.readLine());
+        Assert.assertEquals("20151204", reader.readLine());
+        Assert.assertEquals("aa ", reader.readLine());
+        Assert.assertEquals("bb", reader.readLine());
+        Assert.assertEquals("H0      ", reader.readLine());
+        Assert.assertEquals("ll      ", reader.readLine());
+        Assert.assertEquals("003", reader.readLine());
+        Assert.assertEquals("TransactionCfmDate", reader.readLine());
+        Assert.assertEquals("FundCode", reader.readLine());
+        Assert.assertEquals("AvailableVol", reader.readLine());
+        Assert.assertEquals("00000001", reader.readLine());
+
+        Assert.assertEquals("20151204中国1 -04211", reader.readLine());
 
         Assert.assertEquals("OFDCFEND", reader.readLine());
 
