@@ -15,9 +15,6 @@ public class DoubleType extends AbstractNumberTypeCodec<Double> {
         return Double.valueOf(field);
     }
 
-    /** 
-     * @see hongwei.quhw.file.type.RdfFileColumnTypeSpi#serialize(java.lang.Object, hongwei.quhw.file.meta.FileColumnMeta)
-     */
     @Override
     public String serialize(Double field, FileColumnMeta columnMeta) {
         return field.toString();

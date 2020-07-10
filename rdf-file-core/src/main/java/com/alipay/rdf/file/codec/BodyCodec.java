@@ -29,9 +29,6 @@ import com.alipay.rdf.file.spi.RdfFileProcessorSpi;
 public class BodyCodec implements FileCodec {
     public static BodyCodec instance = new BodyCodec();
 
-    /** 
-     * @see hongwei.quhw.file.codec.FileCodec#serialize(Object, ProtocolFileWriter.quhw.file.common.CommonFileWriter)
-     */
     @Override
     public void serialize(Object bean, FileConfig config, FileWriter writer,
                           Map<ProcessorTypeEnum, List<RdfFileProcessorSpi>> processors) {
@@ -56,9 +53,6 @@ public class BodyCodec implements FileCodec {
         RowsCodec.serialize(bean, config, writer, processors, FileDataTypeEnum.BODY);
     }
 
-    /** 
-     * @see hongwei.quhw.file.codec.FileCodec#deserialize(ProtocolFileReader.quhw.file.common.CommonFileReader)
-     */
     @Override
     public <T> T deserialize(Class<?> clazz, FileConfig config, FileReader reader,
                              Map<ProcessorTypeEnum, List<RdfFileProcessorSpi>> processors) {

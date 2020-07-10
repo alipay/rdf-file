@@ -40,9 +40,6 @@ public class MD5OSSReadValidator extends AbstractOssProcessor {
         return types;
     }
 
-    /** 
-     * @see hongwei.quhw.file.processor.Processor#process(hongwei.quhw.file.processor.ProcessCotnext)
-     */
     @Override
     public void doProcess(ProcessCotnext pc) {
         ProcessorTypeEnum processorType = pc.getProcessorType();

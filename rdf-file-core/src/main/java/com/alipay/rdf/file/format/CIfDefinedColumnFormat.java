@@ -26,9 +26,6 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  */
 public class CIfDefinedColumnFormat extends RawFormat implements RdfFileFormatSpi {
 
-    /** 
-     * @see hongwei.quhw.file.format.RdfFileFormatSpi#serialize(java.lang.String, hongwei.quhw.file.meta.FileColumnMeta)
-     */
     @Override
     public String serialize(String field, FileColumnMeta columnMeta, FileConfig fileConfig) {
         if (null != columnMeta.getRange()) {
@@ -39,9 +36,6 @@ public class CIfDefinedColumnFormat extends RawFormat implements RdfFileFormatSp
         return super.serialize(field, columnMeta, fileConfig);
     }
 
-    /** 
-     * @see hongwei.quhw.file.format.RdfFileFormatSpi#deserialize(java.lang.String, hongwei.quhw.file.meta.FileColumnMeta)
-     */
     @Override
     public String deserialize(String field, FileColumnMeta columnMeta, FileConfig fileConfig) {
         return field.trim();

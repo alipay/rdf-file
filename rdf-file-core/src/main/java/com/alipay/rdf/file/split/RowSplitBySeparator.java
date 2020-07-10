@@ -14,9 +14,6 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  */
 public class RowSplitBySeparator implements RdfFileRowSplitSpi {
 
-    /** 
-     * @see hongwei.quhw.file.split.RdfFileRowSplitSpi#split(java.lang.String, hongwei.quhw.file.meta.FileMeta)
-     */
     @Override
     public String[] split(SplitContext ctx) {
         String columnSplit = RdfFileUtil.getColumnSplit(ctx.getFileConfig());

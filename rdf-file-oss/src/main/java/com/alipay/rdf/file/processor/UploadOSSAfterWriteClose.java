@@ -33,9 +33,6 @@ public class UploadOSSAfterWriteClose extends AbstractOssProcessor {
         return types;
     }
 
-    /** 
-     * @see hongwei.quhw.file.processor.Processor#process(hongwei.quhw.file.processor.ProcessCotnext)
-     */
     @Override
     public void doProcess(ProcessCotnext pc) {
         FileConfig config = pc.getFileConfig();

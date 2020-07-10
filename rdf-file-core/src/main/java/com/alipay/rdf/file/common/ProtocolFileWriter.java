@@ -63,10 +63,7 @@ public class ProtocolFileWriter implements RdfFileWriterSpi {
         }
     }
 
-    /** 
-     * @see hongwei.quhw.file.interfaces.FileWriter#writeHead(java.lang.Object)
-     */
-    @Override
+   @Override
     public void writeHead(Object headBean) {
         ensureOpen();
         HeaderCodec.instance.serialize(headBean, fileConfig, this, processors);
@@ -76,9 +73,6 @@ public class ProtocolFileWriter implements RdfFileWriterSpi {
             new BizData(RdfFileConstants.DATA, headBean));
     }
 
-    /** 
-     * @see hongwei.quhw.file.interfaces.FileWriter#writeRow(java.lang.Object)
-     */
     @Override
     public void writeRow(Object rowBean) {
         ProcessExecutor.execute(ProcessorTypeEnum.BEFORE_WRITE_ROW, processors, fileConfig);
@@ -92,9 +86,6 @@ public class ProtocolFileWriter implements RdfFileWriterSpi {
             new BizData(RdfFileConstants.DATA, rowBean));
     }
 
-    /** 
-     * @see hongwei.quhw.file.interfaces.FileWriter#writeTail(java.lang.Object)
-     */
     @Override
     public void writeTail(Object tailBean) {
         ensureOpen();
@@ -105,9 +96,6 @@ public class ProtocolFileWriter implements RdfFileWriterSpi {
             new BizData(RdfFileConstants.DATA, tailBean));
     }
 
-    /** 
-     * @see hongwei.quhw.file.interfaces.FileWriter#close()
-     */
     @Override
     public void close() {
         close(true);

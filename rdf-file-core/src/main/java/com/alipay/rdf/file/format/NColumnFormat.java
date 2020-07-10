@@ -28,9 +28,6 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  */
 public class NColumnFormat implements RdfFileFormatSpi {
 
-    /** 
-     * @see hongwei.quhw.file.format.RdfFileFormatSpi#serialize(java.lang.String, hongwei.quhw.file.meta.FileColumnMeta)
-     */
     @Override
     public String serialize(String field, FileColumnMeta colMeta, FileConfig fileConfig) {
         //空补零
@@ -55,9 +52,6 @@ public class NColumnFormat implements RdfFileFormatSpi {
         return field;
     }
 
-    /** 
-     * @see hongwei.quhw.file.format.RdfFileFormatSpi#deserialize(java.lang.String, hongwei.quhw.file.meta.FileColumnMeta)
-     */
     @Override
     public String deserialize(String field, FileColumnMeta colMeta, FileConfig fileConfig) {
         //数值型补位为0 不可能StringUtils.isBlank(field)

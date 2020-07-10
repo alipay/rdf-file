@@ -14,17 +14,11 @@ import com.alipay.rdf.file.spi.RdfFileFormatSpi;
  */
 public class RawFormat implements RdfFileFormatSpi {
 
-    /** 
-     * @see hongwei.quhw.file.format.RdfFileFormatSpi#serialize(java.lang.Object, hongwei.quhw.file.meta.FileColumnMeta)
-     */
     @Override
     public String serialize(String field, FileColumnMeta columnMeta, FileConfig fileConfig) {
         return field;
     }
 
-    /** 
-     * @see hongwei.quhw.file.format.RdfFileFormatSpi#deserialize(java.lang.String, hongwei.quhw.file.meta.FileColumnMeta)
-     */
     @Override
     public String deserialize(String field, FileColumnMeta columnMeta, FileConfig fileConfig) {
         return field;

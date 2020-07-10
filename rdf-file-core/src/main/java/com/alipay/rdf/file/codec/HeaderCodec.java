@@ -28,9 +28,6 @@ import com.alipay.rdf.file.util.RdfFileUtil;
 public class HeaderCodec implements FileCodec {
     public static HeaderCodec instance = new HeaderCodec();
 
-    /** 
-     * @see hongwei.quhw.file.codec.FileCodec#serialize(Object, hongwei.quhw.file.common.ProtocolFileWriter)
-     */
     @Override
     public void serialize(Object bean, FileConfig config, FileWriter writer,
                           Map<ProcessorTypeEnum, List<RdfFileProcessorSpi>> processors) {
@@ -55,9 +52,6 @@ public class HeaderCodec implements FileCodec {
         RowsCodec.serialize(bean, config, writer, processors, FileDataTypeEnum.HEAD);
     }
 
-    /** 
-     * @see hongwei.quhw.file.codec.FileCodec#deserialize(hongwei.quhw.file.common.ProtocolFileReader)
-     */
     @Override
     public <T> T deserialize(Class<?> clazz, FileConfig config, FileReader reader,
                              Map<ProcessorTypeEnum, List<RdfFileProcessorSpi>> processors) {

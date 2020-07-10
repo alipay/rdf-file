@@ -23,18 +23,12 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  */
 public class CColumnFormat implements RdfFileFormatSpi {
 
-    /** 
-     * @see hongwei.quhw.file.format.RdfFileFormatSpi#serialize(java.lang.String, hongwei.quhw.file.meta.FileColumnMeta)
-     */
     @Override
     public String serialize(String field, FileColumnMeta columnMeta, FileConfig fileConfig) {
         return RdfFileUtil.alignLeftBlank(field, columnMeta.getRange().getFirstAttr(),
             RdfFileUtil.getFileEncoding(fileConfig));
     }
 
-    /** 
-     * @see hongwei.quhw.file.format.RdfFileFormatSpi#deserialize(java.lang.String, hongwei.quhw.file.meta.FileColumnMeta)
-     */
     @Override
     public String deserialize(String field, FileColumnMeta columnMeta, FileConfig fileConfig) {
         return field.trim();
