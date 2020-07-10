@@ -81,6 +81,7 @@ public class RawFileWriter implements RdfFileWriterSpi {
 
     @Override
     public void append(InputStream in) {
+        ensureOpen();
         writer.append(in);
     }
 

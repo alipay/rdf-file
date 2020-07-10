@@ -147,6 +147,7 @@ public class ProtocolFileWriter implements RdfFileWriterSpi {
     public void append(InputStream in) {
         RdfFileUtil.assertNotNull(in, "ProtocolFileWriter.append(inputsream == null) ",
             RdfErrorEnum.ILLEGAL_ARGUMENT);
+        ensureOpen();
         writer.append(in);
     }
 
