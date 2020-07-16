@@ -19,9 +19,6 @@ import com.alipay.rdf.file.util.RdfFileUtil;
 public class AColumnFormat implements RdfFileFormatSpi {
     private static final Pattern DIGITAL_REG = Pattern.compile("^[0-9]*$");
 
-    /** 
-     * @see RdfFileFormatSpi.quhw.file.format.RdfFormat#serialize(java.lang.String, hongwei.quhw.file.meta.FileColumnMeta)
-     */
     @Override
     public String serialize(String field, FileColumnMeta columnMeta, FileConfig fileConfig) {
         check(field, columnMeta);
@@ -29,9 +26,6 @@ public class AColumnFormat implements RdfFileFormatSpi {
             RdfFileUtil.getFileEncoding(fileConfig));
     }
 
-    /** 
-     * @see RdfFileFormatSpi.quhw.file.format.RdfFormat#deserialize(java.lang.String, hongwei.quhw.file.meta.FileColumnMeta)
-     */
     @Override
     public String deserialize(String field, FileColumnMeta columnMeta, FileConfig fileConfig) {
         field = field.trim();

@@ -25,10 +25,7 @@ public class DigitalCharType extends AbstractColumnTypeCodec<String> {
         return field;
     }
 
-    /** 
-     * @see RdfFileColumnTypeSpi.quhw.file.type.ColumnTypeCodec#serialize(java.lang.Object, hongwei.quhw.file.meta.FileColumnMeta)
-     */
-    @Override
+   @Override
     public String serialize(String field, FileColumnMeta columnMeta) {
         String value = super.serialize(field, columnMeta);
         check(value, columnMeta);

@@ -28,9 +28,6 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  */
 public class NColumnFormat implements RdfFileFormatSpi {
 
-    /** 
-     * @see hongwei.quhw.file.format.RdfFileFormatSpi#serialize(java.lang.String, hongwei.quhw.file.meta.FileColumnMeta)
-     */
     @Override
     public String serialize(String field, FileColumnMeta colMeta, FileConfig fileConfig) {
         //空补零
@@ -39,12 +36,14 @@ public class NColumnFormat implements RdfFileFormatSpi {
         } else {
             try {
                 BigInteger value = new BigDecimal(field.toString().trim())
-                    .multiply(new BigDecimal(
-                        RdfFileUtil.alignLeft("1", colMeta.getRange().getSecondAttr() + 1, "0")))
-                    .toBigInteger();
+                    .multiply(new BigDecimal(RdfFileUtil.alignLeft("1", colMeta.getRange().getSecondAttr() + 1, "0"))).toBigInteger();
 
-                field = RdfFileUtil.alignRight(String.valueOf(value),
-                    colMeta.getRange().getFirstAttr(), '0');
+                //负数
+                if (value.compareTo(new BigInteger("0")) < 0) {
+                    field = RdfFileUtil.alignRight(String.valueOf(value.negate()), colMeta.getRange().getFirstAttr(), '0', true);
+                } else {
+                    field = RdfFileUtil.alignRight(String.valueOf(value), colMeta.getRange().getFirstAttr(), '0');
+                }
             } catch (NumberFormatException e) {
                 throw new RdfFileException("rdf-file#NColumnFormat field = " + field
                                            + ", columnName=" + colMeta.getName() + " 数组转换出错",
@@ -55,18 +54,13 @@ public class NColumnFormat implements RdfFileFormatSpi {
         return field;
     }
 
-    /** 
-     * @see hongwei.quhw.file.format.RdfFileFormatSpi#deserialize(java.lang.String, hongwei.quhw.file.meta.FileColumnMeta)
-     */
     @Override
     public String deserialize(String field, FileColumnMeta colMeta, FileConfig fileConfig) {
         //数值型补位为0 不可能StringUtils.isBlank(field)
         BigDecimal value = null;
         //有小数点
         if (colMeta.getRange().getSecondAttr() > 0) {
-            value = new BigDecimal(field).divide(new BigDecimal(
-                RdfFileUtil.alignLeft("1", colMeta.getRange().getSecondAttr() + 1, "0")));
-
+            value = new BigDecimal(field).divide(new BigDecimal(RdfFileUtil.alignLeft("1", colMeta.getRange().getSecondAttr() + 1, "0")));
         } else {
             value = new BigDecimal(field);
         }

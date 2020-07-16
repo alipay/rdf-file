@@ -30,9 +30,6 @@ public class LengthWriteValidator implements RdfFileProcessorSpi {
         return types;
     }
 
-    /** 
-     * @see hongwei.quhw.file.processor.RdfFileProcessorSpi#process(hongwei.quhw.file.processor.ProcessCotnext)
-     */
     @Override
     public void process(ProcessCotnext pc) {
         ProcessorTypeEnum processorType = pc.getProcessorType();

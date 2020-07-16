@@ -23,9 +23,6 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  */
 public class RowSplitByFixedlLength implements RdfFileRowSplitSpi {
 
-    /** 
-     * @see RdfFileRowSplitSpi.quhw.file.split.RowSplit#split(java.lang.String, hongwei.quhw.file.meta.FileMeta)
-     */
     @Override
     public String[] split(SplitContext ctx) {
         FileMeta fileMeta = TemplateLoader.load(ctx.getFileConfig());

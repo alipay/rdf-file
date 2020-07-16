@@ -114,7 +114,7 @@ public class OssTemplateLoaderTest {
 
     @After
     public void after() {
-        fileStorage.delete(OSS_PATH);
+        //fileStorage.delete(OSS_PATH);
         FileDefaultConfig.RDF_PROCESSOR_PATH = "classpath*:META-INF/rdf-file/auto-processor/";
         FileDefaultConfig.RDF_PROTOCOL_PATH = "classpath*:META-INF/rdf-file/protocol/";
         FileDefaultConfig.RDF_FORMAT_PATH = "classpath*:META-INF/rdf-file/format/";

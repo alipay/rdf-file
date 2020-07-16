@@ -1,0 +1,13 @@
+{
+    "body": [
+        "orderNo|流水号",
+        "orderNo|支付宝订单号",
+        "appSheetNo|基金公司订单号",
+        "transInAmount|支付金额|BigDecimal",
+        "tradeType|订单类型",
+        "paymentStatus|支付状态",
+        "payTime|创建日期|Date:yyyyMMdd HH:mm:ss",
+        "memo|备注"
+    ],
+    "protocol":"DE"
+}

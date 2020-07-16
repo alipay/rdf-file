@@ -202,6 +202,10 @@ public class RdfFileUtil {
         }
     }
 
+    public static String alignRight(String str, int size, char padChar) {
+        return alignRight(str, size, padChar, false);
+    }
+
     /**
      * 基金格式中对数值补位
      * 
@@ -210,8 +214,18 @@ public class RdfFileUtil {
      * @param padChar
      * @return
      */
-    public static String alignRight(String str, int size, char padChar) {
-        String val = alignRight(str, size, String.valueOf(padChar));
+    public static String alignRight(String str, int size, char padChar, boolean negate) {
+        int alignSize = size;
+
+        if (negate) {
+            alignSize--;
+        }
+
+        String val = alignRight(str, alignSize, String.valueOf(padChar));
+
+        if (negate) {
+            val = "-" + val;
+        }
 
         if (val.length() != size) {
             throw new RdfFileException(
