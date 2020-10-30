@@ -13,7 +13,9 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
@@ -27,6 +29,12 @@ public class RdfFileUtil {
     private static final String EMPTY    = "";
 
     private static final int    BUF_SIZE = 8192;
+
+    private static final String AMPERSAND = "&";
+
+    private static final String EQUALS = "=";
+
+    private static final String QUESTION = "?";
 
     public static String trimNotNull(String text) {
         if (null == text) {
@@ -786,5 +794,31 @@ public class RdfFileUtil {
         int exp = (int) (Math.log(bytes) / Math.log(unit));
         String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+    }
+
+    public static Map<String, String> parsePathParams(String path) {
+        Map<String, String> params = new HashMap<String, String>();
+
+        if (isBlank(path)) {
+            return params;
+        }
+
+        int idx = path.indexOf(QUESTION);
+        if (idx < 0) {
+            return params;
+        }
+
+        path = path.substring(idx + 1);
+        String[] pairs = path.split(AMPERSAND);
+        for (String pair : pairs) {
+            String[] param = pair.split(EQUALS);
+            if (param.length == 2) {
+                params.put(param[0], param[1]);
+            } else {
+                throw new RdfFileException("path=" + path + ", parseParams format error, it has not valid param pairs ", RdfErrorEnum.ILLEGAL_ARGUMENT);
+            }
+        }
+
+        return params;
     }
 }
