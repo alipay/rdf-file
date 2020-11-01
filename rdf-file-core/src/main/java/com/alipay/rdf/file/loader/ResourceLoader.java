@@ -26,7 +26,7 @@ public class ResourceLoader {
     private static final String DEFAULT_TYPE = "classpath";
 
     private static final String SPLIT = ":";
-    // 扩展配置项key，同种协议可以指定，不同配置
+    // 扩展配置项key，同种协议可以指定不同配置
     private static final String RESOURCE_KEY = "resourceKey";
 
     private static final Map<String, RdfFileResourceSpi> RESOURCE_CACHE = Collections.synchronizedMap(new WeakHashMap<String, RdfFileResourceSpi>());

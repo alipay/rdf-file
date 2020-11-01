@@ -811,7 +811,7 @@ public class RdfFileUtil {
         path = path.substring(idx + 1);
         String[] pairs = path.split(AMPERSAND);
         for (String pair : pairs) {
-            String[] param = pair.split(EQUALS);
+            String[] param = split(pair, EQUALS);
             if (param.length == 2) {
                 params.put(param[0], param[1]);
             } else {
