@@ -27,32 +27,29 @@ public class ResourceLoaderTest {
     @Test
     public void testGetInputStreamResourceKey() throws  Exception{
 
+        FileDefaultConfig.DEFAULT_FILE_PARAMS.remove("key1");
+        FileDefaultConfig.DEFAULT_FILE_PARAMS.remove("key2");
+
         Field field = ResourceLoader.class.getDeclaredField("RESOURCE_CACHE");
         field.setAccessible(true);
 
         Map<String, RdfFileResourceSpi> resourceMap = ( Map<String, RdfFileResourceSpi>)field.get(null);
-        Assert.assertTrue(resourceMap.isEmpty());
 
         getInputStream("aa/bb/cc/dd.json");
-        Assert.assertEquals(1, resourceMap.size());
         Assert.assertNotNull(resourceMap.get("classpath"));
 
         getInputStream("classpath:aa/bb/cc/dd.json");
-        Assert.assertEquals(1, resourceMap.size());
         Assert.assertNotNull(resourceMap.get("classpath"));
 
         getInputStream("classpath:aa/bb/cc/dd.json?resourceKey=hzconfig");
-        Assert.assertEquals(2, resourceMap.size());
         Assert.assertNotNull(resourceMap.get("classpath"));
         Assert.assertNotNull(resourceMap.get("classpathhzconfig"));
 
         getInputStream("classpath:aa/bb/cc/dd.json?resourceKey=shconfig");
-        Assert.assertEquals(3, resourceMap.size());
         Assert.assertNotNull(resourceMap.get("classpath"));
         Assert.assertNotNull(resourceMap.get("classpathshconfig"));
 
         getInputStream("classpath:aa/bb/cc/dd.json?resourceKey=shconfig&xx=dd");
-        Assert.assertEquals(3, resourceMap.size());
         Assert.assertNotNull(resourceMap.get("classpath"));
         Assert.assertNotNull(resourceMap.get("classpathhzconfig"));
         Assert.assertNotNull(resourceMap.get("classpathshconfig"));
@@ -60,7 +57,6 @@ public class ResourceLoaderTest {
 
         TestResource.TestInputStream testInputStream = (TestResource.TestInputStream)ResourceLoader.getInputStream("testResource:aa/bb/cc/dd.json");
 
-        Assert.assertEquals(4, resourceMap.size());
         Assert.assertNotNull(resourceMap.get("classpath"));
         Assert.assertNotNull(resourceMap.get("classpathhzconfig"));
         Assert.assertNotNull(resourceMap.get("classpathshconfig"));
@@ -83,25 +79,25 @@ public class ResourceLoaderTest {
         });
 
         testInputStream = (TestResource.TestInputStream)ResourceLoader.getInputStream("testResource:aa/bb/cc/dd.json?resourceKey=key1");
-        Assert.assertEquals(5, resourceMap.size());
         Assert.assertNotNull(resourceMap.get("classpath"));
         Assert.assertNotNull(resourceMap.get("classpathhzconfig"));
         Assert.assertNotNull(resourceMap.get("classpathshconfig"));
         Assert.assertNotNull(resourceMap.get("testResource"));
         Assert.assertNotNull(resourceMap.get("testResourcekey1"));
 
+        RdfFileResourceSpi pre = resourceMap.get("testResourcekey1");
+
         // 重复看看缓存
         testInputStream = (TestResource.TestInputStream)ResourceLoader.getInputStream("testResource:aa/bb/cc/dd.json?resourceKey=key1");
-        Assert.assertEquals(5, resourceMap.size());
         Assert.assertNotNull(resourceMap.get("classpath"));
         Assert.assertNotNull(resourceMap.get("classpathhzconfig"));
         Assert.assertNotNull(resourceMap.get("classpathshconfig"));
         Assert.assertNotNull(resourceMap.get("testResource"));
         Assert.assertNotNull(resourceMap.get("testResourcekey1"));
         Assert.assertEquals("key1", testInputStream.getConfig().getParam("type"));
+        Assert.assertEquals(pre, resourceMap.get("testResourcekey1"));
 
         testInputStream = (TestResource.TestInputStream)ResourceLoader.getInputStream("testResource:aa/bb/cc/dd.json?resourceKey=key2");
-        Assert.assertEquals(6, resourceMap.size());
         Assert.assertNotNull(resourceMap.get("classpath"));
         Assert.assertNotNull(resourceMap.get("classpathhzconfig"));
         Assert.assertNotNull(resourceMap.get("classpathshconfig"));
@@ -109,5 +105,9 @@ public class ResourceLoaderTest {
         Assert.assertNotNull(resourceMap.get("testResourcekey1"));
         Assert.assertNotNull(resourceMap.get("testResourcekey2"));
         Assert.assertEquals("key2", testInputStream.getConfig().getParam("type"));
+
+        FileDefaultConfig.DEFAULT_FILE_PARAMS.remove("key1");
+        FileDefaultConfig.DEFAULT_FILE_PARAMS.remove("key2");
+
     }
 }
