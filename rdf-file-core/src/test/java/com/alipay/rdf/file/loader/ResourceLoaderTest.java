@@ -28,7 +28,8 @@ public class ResourceLoaderTest {
     public void testGetInputStreamResourceKey() throws  Exception{
 
         FileDefaultConfig.DEFAULT_FILE_PARAMS.remove("key1");
-        FileDefaultConfig.DEFAULT_FILE_PARAMS.remove("key2");
+        FileDefaultConfig.DEFAULT_FILE_PARAMS.remove("key1");
+        FileDefaultConfig.DEFAULT_FILE_PARAMS.remove("testResource");
 
         Field field = ResourceLoader.class.getDeclaredField("RESOURCE_CACHE");
         field.setAccessible(true);
@@ -65,6 +66,12 @@ public class ResourceLoaderTest {
         Assert.assertEquals("testResource", testInputStream.getResourceType());
         Assert.assertEquals("aa/bb/cc/dd.json", testInputStream.getPath());
         Assert.assertNull( testInputStream.getConfig());
+
+        FileDefaultConfig.DEFAULT_FILE_PARAMS.put("testResource", new StorageConfig("nas") {
+            {
+                addParam("type", "testResource");
+            }
+        });
 
         FileDefaultConfig.DEFAULT_FILE_PARAMS.put("key1", new StorageConfig("nas") {
             {
@@ -106,8 +113,19 @@ public class ResourceLoaderTest {
         Assert.assertNotNull(resourceMap.get("testResourcekey2"));
         Assert.assertEquals("key2", testInputStream.getConfig().getParam("type"));
 
+        testInputStream = (TestResource.TestInputStream)ResourceLoader.getInputStream("testResource:aa/bb/cc/dd.json?resourceKey=key3");
+        Assert.assertNotNull(resourceMap.get("classpath"));
+        Assert.assertNotNull(resourceMap.get("classpathhzconfig"));
+        Assert.assertNotNull(resourceMap.get("classpathshconfig"));
+        Assert.assertNotNull(resourceMap.get("testResource"));
+        Assert.assertNotNull(resourceMap.get("testResourcekey1"));
+        Assert.assertNotNull(resourceMap.get("testResourcekey2"));
+        Assert.assertNotNull(resourceMap.get("testResourcekey3"));
+        Assert.assertEquals("testResource", testInputStream.getConfig().getParam("type"));
+
         FileDefaultConfig.DEFAULT_FILE_PARAMS.remove("key1");
         FileDefaultConfig.DEFAULT_FILE_PARAMS.remove("key2");
+        FileDefaultConfig.DEFAULT_FILE_PARAMS.remove("testResource");
 
     }
 }
