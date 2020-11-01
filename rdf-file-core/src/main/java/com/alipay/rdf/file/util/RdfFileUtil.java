@@ -26,7 +26,7 @@ import java.util.Map;
  * @version $Id: RdfUtil.java, v 0.1 2017年8月8日 上午11:29:42 hongwei.quhw Exp $
  */
 public class RdfFileUtil {
-    private static final String EMPTY    = "";
+    public static final String EMPTY    = "";
 
     private static final int    BUF_SIZE = 8192;
 
@@ -34,7 +34,7 @@ public class RdfFileUtil {
 
     private static final String EQUALS = "=";
 
-    private static final String QUESTION = "?";
+    public static final String QUESTION = "?";
 
     public static String trimNotNull(String text) {
         if (null == text) {

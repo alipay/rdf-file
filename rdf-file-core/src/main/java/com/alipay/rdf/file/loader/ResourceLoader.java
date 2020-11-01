@@ -50,12 +50,12 @@ public class ResourceLoader {
             path = path.substring(idx + 1);
         }
 
-        idx = path.indexOf(RESOURCE_KEY);
+        idx = path.indexOf(RdfFileUtil.QUESTION);
         if (idx > -1) {
             path = path.substring(idx + 1);
         }
 
-        String cacheKey = resourceType + resourceValue == null ? "" : resourceValue;
+        String cacheKey = resourceType + (resourceValue == null ? RdfFileUtil.EMPTY : resourceValue);
 
         RdfFileResourceSpi rdfResource = RESOURCE_CACHE.get(cacheKey);
 

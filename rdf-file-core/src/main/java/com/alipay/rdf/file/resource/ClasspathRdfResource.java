@@ -12,9 +12,6 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  */
 public class ClasspathRdfResource extends AbstractRdfResources {
 
-    /** 
-     * @see com.alipay.rdf.file.spi.RdfFileResourceSpi#getInputStream()
-     */
     @Override
     public RdfInputStream getInputStream(String path) {
         InputStream is = RdfFileUtil.getDefaultClassLoader().getResourceAsStream(path);
