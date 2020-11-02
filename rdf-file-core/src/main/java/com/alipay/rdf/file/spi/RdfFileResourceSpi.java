@@ -16,7 +16,7 @@ public interface RdfFileResourceSpi extends RdfInit<StorageConfig> {
     /**
      * 资源加载类型
      * 
-     * @param type
+     * @param resourceType
      */
     void resourceType(String resourceType);
 

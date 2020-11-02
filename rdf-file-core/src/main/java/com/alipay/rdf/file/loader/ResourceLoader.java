@@ -3,11 +3,18 @@ package com.alipay.rdf.file.loader;
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.init.RdfInit;
+import com.alipay.rdf.file.interfaces.FileStorage;
 import com.alipay.rdf.file.model.FileDefaultConfig;
+import com.alipay.rdf.file.model.StorageConfig;
 import com.alipay.rdf.file.resource.RdfInputStream;
 import com.alipay.rdf.file.spi.RdfFileResourceSpi;
 import com.alipay.rdf.file.util.RdfFileLogUtil;
 import com.alipay.rdf.file.util.RdfFileUtil;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.Queue;
+import java.util.WeakHashMap;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
@@ -18,7 +25,13 @@ import com.alipay.rdf.file.util.RdfFileUtil;
 public class ResourceLoader {
     private static final String DEFAULT_TYPE = "classpath";
 
-    private static final String SPLIT        = ":";
+    private static final String SPLIT = ":";
+    // 扩展配置项key，同种协议可以指定不同配置
+    private static final String RESOURCE_KEY = "resourceKey";
+
+    private static final Map<String, RdfFileResourceSpi> RESOURCE_CACHE = Collections.synchronizedMap(new WeakHashMap<String, RdfFileResourceSpi>());
+
+    private static final Object LOCK = new Object();
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static RdfInputStream getInputStream(String path) {
@@ -28,6 +41,7 @@ public class ResourceLoader {
         int idx = path.indexOf(SPLIT);
 
         String resourceType = null;
+        String resourceValue = RdfFileUtil.parsePathParams(path).get(RESOURCE_KEY);
 
         if (idx < 0) {
             resourceType = DEFAULT_TYPE;
@@ -36,19 +50,45 @@ public class ResourceLoader {
             path = path.substring(idx + 1);
         }
 
-        RdfFileResourceSpi rdfResource = ExtensionLoader
-            .getExtensionLoader(RdfFileResourceSpi.class).getExtension(resourceType);
-
-        if (null == rdfResource) {
-            throw new RdfFileException("rdf-file#ResourceLoader.getInputStream(path=" + path
-                                       + ")  resourceType=" + resourceType + "没有对应的实现!",
-                RdfErrorEnum.NOT_EXSIT);
+        idx = path.indexOf(RdfFileUtil.QUESTION);
+        if (idx > -1) {
+            path = path.substring(idx + 1);
         }
 
-        rdfResource.resourceType(resourceType);
+        String cacheKey = resourceType + (resourceValue == null ? RdfFileUtil.EMPTY : resourceValue);
 
-        if (rdfResource instanceof RdfInit) {
-            ((RdfInit) rdfResource).init(FileDefaultConfig.DEFAULT_FILE_PARAMS.get(resourceType));
+        RdfFileResourceSpi rdfResource = RESOURCE_CACHE.get(cacheKey);
+
+        if (null == rdfResource) {
+            synchronized (LOCK) {
+                rdfResource = RESOURCE_CACHE.get(cacheKey);
+                if (null == rdfResource) {
+                    rdfResource = ExtensionLoader.getExtensionLoader(RdfFileResourceSpi.class).getNewExtension(resourceType);
+
+                    if (null == rdfResource) {
+                        throw new RdfFileException("rdf-file#ResourceLoader.getInputStream(path=" + path
+                                + ")  resourceType=" + resourceType + "没有对应的实现!",
+                                RdfErrorEnum.NOT_EXSIT);
+                    }
+
+                    rdfResource.resourceType(resourceType);
+
+                    if (rdfResource instanceof RdfInit) {
+                        Object configValue = null;
+                        if (RdfFileUtil.isNotBlank(resourceValue)) {
+                            // 指定了特殊配置
+                            configValue = FileDefaultConfig.DEFAULT_FILE_PARAMS.get(resourceValue);
+                        }
+                        if (null == configValue) {
+                            // 使用协议通用配置
+                            configValue = FileDefaultConfig.DEFAULT_FILE_PARAMS.get(resourceType);
+                        }
+                        ((RdfInit) rdfResource).init(configValue);
+                    }
+
+                    RESOURCE_CACHE.put(cacheKey, rdfResource);
+                }
+            }
         }
 
         return rdfResource.getInputStream(path);

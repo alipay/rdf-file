@@ -1,10 +1,13 @@
 package com.alipay.rdf.file.util;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
+import com.alipay.rdf.file.exception.RdfErrorEnum;
+import com.alipay.rdf.file.exception.RdfFileException;
+import org.junit.Assert;
 import org.junit.Test;
 
-import junit.framework.Assert;
 
 /**
  * 工具类测试
@@ -90,5 +93,31 @@ public class RdfFileUtilTest {
             return true;
         }
 
+    }
+
+    @Test
+    public void testParsePathParams() {
+
+        Assert.assertTrue(RdfFileUtil.parsePathParams("").isEmpty());
+
+        String path = "/aaa/bb/cc/dd.json";
+
+        Assert.assertTrue(RdfFileUtil.parsePathParams(path).isEmpty());
+
+        path = "/aaa/bb/cc/dd.json?xxx";
+
+        try {
+            Assert.assertTrue(RdfFileUtil.parsePathParams(path).isEmpty());
+            Assert.fail();
+        } catch (RdfFileException e) {
+            Assert.assertEquals(RdfErrorEnum.ILLEGAL_ARGUMENT, e.getErrorEnum());
+        }
+
+        path = "/aaa/bb/cc/dd.json?xxx=ggg&kkk=ddd&hhh=";
+        Map<String, String> params = RdfFileUtil.parsePathParams(path);
+        Assert.assertEquals(3, params.size());
+        Assert.assertEquals("ggg", params.get("xxx"));
+        Assert.assertEquals("ddd", params.get("kkk"));
+        Assert.assertEquals("", params.get("hhh"));
     }
 }
