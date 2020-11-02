@@ -52,7 +52,7 @@ public class ResourceLoader {
 
         idx = path.indexOf(RdfFileUtil.QUESTION);
         if (idx > -1) {
-            path = path.substring(idx + 1);
+            path = path.substring(0, idx);
         }
 
         String cacheKey = resourceType + (resourceValue == null ? RdfFileUtil.EMPTY : resourceValue);
