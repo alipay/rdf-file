@@ -122,6 +122,7 @@ public class ResourceLoaderTest {
         Assert.assertNotNull(resourceMap.get("testResourcekey2"));
         Assert.assertNotNull(resourceMap.get("testResourcekey3"));
         Assert.assertEquals("testResource", testInputStream.getConfig().getParam("type"));
+        Assert.assertEquals("aa/bb/cc/dd.json", testInputStream.getPath());
 
         FileDefaultConfig.DEFAULT_FILE_PARAMS.remove("key1");
         FileDefaultConfig.DEFAULT_FILE_PARAMS.remove("key2");
