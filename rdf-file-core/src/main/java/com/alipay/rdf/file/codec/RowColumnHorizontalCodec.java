@@ -55,9 +55,9 @@ public class RowColumnHorizontalCodec {
         }
 
         for (int i = 0; i < columnMetas.size(); i++) {
+            FileColumnMeta columnMeta = columnMetas.get(i);
+            FuncContext ctx = new FuncContext();
             try {
-                FileColumnMeta columnMeta = columnMetas.get(i);
-                FuncContext ctx = new FuncContext();
                 ctx.codecType = CodecType.SERIALIZE;
                 ctx.field = bmw.getProperty(columnMeta.getName());
                 ctx.columnMeta = columnMeta;
@@ -71,13 +71,13 @@ public class RowColumnHorizontalCodec {
             } catch (RdfFileException e) {
                 throw new RdfFileException(
                     "rdf-file#RowColumnHorizontalCodec.serialize serialize row=" + bmw.getBean()
-                                           + ", fileConfig=" + fileConfig + ", 将数据序列到文件出错."
+                                           + ", fileConfig=" + fileConfig + ", 将数据序列到文件出错. 错误列信息: columnMeta=" + columnMetas.get(i) + ", field=" + ctx.field
                                            + e.getMessage(),
                     e, e.getErrorEnum());
             } catch (Throwable e) {
                 throw new RdfFileException(
                     "rdf-file#RowColumnHorizontalCodec.serialize row=" + bmw.getBean()
-                                           + ", fileConfig=" + fileConfig + ", 将数据序列到文件出错.",
+                                           + ", fileConfig=" + fileConfig + ", 将数据序列到文件出错. 错误列信息: columnMeta=" + columnMetas.get(i) + ", field=" + ctx.field,
                     e, RdfErrorEnum.SERIALIZE_ERROR);
             }
         }
@@ -124,9 +124,9 @@ public class RowColumnHorizontalCodec {
         int endIndex = fileMeta.isEndWithSplit(rowType) ? column.length - 1 : column.length;
 
         for (int i = statIndex; i < endIndex; i++) {
+            FileColumnMeta columnMeta = columnMetas.get(i - statIndex);
+            FuncContext ctx = new FuncContext();
             try {
-                FileColumnMeta columnMeta = columnMetas.get(i - statIndex);
-                FuncContext ctx = new FuncContext();
                 ctx.codecType = CodecType.DESERIALIZE;
                 ctx.field = column[i];
                 ctx.columnMeta = columnMeta;
@@ -135,11 +135,12 @@ public class RowColumnHorizontalCodec {
             } catch (RdfFileException e) {
                 throw new RdfFileException(
                     "rdf-file#RowColumnHorizontalCodec.deserialize line=" + line + ", fileConfig="
-                                           + fileConfig + ", 将数据反序列到对象出错. " + e.getMessage(),
+                                           + fileConfig + ", 将数据反序列到对象出错. 错误列信息:field=" + ctx.field + ", columnMeta=" + ctx.columnMeta
+                            + e.getMessage(),
                     e, e.getErrorEnum());
             } catch (Throwable e) {
                 throw new RdfFileException("rdf-file#RowColumnHorizontalCodec.deserialize line="
-                                           + line + ", fileConfig=" + fileConfig + ", 将数据反序列到对象出错.",
+                                           + line + ", fileConfig=" + fileConfig + ", 将数据反序列到对象出错. 错误列信息:field=" + ctx.field + ", columnMeta=" + ctx.columnMeta,
                     e, RdfErrorEnum.DESERIALIZE_ERROR);
             }
         }
