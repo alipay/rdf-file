@@ -71,7 +71,7 @@ public class RowColumnHorizontalCodec {
             } catch (RdfFileException e) {
                 throw new RdfFileException(
                     "rdf-file#RowColumnHorizontalCodec.serialize serialize row=" + bmw.getBean()
-                                           + ", fileConfig=" + fileConfig + ", 将数据序列到文件出错. 错误列信息: columnMeta=" + columnMeta + ", field=" + ctx.field
+                                           + ", fileConfig=" + fileConfig + ", 将数据序列到文件出错. 错误列信息: columnMeta=" + columnMeta + ", field=" + ctx.field + ", errorMsg="
                                            + e.getMessage(),
                     e, e.getErrorEnum());
             } catch (Throwable e) {
@@ -135,7 +135,7 @@ public class RowColumnHorizontalCodec {
             } catch (RdfFileException e) {
                 throw new RdfFileException(
                     "rdf-file#RowColumnHorizontalCodec.deserialize line=" + line + ", fileConfig="
-                                           + fileConfig + ", 将数据反序列到对象出错. 错误列信息:field=" + ctx.field + ", columnMeta=" + columnMeta
+                                           + fileConfig + ", 将数据反序列到对象出错. 错误列信息:field=" + ctx.field + ", columnMeta=" + columnMeta + ", errorMsg="
                             + e.getMessage(),
                     e, e.getErrorEnum());
             } catch (Throwable e) {
