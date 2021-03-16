@@ -1,13 +1,11 @@
 package com.alipay.rdf.file.function;
 
-import org.junit.Test;
-
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.model.FileDataTypeEnum;
 import com.alipay.rdf.file.spi.RdfFileFunctionSpi;
-
-import junit.framework.Assert;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * 函数解析测试

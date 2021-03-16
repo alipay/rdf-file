@@ -4,14 +4,11 @@
  */
 package com.alipay.rdf.file.storage;
 
-import java.io.File;
-import java.util.List;
-
+import org.junit.Assert;
 import org.junit.Test;
 
-import com.alipay.rdf.file.storage.FileNasStorage;
-
-import junit.framework.Assert;
+import java.io.File;
+import java.util.List;
 
 /**
  * nas 存储

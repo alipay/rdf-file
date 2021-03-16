@@ -1,10 +1,5 @@
 package com.alipay.rdf.file.storage;
 
-import java.io.File;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import com.alipay.rdf.file.interfaces.FileFactory;
 import com.alipay.rdf.file.interfaces.FileReader;
 import com.alipay.rdf.file.interfaces.FileStorage;
@@ -15,8 +10,11 @@ import com.alipay.rdf.file.util.OssTestUtil;
 import com.alipay.rdf.file.util.RdfFileUtil;
 import com.alipay.rdf.file.util.TemporaryFolderUtil;
 import com.alipay.rdf.file.util.TestLog;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.Assert;
+import java.io.File;
 
 public class OssCopyTest {
     private static final StorageConfig       storageConfig   = OssTestUtil.geStorageConfig();

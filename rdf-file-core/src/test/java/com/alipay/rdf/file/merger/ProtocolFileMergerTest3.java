@@ -1,18 +1,5 @@
 package com.alipay.rdf.file.merger;
 
-import java.io.File;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.alipay.rdf.file.interfaces.FileFactory;
 import com.alipay.rdf.file.interfaces.FileMerger;
 import com.alipay.rdf.file.interfaces.FileReader;
@@ -23,8 +10,15 @@ import com.alipay.rdf.file.model.StorageConfig;
 import com.alipay.rdf.file.util.DateUtil;
 import com.alipay.rdf.file.util.TemporaryFolderUtil;
 import com.alipay.rdf.file.util.TestLog;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.Assert;
+import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 协议文件合并

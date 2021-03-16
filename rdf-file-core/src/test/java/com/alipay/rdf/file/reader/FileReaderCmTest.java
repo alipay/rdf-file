@@ -3,13 +3,11 @@ package com.alipay.rdf.file.reader;
 import com.alipay.rdf.file.interfaces.FileFactory;
 import com.alipay.rdf.file.interfaces.FileReader;
 import com.alipay.rdf.file.model.FileConfig;
-import com.alipay.rdf.file.model.FileDefaultConfig;
 import com.alipay.rdf.file.model.StorageConfig;
 import com.alipay.rdf.file.util.DateUtil;
 import com.alipay.rdf.file.util.TemporaryFolderUtil;
-import com.alipay.rdf.file.util.TestLog;
-import junit.framework.Assert;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

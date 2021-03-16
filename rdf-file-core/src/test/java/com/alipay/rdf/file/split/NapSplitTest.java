@@ -1,15 +1,5 @@
 package com.alipay.rdf.file.split;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.util.List;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.loader.ProtocolLoader;
@@ -21,8 +11,16 @@ import com.alipay.rdf.file.util.RdfFileLogUtil;
 import com.alipay.rdf.file.util.StreamUtil;
 import com.alipay.rdf.file.util.TemporaryFolderUtil;
 import com.alipay.rdf.file.util.TestLog;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.Assert;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * 文件切分

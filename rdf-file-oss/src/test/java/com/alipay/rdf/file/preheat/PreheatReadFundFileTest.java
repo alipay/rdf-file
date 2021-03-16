@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,8 +24,6 @@ import com.alipay.rdf.file.util.OssTestUtil;
 import com.alipay.rdf.file.util.RdfFileUtil;
 import com.alipay.rdf.file.util.TemporaryFolderUtil;
 import com.alipay.rdf.file.util.TestLog;
-
-import junit.framework.Assert;
 
 /**
  * 验证预热读

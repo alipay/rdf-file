@@ -1,20 +1,18 @@
 package com.alipay.rdf.file.validator;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.alipay.rdf.file.interfaces.FileFactory;
 import com.alipay.rdf.file.interfaces.FileValidator;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.StorageConfig;
 import com.alipay.rdf.file.model.ValidateResult;
 import com.alipay.rdf.file.util.TemporaryFolderUtil;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.Assert;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * 验证其test

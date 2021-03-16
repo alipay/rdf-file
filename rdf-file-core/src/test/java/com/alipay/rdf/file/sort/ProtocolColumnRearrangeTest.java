@@ -1,17 +1,5 @@
 package com.alipay.rdf.file.sort;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import org.junit.After;
-import org.junit.Before;
-
 import com.alipay.rdf.file.interfaces.FileFactory;
 import com.alipay.rdf.file.interfaces.FileSorter;
 import com.alipay.rdf.file.model.FileConfig;
@@ -21,8 +9,14 @@ import com.alipay.rdf.file.model.SortConfig.SortTypeEnum;
 import com.alipay.rdf.file.model.SortResult;
 import com.alipay.rdf.file.model.StorageConfig;
 import com.alipay.rdf.file.util.TemporaryFolderUtil;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 
-import junit.framework.Assert;
+import java.io.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 对字段进行重新排列

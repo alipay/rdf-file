@@ -1,5 +1,19 @@
 package com.alipay.rdf.file.multifilessort;
 
+import com.alipay.rdf.file.interfaces.*;
+import com.alipay.rdf.file.model.*;
+import com.alipay.rdf.file.model.SortConfig.ResultFileTypeEnum;
+import com.alipay.rdf.file.model.SortConfig.SortTypeEnum;
+import com.alipay.rdf.file.storage.OssConfig;
+import com.alipay.rdf.file.util.OssTestUtil;
+import com.alipay.rdf.file.util.RdfFileUtil;
+import com.alipay.rdf.file.util.TemporaryFolderUtil;
+import com.alipay.rdf.file.util.TestLog;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,30 +21,6 @@ import java.io.InputStreamReader;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.alipay.rdf.file.interfaces.FileCoreToolContants;
-import com.alipay.rdf.file.interfaces.FileFactory;
-import com.alipay.rdf.file.interfaces.FileReader;
-import com.alipay.rdf.file.interfaces.FileSorter;
-import com.alipay.rdf.file.interfaces.FileStorage;
-import com.alipay.rdf.file.model.FileConfig;
-import com.alipay.rdf.file.model.FileDefaultConfig;
-import com.alipay.rdf.file.model.SortConfig;
-import com.alipay.rdf.file.model.SortConfig.ResultFileTypeEnum;
-import com.alipay.rdf.file.model.SortConfig.SortTypeEnum;
-import com.alipay.rdf.file.model.SortResult;
-import com.alipay.rdf.file.model.StorageConfig;
-import com.alipay.rdf.file.storage.OssConfig;
-import com.alipay.rdf.file.util.OssTestUtil;
-import com.alipay.rdf.file.util.RdfFileUtil;
-import com.alipay.rdf.file.util.TemporaryFolderUtil;
-import com.alipay.rdf.file.util.TestLog;
-
-import junit.framework.Assert;
 
 /**
  * 多个de文件进行排序

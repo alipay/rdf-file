@@ -1,17 +1,15 @@
 package com.alipay.rdf.file.storage;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.util.List;
-
-import org.junit.Test;
-
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.model.FileSlice;
 import com.alipay.rdf.file.util.OssUtil;
+import org.junit.Assert;
+import org.junit.Test;
 
-import junit.framework.Assert;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.List;
 
 /**
  * oss分片测试

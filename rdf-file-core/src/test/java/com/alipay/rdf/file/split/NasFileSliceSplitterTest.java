@@ -1,18 +1,16 @@
 package com.alipay.rdf.file.split;
 
-import java.io.File;
-import java.util.HashMap;
-
-import org.junit.Test;
-
 import com.alipay.rdf.file.interfaces.FileFactory;
 import com.alipay.rdf.file.interfaces.FileReader;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.FileSlice;
 import com.alipay.rdf.file.model.StorageConfig;
 import com.alipay.rdf.file.spi.RdfFileSplitterSpi;
+import org.junit.Assert;
+import org.junit.Test;
 
-import junit.framework.Assert;
+import java.io.File;
+import java.util.HashMap;
 
 public class NasFileSliceSplitterTest {
 

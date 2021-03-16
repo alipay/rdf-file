@@ -1,15 +1,5 @@
 package com.alipay.rdf.file.resource;
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.alipay.rdf.file.interfaces.FileFactory;
 import com.alipay.rdf.file.interfaces.FileReader;
 import com.alipay.rdf.file.interfaces.FileStorage;
@@ -19,8 +9,16 @@ import com.alipay.rdf.file.model.StorageConfig;
 import com.alipay.rdf.file.util.DateUtil;
 import com.alipay.rdf.file.util.OssTestUtil;
 import com.alipay.rdf.file.util.TestLog;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.Assert;
+import java.io.File;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author hongwei.quhw

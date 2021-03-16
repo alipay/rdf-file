@@ -1,11 +1,5 @@
 package com.alipay.rdf.file.summary;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Test;
-
 import com.alipay.rdf.file.loader.SummaryLoader;
 import com.alipay.rdf.file.loader.TemplateLoader;
 import com.alipay.rdf.file.meta.FileMeta;
@@ -15,8 +9,12 @@ import com.alipay.rdf.file.model.Summary;
 import com.alipay.rdf.file.processor.ProcessCotnext;
 import com.alipay.rdf.file.processor.ProcessorTypeEnum;
 import com.alipay.rdf.file.util.RdfFileConstants;
+import org.junit.Assert;
+import org.junit.Test;
 
-import junit.framework.Assert;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group

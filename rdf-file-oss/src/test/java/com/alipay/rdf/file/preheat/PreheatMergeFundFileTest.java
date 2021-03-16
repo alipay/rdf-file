@@ -1,32 +1,22 @@
 package com.alipay.rdf.file.preheat;
 
-import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import com.alipay.rdf.file.interfaces.FileFactory;
-import com.alipay.rdf.file.interfaces.FileMerger;
-import com.alipay.rdf.file.interfaces.FileOssToolContants;
-import com.alipay.rdf.file.interfaces.FileReader;
-import com.alipay.rdf.file.interfaces.FileStorage;
+import com.alipay.rdf.file.interfaces.*;
 import com.alipay.rdf.file.interfaces.FileStorage.FilePathFilter;
-import com.alipay.rdf.file.model.FileConfig;
-import com.alipay.rdf.file.model.FileDataTypeEnum;
-import com.alipay.rdf.file.model.FileDefaultConfig;
-import com.alipay.rdf.file.model.MergerConfig;
-import com.alipay.rdf.file.model.StorageConfig;
+import com.alipay.rdf.file.model.*;
 import com.alipay.rdf.file.storage.OssConfig;
 import com.alipay.rdf.file.util.OssTestUtil;
 import com.alipay.rdf.file.util.RdfFileUtil;
 import com.alipay.rdf.file.util.TemporaryFolderUtil;
 import com.alipay.rdf.file.util.TestLog;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.Assert;
+import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group

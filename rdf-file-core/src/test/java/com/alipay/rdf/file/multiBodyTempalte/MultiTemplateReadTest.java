@@ -1,20 +1,18 @@
 package com.alipay.rdf.file.multiBodyTempalte;
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Test;
-
 import com.alipay.rdf.file.interfaces.FileFactory;
 import com.alipay.rdf.file.interfaces.FileReader;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.StorageConfig;
 import com.alipay.rdf.file.util.DateUtil;
+import org.junit.Assert;
+import org.junit.Test;
 
-import junit.framework.Assert;
+import java.io.File;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group

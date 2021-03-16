@@ -6,8 +6,8 @@ import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.StorageConfig;
 import com.alipay.rdf.file.util.DateUtil;
 import com.alipay.rdf.file.util.TemporaryFolderUtil;
-import junit.framework.Assert;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

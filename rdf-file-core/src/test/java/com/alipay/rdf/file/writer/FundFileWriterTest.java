@@ -1,25 +1,23 @@
 package com.alipay.rdf.file.writer;
 
+import com.alipay.rdf.file.interfaces.FileFactory;
+import com.alipay.rdf.file.interfaces.FileReader;
+import com.alipay.rdf.file.interfaces.FileWriter;
+import com.alipay.rdf.file.model.FileConfig;
+import com.alipay.rdf.file.model.StorageConfig;
+import com.alipay.rdf.file.util.DateUtil;
+import com.alipay.rdf.file.util.TemporaryFolderUtil;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.alipay.rdf.file.interfaces.FileReader;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.alipay.rdf.file.interfaces.FileFactory;
-import com.alipay.rdf.file.interfaces.FileWriter;
-import com.alipay.rdf.file.model.FileConfig;
-import com.alipay.rdf.file.model.StorageConfig;
-import com.alipay.rdf.file.util.DateUtil;
-import com.alipay.rdf.file.util.TemporaryFolderUtil;
-
-import junit.framework.Assert;
 
 /**
  * 写测试

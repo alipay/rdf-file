@@ -1,15 +1,12 @@
 package com.alipay.rdf.file.loader;
 
-import org.junit.Test;
-
 import com.alipay.rdf.file.format.AColumnFormat;
 import com.alipay.rdf.file.format.CColumnFormat;
 import com.alipay.rdf.file.format.NColumnFormat;
 import com.alipay.rdf.file.format.RawFormat;
-import com.alipay.rdf.file.loader.FormatLoader;
 import com.alipay.rdf.file.spi.RdfFileFormatSpi;
-
-import junit.framework.Assert;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * 

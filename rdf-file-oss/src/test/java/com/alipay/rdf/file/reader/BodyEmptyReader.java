@@ -1,12 +1,5 @@
 package com.alipay.rdf.file.reader;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import com.alipay.rdf.file.interfaces.FileFactory;
 import com.alipay.rdf.file.interfaces.FileReader;
 import com.alipay.rdf.file.interfaces.FileStorage;
@@ -16,8 +9,13 @@ import com.alipay.rdf.file.storage.OssConfig;
 import com.alipay.rdf.file.util.OssTestUtil;
 import com.alipay.rdf.file.util.RdfFileUtil;
 import com.alipay.rdf.file.util.TemporaryFolderUtil;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.Assert;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BodyEmptyReader {
     private TemporaryFolderUtil        temporaryFolder = new TemporaryFolderUtil();

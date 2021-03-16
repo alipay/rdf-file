@@ -1,17 +1,5 @@
 package com.alipay.rdf.file.sortedreader;
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.alipay.rdf.file.common.ProtocolFilesSortedReader;
 import com.alipay.rdf.file.interfaces.FileCoreToolContants;
 import com.alipay.rdf.file.interfaces.FileFactory;
@@ -22,8 +10,18 @@ import com.alipay.rdf.file.model.SortConfig.ResultFileTypeEnum;
 import com.alipay.rdf.file.model.SortConfig.SortTypeEnum;
 import com.alipay.rdf.file.model.StorageConfig;
 import com.alipay.rdf.file.util.TemporaryFolderUtil;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.Assert;
+import java.io.File;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 
