@@ -1,9 +1,6 @@
 package com.alipay.rdf.file.processor;
 
-import com.alipay.rdf.file.interfaces.FileFactory;
-import com.alipay.rdf.file.interfaces.FileStorage;
 import com.alipay.rdf.file.model.FileConfig;
-import com.alipay.rdf.file.model.FileInfo;
 import com.alipay.rdf.file.spi.RdfFileProcessorSpi;
 import com.alipay.rdf.file.util.RdfFileConstants;
 import com.alipay.rdf.file.util.RdfFileLogUtil;
