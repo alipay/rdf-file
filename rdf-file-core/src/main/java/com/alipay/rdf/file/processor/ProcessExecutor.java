@@ -13,22 +13,19 @@ import com.alipay.rdf.file.spi.RdfFileProcessorSpi;
  * @version $Id: ProcessExecutor.java, v 0.1 2018年3月12日 下午4:23:04 hongwei.quhw Exp $
  */
 public class ProcessExecutor {
-
-    public static boolean execute(ProcessorTypeEnum type,
-                                  Map<ProcessorTypeEnum, List<RdfFileProcessorSpi>> processors,
-                                  FileConfig fileConfig, BizData... bizDatas) {
+    public static boolean execute(ProcessCotnext ctx, Map<ProcessorTypeEnum,
+            List<RdfFileProcessorSpi>> processors, BizData... bizDatas) {
 
         if (null == processors) {
             return true;
         }
 
-        List<RdfFileProcessorSpi> processorSpis = processors.get(type);
+        List<RdfFileProcessorSpi> processorSpis = processors.get(ctx.getProcessorType());
 
         if (null == processorSpis || 0 == processorSpis.size()) {
             return true;
         }
 
-        ProcessCotnext ctx = new ProcessCotnext(fileConfig, type);
         if (null != bizDatas) {
             for (BizData bd : bizDatas) {
                 ctx.putBizData(bd.key, bd.vaule);
@@ -40,6 +37,15 @@ public class ProcessExecutor {
         }
 
         return ctx.isSuccess();
+    }
+
+    public static boolean execute(ProcessorTypeEnum type,
+                                  Map<ProcessorTypeEnum, List<RdfFileProcessorSpi>> processors,
+                                  FileConfig fileConfig, BizData... bizDatas) {
+
+        ProcessCotnext ctx = new ProcessCotnext(fileConfig, type);
+
+        return execute(ctx,processors, bizDatas);
     }
 
     public static class BizData {

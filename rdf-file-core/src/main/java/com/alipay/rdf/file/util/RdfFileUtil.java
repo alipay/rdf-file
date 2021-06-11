@@ -19,9 +19,9 @@ import java.util.Map;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * 文件组件工具类
- * 
+ *
  * @author hongwei.quhw
  * @version $Id: RdfUtil.java, v 0.1 2017年8月8日 上午11:29:42 hongwei.quhw Exp $
  */
@@ -216,7 +216,7 @@ public class RdfFileUtil {
 
     /**
      * 基金格式中对数值补位
-     * 
+     *
      * @param str
      * @param size
      * @param padChar
@@ -279,9 +279,9 @@ public class RdfFileUtil {
 
     /**
      * 左对齐，填充空
-     * 
+     *
      * 中文字符按字节计算
-     * 
+     *
      * @param str
      * @param size
      * @return
@@ -296,11 +296,11 @@ public class RdfFileUtil {
 
     /**
      * 左对齐，填充空
-     * 
+     *
      * 中文字符按字节计算
-     * 
+     *
      * 拷贝之StringUtil
-     * 
+     *
      * @param str
      * @param size
      * @return
@@ -433,7 +433,7 @@ public class RdfFileUtil {
 
     /**
      * 获取换行符配置
-     * 
+     *
      * @param fileConfig
      * @return
      */
@@ -713,7 +713,7 @@ public class RdfFileUtil {
 
     /**
      * 组装文件路径
-     * 
+     *
      * @param pathOrFilename
      * @return
      */
@@ -723,7 +723,7 @@ public class RdfFileUtil {
 
     /**
      * 从配置获取分隔符
-     * 
+     *
      * @return
      */
     public static String getColumnSplit(FileConfig fileConfig) {
@@ -736,7 +736,7 @@ public class RdfFileUtil {
 
     /**
      * 从协议定义获取分隔符
-     * 
+     *
      * @param fileConfig
      * @return
      */
@@ -821,4 +821,35 @@ public class RdfFileUtil {
 
         return params;
     }
+
+    /**
+     * 从输入流读取指定长度数据到byte[]
+     * @param is
+     * @return
+     * @throws IOException
+     */
+    public static byte[] read(InputStream is) {
+        try {
+            byte[] bs = new byte[1024];
+            int readSize = 0;
+            ByteArrayOutputStream bao = new ByteArrayOutputStream();
+            while ((readSize = is.read(bs)) != -1) {
+                bao.write(bs, 0, readSize);
+            }
+            return bao.toByteArray();
+        } catch (IOException e) {
+            throw new RdfFileException("rdf-file#RdfFileBytesUtil.read 异常", e, RdfErrorEnum.IO_ERROR);
+        } finally {
+            if (null != is) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    if (RdfFileLogUtil.common.isWarn()) {
+                        RdfFileLogUtil.common.warn("rdf-file#RdfFileBytesUtil.close()", e);
+                    }
+                }
+            }
+        }
+    }
+
 }

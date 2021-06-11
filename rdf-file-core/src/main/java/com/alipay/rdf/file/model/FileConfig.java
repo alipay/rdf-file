@@ -12,9 +12,9 @@ import com.alipay.rdf.file.util.RdfFileUtil;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * 文件模块配置
- * 
+ *
  * @author hongwei.quhw
  * @version $Id: FileConfig.java, v 0.1 2016-12-22 下午3:18:02 hongwei.quhw Exp $
  */
@@ -55,6 +55,8 @@ public class FileConfig implements Cloneable {
     private boolean             isPartial;
 
     //=====================其他===================
+    /**读文件时是否先读取所有文件的字节到内存*/
+    private boolean             isReadAll        = false;
     /** 写文件的时候是否在文件尾部追加*/
     private boolean             isAppend         = false;
     /** 外部构建的输入流*/
@@ -64,7 +66,7 @@ public class FileConfig implements Cloneable {
 
     /**
      * 构造方法
-     * 
+     *
      * @param filePath
      * @param templatePath
      * @param storageConfig
@@ -81,8 +83,7 @@ public class FileConfig implements Cloneable {
 
     /**
      * 构造方法
-     * 
-     * @param filePath
+     *
      * @param templatePath
      * @param storageConfig
      */
@@ -95,10 +96,9 @@ public class FileConfig implements Cloneable {
 
     /**
      * 读数据时， 输入流由外界构造
-     * 
-     * @param filePath
+     *
+     * @param is
      * @param templatePath
-     * @param storageConfig 存储对象可空
      */
     public FileConfig(InputStream is, String templatePath) {
         RdfFileUtil.assertNotNull(is, "rdf-file#外部构建的输入流不能为空!", RdfErrorEnum.ILLEGAL_ARGUMENT);
@@ -109,7 +109,7 @@ public class FileConfig implements Cloneable {
 
     /**
      * 设置部分读属性
-     * 
+     *
      * @param offset
      * @param length
      */
@@ -132,7 +132,7 @@ public class FileConfig implements Cloneable {
 
     /**
      * Getter method for property <tt>filePath</tt>.
-     * 
+     *
      * @return property value of filePath
      */
     public String getFilePath() {
@@ -141,7 +141,7 @@ public class FileConfig implements Cloneable {
 
     /**
      * Getter method for property <tt>templatePath</tt>.
-     * 
+     *
      * @return property value of templatePath
      */
     public String getTemplatePath() {
@@ -150,7 +150,7 @@ public class FileConfig implements Cloneable {
 
     /**
      * Getter method for property <tt>offset</tt>.
-     * 
+     *
      * @return property value of offset
      */
     public long getOffset() {
@@ -159,7 +159,7 @@ public class FileConfig implements Cloneable {
 
     /**
      * Getter method for property <tt>length</tt>.
-     * 
+     *
      * @return property value of length
      */
     public long getLength() {
@@ -168,7 +168,7 @@ public class FileConfig implements Cloneable {
 
     /**
      * Getter method for property <tt>partial</tt>.
-     * 
+     *
      * @return property value of partial
      */
     public boolean isPartial() {
@@ -177,7 +177,7 @@ public class FileConfig implements Cloneable {
 
     /**
      * Getter method for property <tt>templatEncoding</tt>.
-     * 
+     *
      * @return property value of templatEncoding
      */
     public String getTemplateEncoding() {
@@ -186,7 +186,7 @@ public class FileConfig implements Cloneable {
 
     /**
      * Setter method for property <tt>templatEncoding</tt>.
-     * 
+     *
      * @param templatEncoding value to be assigned to property templatEncoding
      */
     public void setTemplateEncoding(String templatEncoding) {
@@ -195,7 +195,7 @@ public class FileConfig implements Cloneable {
 
     /**
      * Getter method for property <tt>isAppend</tt>.
-     * 
+     *
      * @return property value of isAppend
      */
     public boolean isAppend() {
@@ -204,7 +204,7 @@ public class FileConfig implements Cloneable {
 
     /**
      * Setter method for property <tt>isAppend</tt>.
-     * 
+     *
      * @param isAppend value to be assigned to property isAppend
      */
     public void setAppend(boolean isAppend) {
@@ -213,7 +213,7 @@ public class FileConfig implements Cloneable {
 
     /**
      * Setter method for property <tt>filePath</tt>.
-     * 
+     *
      * @param filePath value to be assigned to property filePath
      */
     public void setFilePath(String filePath) {
@@ -222,7 +222,7 @@ public class FileConfig implements Cloneable {
 
     /**
      * Getter method for property <tt>fileEncoding</tt>.
-     * 
+     *
      * @return property value of fileEncoding
      */
     public String getFileEncoding() {
@@ -231,7 +231,7 @@ public class FileConfig implements Cloneable {
 
     /**
      * Setter method for property <tt>fileEncoding</tt>.
-     * 
+     *
      * @param fileEncoding value to be assigned to property fileEncoding
      */
     public void setFileEncoding(String fileEncoding) {
@@ -322,8 +322,16 @@ public class FileConfig implements Cloneable {
         this.createEmptyFile = createEmptyFile;
     }
 
+    public boolean isReadAll() {
+        return isReadAll;
+    }
+
+    public void setReadAll(boolean readAll) {
+        isReadAll = readAll;
+    }
+
     /**
-     * 
+     *
      * @see java.lang.Object#clone()
      */
     @Override
@@ -353,6 +361,7 @@ public class FileConfig implements Cloneable {
         for(String processKey : processorKeys){
             config.addProcessorKey(processKey);
         }
+        config.setReadAll(isReadAll);
         return config;
     }
 
@@ -397,6 +406,7 @@ public class FileConfig implements Cloneable {
             sb.append(",length=").append(length);
         }
         sb.append(",isAppend=").append(isAppend);
+        sb.append(",isReadAll=").append(isReadAll);
         sb.append(", is=").append(is);
         sb.append("]");
         return sb.toString();

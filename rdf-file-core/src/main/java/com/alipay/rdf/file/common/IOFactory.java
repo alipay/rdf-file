@@ -17,9 +17,9 @@ import com.alipay.rdf.file.util.RdfFileUtil;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * IO工厂类
- * 
+ *
  * @author hongwei.quhw
  * @version $Id: IOFactory.java, v 0.1 2017年8月10日 上午10:51:15 hongwei.quhw Exp $
  */
@@ -43,9 +43,7 @@ public class IOFactory {
         }
 
         try {
-            return new RdfBufferedReader(
-                new InputStreamReader(is, RdfFileUtil.getFileEncoding(fileConfig)), fileConfig,
-                processors);
+            return new RdfBufferedReader(is, fileConfig, processors);
         } catch (UnsupportedEncodingException e) {
             throw new RdfFileException("rdf-file#IOFactory.createReader(fileConfig=" + fileConfig
                                        + ", processors=" + processors + ") 异常",
@@ -65,9 +63,7 @@ public class IOFactory {
         }
 
         try {
-            return new RdfBufferedReader(
-                new InputStreamReader(is, RdfFileUtil.getFileEncoding(fileConfig)), fileConfig,
-                processors);
+            return new RdfBufferedReader(is, fileConfig, processors);
         } catch (UnsupportedEncodingException e) {
             throw new RdfFileException("rdf-file#IOFactory.createTailReader(fileConfig="
                                        + fileConfig + ", processors=" + processors + ") 异常",

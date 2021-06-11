@@ -4,9 +4,9 @@ import com.alipay.rdf.file.protocol.ColumnLayoutEnum;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * rdf组件常量
- * 
+ *
  * @author hongwei.quhw
  * @version $Id: RdfConstants.java, v 0.1 2017年7月22日 下午6:02:41 hongwei.quhw Exp $
  */
@@ -24,4 +24,5 @@ public class RdfFileConstants {
     public static final String           DATA                  = "data";
     public static final String           ROW_TYPE              = "rowType";
     public static final String           SUMMARY               = "summary";
+    public static final String           INPUT_STREAM          = "inputStream";
 }

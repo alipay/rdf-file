@@ -39,7 +39,7 @@ public class OssPreheatReaderConfig {
         return paths;
     }
 
-    protected void setPaths(List<String> paths) {
+    public void setPaths(List<String> paths) {
         this.paths = paths;
     }
 
