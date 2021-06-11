@@ -5,9 +5,9 @@ import java.util.List;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * 接受配置参数
- * 
+ *
  * @author hongwei.quhw
  * @version $Id: TemplateConfig.java, v 0.1 2017年5月9日 上午10:26:52 hongwei.quhw Exp $
  */
@@ -38,6 +38,8 @@ public class TemplateConfig {
     private List<String>          statisticColumnPairs = new ArrayList<String>();
     /** 行校验器*/
     private List<String>          rowValidators        = new ArrayList<String>();
+    /**定义或者覆盖协议文件的字段类型*/
+    private List<String>          protocolDataType     = new ArrayList<String>();
 
     public String getProtocol() {
         return protocol;
@@ -143,4 +145,11 @@ public class TemplateConfig {
         this.statisticColumnPairs = statisticColumnPairs;
     }
 
+    public List<String> getProtocolDataType() {
+        return protocolDataType;
+    }
+
+    public void setProtocolDataType(List<String> protocolDataType) {
+        this.protocolDataType = protocolDataType;
+    }
 }

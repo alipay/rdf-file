@@ -13,9 +13,9 @@ import com.alipay.rdf.file.util.RdfFileUtil;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * 文件元数据
- * 
+ *
  * @author hongwei.quhw
  * @version $Id: FileMeta.java, v 0.1 2016-12-20 下午4:08:31 hongwei.quhw Exp $
  */
@@ -53,6 +53,8 @@ public class FileMeta {
     private Map<FileDataTypeEnum, Boolean> endWithSplit          = new HashMap<FileDataTypeEnum, Boolean>();
     /**body是否是多模板配置*/
     private boolean                        multiBody             = false;
+    /**定义或者覆盖协议文件的字段类型*/
+    private final List<FileColumnMeta>     protocolDataTypes     = new ArrayList<FileColumnMeta>();
 
     public boolean isStartWithSplit(FileDataTypeEnum rowType) {
         Boolean startSplit = startWithSplit.get(rowType);
@@ -112,7 +114,7 @@ public class FileMeta {
 
     /**
      * 文件是否有头
-     * 
+     *
      * @return
      */
     public boolean hasHead() {
@@ -121,7 +123,7 @@ public class FileMeta {
 
     /**
      * 文件是否有文件体
-     * 
+     *
      * @return
      */
     public boolean hasBody() {
@@ -130,7 +132,7 @@ public class FileMeta {
 
     /**
      * 文件是否有文件尾
-     * 
+     *
      * @return
      */
     public boolean hasTail() {
@@ -139,7 +141,7 @@ public class FileMeta {
 
     /**
      * 增加文件头
-     * 
+     *
      * @param column
      */
     public void addHeadColumn(FileColumnMeta column) {
@@ -159,8 +161,8 @@ public class FileMeta {
 
     /**
      * 增加文件体
-     * 
-     * @param column
+     *
+     * @param bodyMeta
      */
     public void addBodyColumn(FileBodyMeta bodyMeta) {
         bodyColumns.add(bodyMeta);
@@ -168,7 +170,7 @@ public class FileMeta {
 
     /**
      * 增加文件尾
-     * 
+     *
      * @param column
      */
     public void addTailColumn(FileColumnMeta column) {
@@ -186,9 +188,13 @@ public class FileMeta {
             RdfErrorEnum.COLUMN_NOT_DEFINED);
     }
 
+    public void addProtocolDataType(FileColumnMeta type) {
+        protocolDataTypes.add(type);
+    }
+
     /**
      * Getter method for property <tt>columnSplit</tt>.
-     * 
+     *
      * @return property value of columnSplit
      */
     public String getColumnSplit() {
@@ -197,7 +203,7 @@ public class FileMeta {
 
     /**
      * Setter method for property <tt>columnSplit</tt>.
-     * 
+     *
      * @param columnSplit value to be assigned to property columnSplit
      */
     public void setColumnSplit(String columnSplit) {
@@ -206,7 +212,7 @@ public class FileMeta {
 
     /**
      * Getter method for property <tt>headColumns</tt>.
-     * 
+     *
      * @return property value of headColumns
      */
     public List<FileColumnMeta> getHeadColumns() {
@@ -215,7 +221,7 @@ public class FileMeta {
 
     /**
      * Getter method for property <tt>bodyColumns</tt>.
-     * 
+     *
      * @return property value of bodyColumns
      */
     public List<FileColumnMeta> getBodyColumns() {
@@ -245,9 +251,13 @@ public class FileMeta {
         return null;
     }
 
+    public List<FileColumnMeta> getProtocolDataTypes() {
+        return protocolDataTypes;
+    }
+
     /**
      * Getter method for property <tt>tailColumns</tt>.
-     * 
+     *
      * @return property value of tailColumns
      */
     public List<FileColumnMeta> getTailColumns() {
@@ -256,7 +266,7 @@ public class FileMeta {
 
     /**
      * Getter method for property <tt>templatePath</tt>.
-     * 
+     *
      * @return property value of templatePath
      */
     public String getTemplatePath() {
@@ -265,7 +275,7 @@ public class FileMeta {
 
     /**
      * Setter method for property <tt>templatePath</tt>.
-     * 
+     *
      * @param templatePath value to be assigned to property templatePath
      */
     public void setTemplatePath(String templatePath) {
@@ -274,7 +284,7 @@ public class FileMeta {
 
     /**
      * Getter method for property <tt>encoding</tt>.
-     * 
+     *
      * @return property value of encoding
      */
     public String getFileEncoding() {
@@ -283,8 +293,8 @@ public class FileMeta {
 
     /**
      * Setter method for property <tt>encoding</tt>.
-     * 
-     * @param encoding value to be assigned to property encoding
+     *
+     * @param fileEncoding value to be assigned to property encoding
      */
     public void setFileEncoding(String fileEncoding) {
         this.fileEncoding = fileEncoding;
@@ -292,7 +302,7 @@ public class FileMeta {
 
     /**
      * Getter method for property <tt>totalCountKey</tt>.
-     * 
+     *
      * @return property value of totalCountKey
      */
     public String getTotalCountKey() {
@@ -301,7 +311,7 @@ public class FileMeta {
 
     /**
      * Setter method for property <tt>totalCountKey</tt>.
-     * 
+     *
      * @param totalCountKey value to be assigned to property totalCountKey
      */
     public void setTotalCountKey(String totalCountKey) {
@@ -310,7 +320,7 @@ public class FileMeta {
 
     /**
      * Getter method for property <tt>summaryPairs</tt>.
-     * 
+     *
      * @return property value of summaryPairs
      */
     public List<SummaryPairMeta> getSummaryPairMetas() {
@@ -319,7 +329,7 @@ public class FileMeta {
 
     /**
      * 增加合计列参数
-     * 
+     *
      * @param pair
      */
     public void addSummaryColumnPair(SummaryPairMeta pair) {
@@ -336,7 +346,7 @@ public class FileMeta {
 
     /**
      * Setter method for property <tt>protocol</tt>.
-     * 
+     *
      * @param protocol value to be assigned to property protocol
      */
     public void setProtocol(String protocol) {
@@ -345,7 +355,7 @@ public class FileMeta {
 
     /**
      * Getter method for property <tt>protocol</tt>.
-     * 
+     *
      * @return property value of protocol
      */
     public String getProtocol() {
@@ -354,7 +364,7 @@ public class FileMeta {
 
     /**
      * Getter method for property <tt>validators</tt>.
-     * 
+     *
      * @return property value of validators
      */
     public List<RowValidator> getValidators() {
