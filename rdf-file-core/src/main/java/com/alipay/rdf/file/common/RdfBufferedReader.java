@@ -34,12 +34,6 @@ class RdfBufferedReader extends Reader {
     private static final int                                        defaultCharBufferSize     = 8192;
     private static final int                                        defaultExpectedLineLength = 80;
 
-    /** 已读数据大小 */
-    private Long                                                    readedSize;
-
-    /** 文件是否读取完成 */
-    private boolean                                                 isReadEnd                 = false;
-
     private final Map<ProcessorTypeEnum, List<RdfFileProcessorSpi>> processors;
 
     private final FileConfig                                        fileConfig;
@@ -94,7 +88,6 @@ class RdfBufferedReader extends Reader {
                         validate(str.getBytes(in.getEncoding()));
                         return str;
                     } else {
-                        isReadEnd = true;
                         return null;
                     }
                 }
@@ -197,23 +190,5 @@ class RdfBufferedReader extends Reader {
             in = null;
             cb = null;
         }
-    }
-
-    /**
-     * Getter method for property <tt>readedSize</tt>.
-     *
-     * @return property value of readedSize
-     */
-    public Long getReadedSize() {
-        return readedSize;
-    }
-
-    /**
-     * Getter method for property <tt>isReadEnd</tt>.
-     *
-     * @return property value of isReadEnd
-     */
-    public boolean isReadEnd() {
-        return isReadEnd;
     }
 }

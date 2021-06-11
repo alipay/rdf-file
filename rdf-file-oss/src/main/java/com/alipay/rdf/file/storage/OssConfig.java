@@ -6,9 +6,9 @@ import com.aliyun.oss.ClientConfiguration;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * oss 配置对象
- * 
+ *
  * @author hongwei.quhw
  * @version $Id: OssConfig.java, v 0.1 2017年8月24日 上午11:38:34 hongwei.quhw Exp $
  */
@@ -18,7 +18,7 @@ public class OssConfig {
     public static final String        DEFAULT_OSS_BIG_FILE_SIZE_KEY     = "default_oss_big_file_size";
     public static final String        DEFAULT_OSS_APPEND_SIZE_LIMIT_KEY = "default_oss_append_size_limit_size";
 
-    /** 
+    /**
      * 写文件时OSS本地文件根目录
      * <li>写文件时会先写在本地再上传到OSS
      * <li>OSS本地目录为：tempRoot + OSS路径
@@ -46,6 +46,13 @@ public class OssConfig {
     private Long                      ossBigFileSize;
 
     private Long                      ossAppendSizeLimit;
+
+    /**
+     * oss指定范围读取时，大小小于等于零 返回数据行为不同于nas（本地磁盘）返回的是空数据
+     * 默认实现开启了校验，直接报错，
+     * emptyLeZero = true 返回空数据
+     */
+    private boolean                   emptyLeZero = false;
 
     public OssConfig(String bucketName, String endpoint, String accessKeyId,
                      String accessKeySecret) {
@@ -133,6 +140,14 @@ public class OssConfig {
 
     public ClientConfiguration getClientConfiguration() {
         return this.clientConfiguration;
+    }
+
+    public boolean isEmptyLeZero() {
+        return emptyLeZero;
+    }
+
+    public void setEmptyLeZero(boolean emptyLeZero) {
+        this.emptyLeZero = emptyLeZero;
     }
 
     @Override
