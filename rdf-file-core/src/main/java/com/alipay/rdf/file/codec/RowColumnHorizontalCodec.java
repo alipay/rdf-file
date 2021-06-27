@@ -26,11 +26,11 @@ import com.alipay.rdf.file.util.RdfFileUtil;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * 针对字段水平codec
- * 
+ *
  * 抽离的目的在于方便，对单行数据进行编码解码， 特别是在测试或者排查问题的时候
- * 
+ *
  * @author hongwei.quhw
  * @version $Id: RowColumnHorizontalCodec.java, v 0.1 2017年8月1日 下午8:49:41 hongwei.quhw Exp $
  */
@@ -41,18 +41,12 @@ public class RowColumnHorizontalCodec {
                                    Map<ProcessorTypeEnum, List<RdfFileProcessorSpi>> processors,
                                    FileDataTypeEnum rowType) {
         ProcessExecutor.execute(ProcessorTypeEnum.BEFORE_SERIALIZE_ROW, processors, fileConfig,
-            new BizData(RdfFileConstants.DATA, bmw),
-            new BizData(RdfFileConstants.ROW_TYPE, rowType));
+                new BizData(RdfFileConstants.DATA, bmw),
+                new BizData(RdfFileConstants.ROW_TYPE, rowType));
 
-        FileMeta fileMeta = TemplateLoader.load(fileConfig);
-        List<FileColumnMeta> columnMetas = RowConditionExecutor.serializeRow(fileConfig, bmw,
-            rowType);
+        List<FileColumnMeta> columnMetas = RowConditionExecutor.serializeRow(fileConfig, bmw, rowType);
         StringBuffer line = new StringBuffer();
         String split = RdfFileUtil.getRowSplit(fileConfig);
-
-        if (null != split && fileMeta.isStartWithSplit(rowType)) {
-            line.append(split);
-        }
 
         for (int i = 0; i < columnMetas.size(); i++) {
             FileColumnMeta columnMeta = columnMetas.get(i);
@@ -64,29 +58,28 @@ public class RowColumnHorizontalCodec {
                 ctx.fileConfig = fileConfig;
                 line.append(rd.getOutput().execute(ctx));
 
-                if (null != split
-                    && (i < columnMetas.size() - 1 || fileMeta.isEndWithSplit(rowType))) {
+                if (null != split && i < columnMetas.size() - 1) {
                     line.append(split);
                 }
             } catch (RdfFileException e) {
                 throw new RdfFileException(
-                    "rdf-file#RowColumnHorizontalCodec.serialize serialize row=" + bmw.getBean()
-                                           + ", fileConfig=" + fileConfig + ", 将数据序列到文件出错. 错误列信息: columnMeta=" + columnMeta + ", field=" + ctx.field + ", errorMsg="
-                                           + e.getMessage(),
-                    e, e.getErrorEnum());
+                        "rdf-file#RowColumnHorizontalCodec.serialize serialize row=" + bmw.getBean()
+                                + ", fileConfig=" + fileConfig + ", 将数据序列到文件出错. 错误列信息: columnMeta=" + columnMeta + ", field=" + ctx.field + ", errorMsg="
+                                + e.getMessage(),
+                        e, e.getErrorEnum());
             } catch (Throwable e) {
                 throw new RdfFileException(
-                    "rdf-file#RowColumnHorizontalCodec.serialize row=" + bmw.getBean()
-                                           + ", fileConfig=" + fileConfig + ", 将数据序列到文件出错. 错误列信息: columnMeta=" + columnMeta + ", field=" + ctx.field,
-                    e, RdfErrorEnum.SERIALIZE_ERROR);
+                        "rdf-file#RowColumnHorizontalCodec.serialize row=" + bmw.getBean()
+                                + ", fileConfig=" + fileConfig + ", 将数据序列到文件出错. 错误列信息: columnMeta=" + columnMeta + ", field=" + ctx.field,
+                        e, RdfErrorEnum.SERIALIZE_ERROR);
             }
         }
 
-        String data = line.toString();
+        String data = RowFormatCodec.serialize(fileConfig, line.toString(), rowType);
 
         ProcessExecutor.execute(ProcessorTypeEnum.AFTER_SERIALIZE_ROW, processors, fileConfig,
-            new BizData(RdfFileConstants.DATA, data),
-            new BizData(RdfFileConstants.ROW_TYPE, rowType));
+                new BizData(RdfFileConstants.DATA, data),
+                new BizData(RdfFileConstants.ROW_TYPE, rowType));
 
         return data;
     }
@@ -96,35 +89,32 @@ public class RowColumnHorizontalCodec {
                                     Map<ProcessorTypeEnum, List<RdfFileProcessorSpi>> processors,
                                     FileDataTypeEnum rowType) {
         ProcessExecutor.execute(ProcessorTypeEnum.BEFORE_DESERIALIZE_ROW, processors, fileConfig,
-            new BizData(RdfFileConstants.DATA, line),
-            new BizData(RdfFileConstants.ROW_TYPE, rowType));
+                new BizData(RdfFileConstants.DATA, line),
+                new BizData(RdfFileConstants.ROW_TYPE, rowType));
+
+        line = RowFormatCodec.deserialize(fileConfig, line, rowType);
 
         FileMeta fileMeta = TemplateLoader.load(fileConfig);
 
-        boolean startWithSplit = fileMeta.isStartWithSplit(rowType);
-        boolean endWithSplit = fileMeta.isEndWithSplit(rowType);
-
         String[] column = ProtocolLoader.loadProtocol(fileMeta.getProtocol()).getRowSplit()
-            .split(new SplitContext(line, fileConfig, rowType));
+                .split(new SplitContext(line, fileConfig, rowType));
 
         List<FileColumnMeta> columnMetas = RowConditionExecutor.deserializeRow(fileConfig, column,
-            rowType, line);
+                rowType, line);
 
-        int splitLength = startWithSplit ? columnMetas.size() + 1 : columnMetas.size();
-        splitLength = endWithSplit ? splitLength + 1 : splitLength;
+        int splitLength =  columnMetas.size();
 
         if (column.length != splitLength) {
             throw new RdfFileException("rdf-file#RowColumnHorizontalCodec.deserialize fileConfig="
-                                       + fileConfig + ", line=[" + line + "],模板定义列数=" + splitLength
-                                       + ", 实际列数=" + column.length,
-                RdfErrorEnum.DESERIALIZE_ERROR);
+                    + fileConfig + ", line=[" + line + "],模板定义列数=" + splitLength
+                    + ", 实际列数=" + column.length,
+                    RdfErrorEnum.DESERIALIZE_ERROR);
         }
 
-        int statIndex = fileMeta.isStartWithSplit(rowType) ? 1 : 0;
-        int endIndex = fileMeta.isEndWithSplit(rowType) ? column.length - 1 : column.length;
+        int endIndex =  Math.min(column.length, splitLength);
 
-        for (int i = statIndex; i < endIndex; i++) {
-            FileColumnMeta columnMeta = columnMetas.get(i - statIndex);
+        for (int i = 0; i < endIndex; i++) {
+            FileColumnMeta columnMeta = columnMetas.get(i);
             FuncContext ctx = new FuncContext();
             try {
                 ctx.codecType = CodecType.DESERIALIZE;
@@ -134,20 +124,20 @@ public class RowColumnHorizontalCodec {
                 bmw.setProperty(columnMeta.getName(), rd.getOutput().execute(ctx));
             } catch (RdfFileException e) {
                 throw new RdfFileException(
-                    "rdf-file#RowColumnHorizontalCodec.deserialize line=" + line + ", fileConfig="
-                                           + fileConfig + ", 将数据反序列到对象出错. 错误列信息:field=" + ctx.field + ", columnMeta=" + columnMeta + ", errorMsg="
-                            + e.getMessage(),
-                    e, e.getErrorEnum());
+                        "rdf-file#RowColumnHorizontalCodec.deserialize line=" + line + ", fileConfig="
+                                + fileConfig + ", 将数据反序列到对象出错. 错误列信息:field=" + ctx.field + ", columnMeta=" + columnMeta + ", errorMsg="
+                                + e.getMessage(),
+                        e, e.getErrorEnum());
             } catch (Throwable e) {
                 throw new RdfFileException("rdf-file#RowColumnHorizontalCodec.deserialize line="
-                                           + line + ", fileConfig=" + fileConfig + ", 将数据反序列到对象出错. 错误列信息:field=" + ctx.field + ", columnMeta=" + columnMeta,
-                    e, RdfErrorEnum.DESERIALIZE_ERROR);
+                        + line + ", fileConfig=" + fileConfig + ", 将数据反序列到对象出错. 错误列信息:field=" + ctx.field + ", columnMeta=" + columnMeta,
+                        e, RdfErrorEnum.DESERIALIZE_ERROR);
             }
         }
 
         ProcessExecutor.execute(ProcessorTypeEnum.AFTER_DESERIALIZE_ROW, processors, fileConfig,
-            new BizData(RdfFileConstants.DATA, bmw),
-            new BizData(RdfFileConstants.ROW_TYPE, rowType));
+                new BizData(RdfFileConstants.DATA, bmw),
+                new BizData(RdfFileConstants.ROW_TYPE, rowType));
 
         return (T) bmw.getBean();
 
