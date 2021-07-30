@@ -282,7 +282,7 @@ public class RdfFileUtil {
      *
      * 中文字符按字节计算
      *
-     * @param str
+     * @param obj
      * @param size
      * @return
      */
@@ -852,4 +852,11 @@ public class RdfFileUtil {
         }
     }
 
+    public static String getRowCodecMode(FileConfig fileConfig) {
+        return fileConfig.getRowCodecMode();
+    }
+
+    public static <T> T getParam(FileConfig fileConfig, String key, T defaultValue) {
+        return defaultValue;
+    }
 }

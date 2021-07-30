@@ -21,6 +21,7 @@ import com.alipay.rdf.file.util.RdfFileUtil;
 public class FileConfig implements Cloneable {
     /**文件读写合并校验组件类型  默认 type=protocol */
     private String              type             = "protocol";
+    private String              rowCodecMode     = "relation";
     /** 文件路径*/
     private String              filePath;
     /**文件数据类型*/
@@ -330,6 +331,14 @@ public class FileConfig implements Cloneable {
         isReadAll = readAll;
     }
 
+    public String getRowCodecMode() {
+        return rowCodecMode;
+    }
+
+    public void setRowCodecMode(String rowCodecMode) {
+        this.rowCodecMode = rowCodecMode;
+    }
+
     /**
      *
      * @see java.lang.Object#clone()
@@ -362,6 +371,7 @@ public class FileConfig implements Cloneable {
             config.addProcessorKey(processKey);
         }
         config.setReadAll(isReadAll);
+        config.setRowCodecMode(rowCodecMode);
         return config;
     }
 
@@ -369,6 +379,7 @@ public class FileConfig implements Cloneable {
     public String toString() {
         StringBuffer sb = new StringBuffer("FileConfig[");
         sb.append("type=").append(type);
+        sb.append(",rowCodecMode=").append(rowCodecMode);
         sb.append(",filepath=").append(filePath);
         sb.append(",fileDataType=").append(fileDataType.name());
         sb.append(",fileEncoding=").append(fileEncoding);
