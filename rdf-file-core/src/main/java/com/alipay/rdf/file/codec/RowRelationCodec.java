@@ -12,7 +12,6 @@ import com.alipay.rdf.file.util.RdfFileUtil;
 import java.util.List;
 
 /**
- *
  * @Author: hongwei.quhw 2021/6/27 3:02 下午
  */
 public class RowRelationCodec extends AbstractRowCodec {
@@ -53,7 +52,7 @@ public class RowRelationCodec extends AbstractRowCodec {
             }
         }
 
-        return  line.toString();
+        return line.toString();
     }
 
     @Override
@@ -64,16 +63,15 @@ public class RowRelationCodec extends AbstractRowCodec {
         List<FileColumnMeta> columnMetas = rccCtx.columnMetas;
         String[] columnValues = rccCtx.columnValues;
 
-        int splitLength =  columnMetas.size();
+        int splitLength = columnMetas.size();
 
-        if (columnValues.length != splitLength) {
-            throw new RdfFileException("rdf-file#RowRelationCodec.deserialize fileConfig="
-                    + fileConfig + ", line=[" + line + "],模板定义列数=" + splitLength
-                    + ", 实际列数=" + columnValues.length,
-                    RdfErrorEnum.DESERIALIZE_ERROR);
+        // 只有关系编码模式才可能需要字段的强约束
+        if (columnValues.length != splitLength && !fileConfig.isRelationReadRowCompatibility()) {
+            throw new RdfFileException("rdf-file#RowRelationCodec.deserialize fileConfig=" + fileConfig + ", line=[" + line + "],模板定义列数="
+                    + splitLength + ", 实际列数=" + columnValues.length, RdfErrorEnum.DESERIALIZE_ERROR);
         }
 
-        int endIndex =  Math.min(columnValues.length, splitLength);
+        int endIndex = Math.min(columnValues.length, splitLength);
 
         for (int i = 0; i < endIndex; i++) {
             FileColumnMeta columnMeta = columnMetas.get(i);

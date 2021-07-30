@@ -859,4 +859,8 @@ public class RdfFileUtil {
     public static <T> T getParam(FileConfig fileConfig, String key, T defaultValue) {
         return defaultValue;
     }
+
+    public static boolean  isRelationCodecMode(FileConfig fileConfig) {
+        return "relation".equals(fileConfig.getRowCodecMode());
+    }
 }
