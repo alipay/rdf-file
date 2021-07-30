@@ -2,7 +2,6 @@ package com.alipay.rdf.file.spi;
 
 import com.alipay.rdf.file.meta.FileColumnMeta;
 import com.alipay.rdf.file.model.FileConfig;
-import com.alipay.rdf.file.model.FileDataTypeEnum;
 import com.alipay.rdf.file.protocol.RowDefinition;
 import com.alipay.rdf.file.util.BeanMapWrapper;
 
@@ -18,14 +17,19 @@ public interface RdfFileRowCodecSpi {
 
     String serialize(RowCodecContext ctx);
 
+    String postSerialize(String line, RowCodecContext ctx);
+
+    String preDeserialize(String line, RowCodecContext ctx);
+
     void deserialize(String line, RowCodecContext ctx);
 
     public static class RowCodecContext {
         public final BeanMapWrapper bmw;
         public final FileConfig fileConfig;
-        public final List<FileColumnMeta> columnMetas;
+        public List<FileColumnMeta> columnMetas;
         public final RowDefinition rd;
-        public final String[] columnValues;
+        public String[] columnValues;
+        public Object ext;
 
         public RowCodecContext(BeanMapWrapper bmw, FileConfig fileConfig, List<FileColumnMeta> columnMetas, RowDefinition rd) {
             this.bmw = bmw;

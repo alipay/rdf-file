@@ -6,7 +6,6 @@ import com.alipay.rdf.file.meta.FileColumnMeta;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.protocol.RowDefinition;
 import com.alipay.rdf.file.spi.RdfFileFunctionSpi;
-import com.alipay.rdf.file.spi.RdfFileRowCodecSpi;
 import com.alipay.rdf.file.util.BeanMapWrapper;
 import com.alipay.rdf.file.util.RdfFileUtil;
 
@@ -15,7 +14,7 @@ import java.util.List;
 /**
  * @Author: hongwei.quhw 2021/6/27 3:48 下午
  */
-public class RowNosqlKVCodec implements RdfFileRowCodecSpi {
+public class RowNosqlKVCodec extends AbstractRowCodec {
     private static final String KV_SPLIT_KEY = "rowCodecKVSplit";
     private static final String DEFAULT_KV_SPLIT = ":";
 

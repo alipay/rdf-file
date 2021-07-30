@@ -6,7 +6,6 @@ import com.alipay.rdf.file.meta.FileColumnMeta;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.protocol.RowDefinition;
 import com.alipay.rdf.file.spi.RdfFileFunctionSpi;
-import com.alipay.rdf.file.spi.RdfFileRowCodecSpi;
 import com.alipay.rdf.file.util.BeanMapWrapper;
 import com.alipay.rdf.file.util.RdfFileUtil;
 
@@ -14,21 +13,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 行首或者行尾添加行元数据信息
+ * colMeta(idx:1,3,5)
+ * 默认实现是数据与数据定义模板的字段映射索引
+ * 默认放置于行尾
  *
  * @Author: hongwei.quhw 2021/6/27 3:48 下午
  */
-public class RowNosqlIndexCodec implements RdfFileRowCodecSpi {
-    private static String INDEX_PLACE_KEY = "rowCodecIndex";
+public class RowNosqlIndexCodec extends AbstractRowCodec {
+    private static final String INDEX_PLACE_KEY = "rowCodecIndex";
     // (start|end) 代表在 (第一个字段|最后一个字段)
-    private static String INDEX_START = "start";
-    private static String INDEX_END = "end";
+    private static final String INDEX_START = "start";
+    private static final String INDEX_END = "end";
+    private static final String COL_META_START = "colMeta(idx:";
+    private static final int COL_META_START_LENGTH = COL_META_START.length();
+    private static final String COL_META_END = ")";
 
     @Override
     public String serialize(RowCodecContext rccCtx) {
         BeanMapWrapper bmw = rccCtx.bmw;
         List<FileColumnMeta> columnMetas = rccCtx.columnMetas;
 
-        StringBuffer index = new StringBuffer();
+        StringBuffer colMeta = new StringBuffer();
         StringBuffer line = new StringBuffer();
         String split = RdfFileUtil.getRowSplit(rccCtx.fileConfig);
 
@@ -42,13 +48,13 @@ public class RowNosqlIndexCodec implements RdfFileRowCodecSpi {
                 if (null != ctx.field) {
                     ctx.columnMeta = columnMeta;
                     ctx.fileConfig = rccCtx.fileConfig;
-                    String value= (String) rccCtx.rd.getOutput().execute(ctx);
+                    String value = (String) rccCtx.rd.getOutput().execute(ctx);
                     line.append(value);
-                    index.append(columnMeta.getColIndex());
+                    colMeta.append(columnMeta.getColIndex());
 
                     if (null != split && i < columnMetas.size() - 1) {
                         line.append(split);
-                        index.append(",");
+                        colMeta.append(",");
                     }
                 }
             } catch (RdfFileException e) {
@@ -67,18 +73,50 @@ public class RowNosqlIndexCodec implements RdfFileRowCodecSpi {
 
         // 序列化索引字段
         String indexPlace = RdfFileUtil.getParam(rccCtx.fileConfig, INDEX_PLACE_KEY, INDEX_END);
+        colMeta.insert(0, COL_META_START).append(COL_META_END);
         if (RdfFileUtil.isBlank(indexPlace) || INDEX_END.equalsIgnoreCase(indexPlace)) {
-            index.insert(0, "(").append(")");
-            line.append(split).append(index.toString());
+            line.append(split).append(colMeta.toString());
         } else if (INDEX_START.equalsIgnoreCase(indexPlace)) {
-            index.insert(0, "(").append(")");
-            line.insert(0, split).insert(0, index.toString());
+            line.insert(0, split).insert(0, colMeta.toString());
         } else {
             throw new RdfFileException("rdf-file#RowNosqlIndexCodec.serialize fileConfig=" + rccCtx.fileConfig + ", 配置的索引字段存放位置的值不正确，应该是[start]或者[end]， 实际是[" + indexPlace + "]",
                     RdfErrorEnum.SERIALIZE_ERROR);
         }
 
-        return  line.toString();
+        return line.toString();
+    }
+
+    @Override
+    public String preDeserialize(String line, RowCodecContext rccCtx) {
+        String indexPlace = RdfFileUtil.getParam(rccCtx.fileConfig, INDEX_PLACE_KEY, INDEX_END);
+        String split = RdfFileUtil.getRowSplit(rccCtx.fileConfig);
+        String colMeta;
+        if (RdfFileUtil.isBlank(indexPlace) || INDEX_END.equalsIgnoreCase(indexPlace)) {
+            int endIdx = line.indexOf(split);
+            colMeta = line.substring(endIdx + split.length());
+            line = line.substring(0, endIdx);
+        } else if (INDEX_START.equalsIgnoreCase(indexPlace)) {
+            int startIdx = line.lastIndexOf(split);
+            colMeta = line.substring(0, startIdx);
+            line = line.substring(startIdx + split.length());
+        } else {
+            throw new RdfFileException("rdf-file#RowNosqlIndexCodec.preDeserialize fileConfig=" + rccCtx.fileConfig + ", 配置的索引字段存放位置的值不正确，应该是[start]或者[end]， 实际是[" + indexPlace + "]",
+                    RdfErrorEnum.SERIALIZE_ERROR);
+        }
+
+        String idxMeta = colMeta.substring(COL_META_START_LENGTH, colMeta.length() - 1);
+
+        if (RdfFileUtil.isNotBlank(idxMeta)) {
+            String[] idxes = idxMeta.split(",");
+            Integer[] idxArray = new Integer[idxes.length];
+            for (int i = 0; i < idxes.length; i++) {
+                idxArray[i] = Integer.parseInt(idxes[i]);
+            }
+
+            rccCtx.ext = idxArray;
+        }
+
+        return line;
     }
 
     @Override
@@ -89,19 +127,10 @@ public class RowNosqlIndexCodec implements RdfFileRowCodecSpi {
         String[] columnValues = rccCtx.columnValues;
 
         // 反序列化索引字段
-        String indexs[] = null;
-        String indexPlace = RdfFileUtil.getParam(rccCtx.fileConfig, INDEX_PLACE_KEY, INDEX_END);
-        if (RdfFileUtil.isBlank(indexPlace) || INDEX_END.equalsIgnoreCase(indexPlace)) {
-            indexs = columnValues[columnValues.length - 1].split(",");
-        } else if (INDEX_START.equalsIgnoreCase(indexPlace)) {
-            indexs = columnValues[0].split(",");
-        } else {
-            throw new RdfFileException("rdf-file#RowNosqlIndexCodec.deserialize fileConfig=" + rccCtx.fileConfig + ", 配置的索引字段存放位置的值不正确，应该是[start]或者[end]， 实际是[" + indexPlace + "]",
-                    RdfErrorEnum.SERIALIZE_ERROR);
-        }
+        String idxArray[] = (String[]) rccCtx.ext;
 
-        List<FileColumnMeta> columnMetas = new ArrayList<FileColumnMeta>(indexs.length);
-        for (String index : indexs) {
+        List<FileColumnMeta> columnMetas = new ArrayList<FileColumnMeta>(idxArray.length);
+        for (String index : idxArray) {
             for (FileColumnMeta columnMeta : rccCtx.columnMetas) {
                 if (index.equals(String.valueOf(columnMeta.getColIndex()))) {
                     columnMetas.add(columnMeta);
@@ -109,14 +138,12 @@ public class RowNosqlIndexCodec implements RdfFileRowCodecSpi {
             }
         }
 
-        // TODO 字段在之前就已经分格了， 那索引还需要()吗？
-
         for (int i = 0; i < columnMetas.size(); i++) {
             RdfFileFunctionSpi.FuncContext ctx = new RdfFileFunctionSpi.FuncContext();
             FileColumnMeta columnMeta = columnMetas.get(i);
             try {
                 ctx.codecType = RdfFileFunctionSpi.CodecType.DESERIALIZE;
-                ctx.field = columnValues[i + 1];
+                ctx.field = columnValues[i];
                 ctx.columnMeta = columnMeta;
                 ctx.fileConfig = fileConfig;
                 bmw.setProperty(columnMeta.getName(), rd.getOutput().execute(ctx));

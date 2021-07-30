@@ -42,13 +42,16 @@ public class RowColumnHorizontalCodec {
         ProcessExecutor.execute(ProcessorTypeEnum.BEFORE_SERIALIZE_ROW, processors, fileConfig,
                 new BizData(RdfFileConstants.DATA, bmw),
                 new BizData(RdfFileConstants.ROW_TYPE, rowType));
-
+        // 条件模板处理
         List<FileColumnMeta> columnMetas = RowConditionExecutor.serializeRow(fileConfig, bmw, rowType);
 
         RowCodecContext ctx = new RowCodecContext(bmw, fileConfig, columnMetas, rd);
         RdfFileRowCodecSpi rowCodec = ExtensionLoader.getExtensionLoader(RdfFileRowCodecSpi.class).getExtension(RdfFileUtil.getRowCodecMode(fileConfig));
+        // 字段编码
         String line = rowCodec.serialize(ctx);
-
+        // 行编码后置处理
+        line = rowCodec.postSerialize(line, ctx);
+        // 行整体格式化处理
         line = RowFormatCodec.serialize(fileConfig, line, rowType);
 
         ProcessExecutor.execute(ProcessorTypeEnum.AFTER_SERIALIZE_ROW, processors, fileConfig,
@@ -65,16 +68,21 @@ public class RowColumnHorizontalCodec {
         ProcessExecutor.execute(ProcessorTypeEnum.BEFORE_DESERIALIZE_ROW, processors, fileConfig,
                 new BizData(RdfFileConstants.DATA, line),
                 new BizData(RdfFileConstants.ROW_TYPE, rowType));
-
+        // 行格式化处理
         line = RowFormatCodec.deserialize(fileConfig, line, rowType);
 
         FileMeta fileMeta = TemplateLoader.load(fileConfig);
-        String[] columnValues = ProtocolLoader.loadProtocol(fileMeta.getProtocol()).getRowSplit().split(new SplitContext(line, fileConfig, rowType));
-
-        List<FileColumnMeta> columnMetas = RowConditionExecutor.deserializeRow(fileConfig, columnValues, rowType, line);
-
-        RowCodecContext ctx = new RowCodecContext(bmw, fileConfig, columnMetas, rd, columnValues);
+        RowCodecContext ctx = new RowCodecContext(bmw, fileConfig, null, rd, null);
         RdfFileRowCodecSpi rowCodec = ExtensionLoader.getExtensionLoader(RdfFileRowCodecSpi.class).getExtension(RdfFileUtil.getRowCodecMode(fileConfig));
+        // 行前置处理
+        line =rowCodec.preDeserialize(line, ctx);
+
+        String[] columnValues = ProtocolLoader.loadProtocol(fileMeta.getProtocol()).getRowSplit().split(new SplitContext(line, fileConfig, rowType));
+        // 条件模板处理
+        List<FileColumnMeta> columnMetas = RowConditionExecutor.deserializeRow(fileConfig, columnValues, rowType, line);
+        ctx.columnMetas = columnMetas;
+        ctx.columnValues = columnValues;
+        // 行字段解析
         rowCodec.deserialize(line, ctx);
 
         ProcessExecutor.execute(ProcessorTypeEnum.AFTER_DESERIALIZE_ROW, processors, fileConfig,

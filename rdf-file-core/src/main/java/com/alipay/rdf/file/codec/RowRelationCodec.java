@@ -4,10 +4,8 @@ import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.meta.FileColumnMeta;
 import com.alipay.rdf.file.model.FileConfig;
-import com.alipay.rdf.file.model.FileDataTypeEnum;
 import com.alipay.rdf.file.protocol.RowDefinition;
 import com.alipay.rdf.file.spi.RdfFileFunctionSpi;
-import com.alipay.rdf.file.spi.RdfFileRowCodecSpi;
 import com.alipay.rdf.file.util.BeanMapWrapper;
 import com.alipay.rdf.file.util.RdfFileUtil;
 
@@ -17,7 +15,7 @@ import java.util.List;
  *
  * @Author: hongwei.quhw 2021/6/27 3:02 下午
  */
-public class RowRelationCodec implements RdfFileRowCodecSpi {
+public class RowRelationCodec extends AbstractRowCodec {
     @Override
     public String serialize(RowCodecContext rccCtx) {
         FileConfig fileConfig = rccCtx.fileConfig;
