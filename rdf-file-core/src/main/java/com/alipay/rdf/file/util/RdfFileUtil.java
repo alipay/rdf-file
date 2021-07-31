@@ -863,4 +863,17 @@ public class RdfFileUtil {
     public static boolean  isRelationCodecMode(FileConfig fileConfig) {
         return "relation".equals(fileConfig.getRowCodecMode());
     }
+
+    public static boolean isRelationReadRowCompatibility(FileConfig fileConfig) {
+        if (null != fileConfig.getRelationReadRowCompatibility()) {
+            return fileConfig.getRelationReadRowCompatibility();
+        }
+
+        FileMeta fileMeta = TemplateLoader.load(fileConfig);
+        if (null != fileMeta.getRelationReadRowCompatibility()) {
+            return fileMeta.getRelationReadRowCompatibility();
+        }
+
+        return false;
+    }
 }

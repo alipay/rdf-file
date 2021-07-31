@@ -204,6 +204,7 @@ public class TemplateLoader {
             fileMeta.setColumnSplit(templateConfig.getColumnSplit());
             fileMeta.setFileEncoding(templateConfig.getFileEncoding());
             fileMeta.setLineBreak(templateConfig.getLineBreak());
+            fileMeta.setRelationReadRowCompatibility(templateConfig.getRelationReadRowCompatibility());
 
             CACHE.put(templatePath, fileMeta);
 

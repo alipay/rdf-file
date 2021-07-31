@@ -66,7 +66,7 @@ public class RowRelationCodec extends AbstractRowCodec {
         int splitLength = columnMetas.size();
 
         // 只有关系编码模式才可能需要字段的强约束
-        if (columnValues.length != splitLength && !fileConfig.isRelationReadRowCompatibility()) {
+        if (columnValues.length != splitLength && !RdfFileUtil.isRelationReadRowCompatibility(fileConfig)) {
             throw new RdfFileException("rdf-file#RowRelationCodec.deserialize fileConfig=" + fileConfig + ", line=[" + line + "],模板定义列数="
                     + splitLength + ", 实际列数=" + columnValues.length, RdfErrorEnum.DESERIALIZE_ERROR);
         }

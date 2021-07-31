@@ -40,6 +40,8 @@ public class TemplateConfig {
     private List<String>          rowValidators        = new ArrayList<String>();
     /**定义或者覆盖协议文件的字段类型*/
     private List<String>          protocolDataType     = new ArrayList<String>();
+    /**关系模式读行数据兼容模式*/
+    private Boolean               relationReadRowCompatibility;
 
     public String getProtocol() {
         return protocol;
@@ -151,5 +153,13 @@ public class TemplateConfig {
 
     public void setProtocolDataType(List<String> protocolDataType) {
         this.protocolDataType = protocolDataType;
+    }
+
+    public Boolean getRelationReadRowCompatibility() {
+        return relationReadRowCompatibility;
+    }
+
+    public void setRelationReadRowCompatibility(Boolean relationReadRowCompatibility) {
+        this.relationReadRowCompatibility = relationReadRowCompatibility;
     }
 }

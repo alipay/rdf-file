@@ -67,7 +67,7 @@ public class ColumnInfoHorizontalCodec extends AbstractColumnInfoCodec {
         splitLength = fileMeta.isEndWithSplit(layoutType) ? splitLength + 1 : splitLength;
 
         if (splitLength != columns.length) {
-            if (config.isRelationReadRowCompatibility()) {
+            if (RdfFileUtil.isRelationReadRowCompatibility(config)) {
                 splitLength = Math.min(splitLength, columns.length);
             } else {
                 throw new RdfFileException("rdf-file#ColumnInfoHorizontalCodec.deserialize 文件=" + config.getFilePath() + "， " + layoutType.name() + " line=" + line, RdfErrorEnum.DESERIALIZE_ERROR);

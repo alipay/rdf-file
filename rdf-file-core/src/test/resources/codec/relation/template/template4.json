@@ -18,8 +18,6 @@
 		 "newCol1|新增字段1",
 		 "newCol|2新增字段2"
     ],
-	"startWithSplit": "head|body",
-	"endWithSplit": "body",
-	"relationReadRowCompatibility": "false",
+	"relationReadRowCompatibility": "true",
     "protocol":"DE"
 }

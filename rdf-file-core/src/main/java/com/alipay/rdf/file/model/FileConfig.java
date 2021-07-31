@@ -59,7 +59,7 @@ public class FileConfig implements Cloneable {
     /**读文件时是否先读取所有文件的字节到内存*/
     private boolean             isReadAll        = false;
     /*关系模式：读行兼容模式， 用于数据模板行尾添加或者删除字段场景*/
-    private boolean             relationReadRowCompatibility = false;
+    private Boolean             relationReadRowCompatibility;
     /** 写文件的时候是否在文件尾部追加*/
     private boolean             isAppend         = false;
     /** 外部构建的输入流*/
@@ -341,11 +341,11 @@ public class FileConfig implements Cloneable {
         this.rowCodecMode = rowCodecMode;
     }
 
-    public boolean isRelationReadRowCompatibility() {
+    public Boolean getRelationReadRowCompatibility() {
         return relationReadRowCompatibility;
     }
 
-    public void setRelationReadRowCompatibility(boolean relationReadRowCompatibility) {
+    public void setRelationReadRowCompatibility(Boolean relationReadRowCompatibility) {
         this.relationReadRowCompatibility = relationReadRowCompatibility;
     }
 
@@ -429,7 +429,9 @@ public class FileConfig implements Cloneable {
         }
         sb.append(",isAppend=").append(isAppend);
         sb.append(",isReadAll=").append(isReadAll);
-        sb.append(",relationReadRowCompatibility=").append(relationReadRowCompatibility);
+        if (null != relationReadRowCompatibility) {
+            sb.append(",relationReadRowCompatibility=").append(relationReadRowCompatibility);
+        }
         sb.append(", is=").append(is);
         sb.append("]");
         return sb.toString();

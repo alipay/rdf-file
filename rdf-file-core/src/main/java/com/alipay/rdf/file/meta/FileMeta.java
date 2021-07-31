@@ -55,6 +55,8 @@ public class FileMeta {
     private boolean                        multiBody             = false;
     /**定义或者覆盖协议文件的字段类型*/
     private final List<FileColumnMeta>     protocolDataTypes     = new ArrayList<FileColumnMeta>();
+    /**关系模式读行数据兼容模式*/
+    private Boolean                        relationReadRowCompatibility;
 
     public boolean isStartWithSplit(FileDataTypeEnum rowType) {
         Boolean startSplit = startWithSplit.get(rowType);
@@ -394,6 +396,14 @@ public class FileMeta {
             throw new RdfFileException("rdf-file# 不支持换行符 lineBreak=" + lineBreak,
                 RdfErrorEnum.UNSUPPORT_LINEBREAK);
         }
+    }
+
+    public Boolean getRelationReadRowCompatibility() {
+        return relationReadRowCompatibility;
+    }
+
+    public void setRelationReadRowCompatibility(Boolean relationReadRowCompatibility) {
+        this.relationReadRowCompatibility = relationReadRowCompatibility;
     }
 
     @Override
