@@ -12,8 +12,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -209,6 +208,81 @@ public class RowRelationCodecTest {
         Assert.assertNull(fileReader.readTail(HashMap.class));
 
         fileReader.close();
+    }
+
+    @Test
+    public void testReadDEFile5() throws Exception {
+        String filePath = File.class.getResource("/codec/relation/data/data1.txt").getPath();
+
+        FileConfig config = new FileConfig(filePath, "/codec/relation/template/template5.json",
+                new StorageConfig("nas"));
+
+        FileReader fileReader = FileFactory.createReader(config);
+
+        Assert.assertNull(fileReader.readTail(HashMap.class));
+
+        Map<String, Object> head = fileReader.readHead(HashMap.class);
+        Assert.assertEquals(new Long(100), head.get("totalCount"));
+        //Assert.assertEquals(new BigDecimal("300.03"), head.get("totalAmount"));
+
+        Map<String, Object> row = fileReader.readRow(HashMap.class);
+        Assert.assertEquals("seq_0", row.get("seq"));
+        Assert.assertEquals("inst_seq_0", row.get("instSeq"));
+        Assert.assertEquals("2013-11-09 12:34:56",
+                DateUtil.format((Date) row.get("gmtApply"), "yyyy-MM-dd HH:mm:ss"));
+        Assert.assertEquals("20131109", DateUtil.format((Date) row.get("date"), "yyyyMMdd"));
+        Assert.assertEquals("20131112 12:23:34",
+                DateUtil.format((Date) row.get("dateTime"), "yyyyMMdd HH:mm:ss"));
+        Assert.assertEquals(new BigDecimal("23.33"), row.get("applyNumber"));
+        Assert.assertEquals(new BigDecimal("10.22"), row.get("amount"));
+        Assert.assertEquals(new Integer(22), row.get("age"));
+        Assert.assertEquals(null, row.get("longN"));
+        Assert.assertEquals(null, row.get("bol"));
+        Assert.assertEquals(null, row.get("memo"));
+
+        row = fileReader.readRow(HashMap.class);
+        Assert.assertEquals("seq_1", row.get("seq"));
+        Assert.assertEquals("inst_seq_1", row.get("instSeq"));
+        Assert.assertEquals("2013-11-10 15:56:12",
+                DateUtil.format((Date) row.get("gmtApply"), "yyyy-MM-dd HH:mm:ss"));
+        Assert.assertEquals("20131110", DateUtil.format((Date) row.get("date"), "yyyyMMdd"));
+        Assert.assertEquals("20131113 12:33:34",
+                DateUtil.format((Date) row.get("dateTime"), "yyyyMMdd HH:mm:ss"));
+        Assert.assertEquals(new BigDecimal("23.34"), row.get("applyNumber"));
+        Assert.assertEquals(new BigDecimal("11.88"), row.get("amount"));
+        Assert.assertEquals(new Integer(33), row.get("age"));
+        Assert.assertEquals(null, row.get("longN"));
+        Assert.assertEquals(null, row.get("bol"));
+        Assert.assertNull(row.get("memo"));
+
+        row = fileReader.readRow(HashMap.class);
+        Assert.assertNull(row);
+
+        Assert.assertNull(fileReader.readTail(HashMap.class));
+
+        fileReader.close();
+    }
+
+    //
+    @Test(expected = Exception.class)
+    public void test5() throws  Exception {
+        String filePath = File.class.getResource("/codec/relation/data/data3.txt").getPath();
+        FileConfig config = new FileConfig(filePath, "/codec/relation/template/cm_ext.json", new StorageConfig("nas"));
+        FileReader fileReader = FileFactory.createReader(config);
+        fileReader.readHead(HashMap.class);
+    }
+
+    @Test(expected = RdfFileException.class)
+    public void test6() throws  Exception {
+        String filePath = File.class.getResource("/codec/relation/data/data4.txt").getPath();
+        FileConfig config = new FileConfig(filePath, "/codec/relation/template/cm_info.json", new StorageConfig("nas"));
+        FileReader fileReader = FileFactory.createReader(config);
+        Map<String, Object> head = fileReader.readHead(HashMap.class);
+        System.out.println(head);
+        // 头少消耗一个头行
+        Map<String, Object> row = fileReader.readRow(HashMap.class);
+        Assert.assertEquals("seq234567", row.get("seq"));
+
     }
 
     @After
