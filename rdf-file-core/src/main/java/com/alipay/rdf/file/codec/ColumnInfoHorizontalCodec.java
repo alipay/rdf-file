@@ -27,6 +27,7 @@ public class ColumnInfoHorizontalCodec extends AbstractColumnInfoCodec {
 
     public static void serialize(FileDataTypeEnum layoutType, FileDataTypeEnum dataType, FileConfig config, FileWriter writer,
                                  String method) {
+        checkRelationRowCodecMode(config);
         FileMeta fileMeta = TemplateLoader.load(config);
         List<FileColumnMeta> colMetas = getColumnMetas(config, dataType);
         StringBuilder colHead = new StringBuilder();
@@ -50,6 +51,7 @@ public class ColumnInfoHorizontalCodec extends AbstractColumnInfoCodec {
     public static <T> T deserialize(FileDataTypeEnum layoutType, FileDataTypeEnum dataType, FileConfig config,
                                     FileReader reader,
                                     String method) {
+        checkRelationRowCodecMode(config);
         String line = reader.readLine();
         RdfFileUtil.assertNotBlank(line, "文件=" + config.getFilePath() + ", " + layoutType.name() + " 内容缺失");
 

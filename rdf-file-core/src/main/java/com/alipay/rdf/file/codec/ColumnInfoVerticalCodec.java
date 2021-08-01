@@ -24,6 +24,7 @@ public class ColumnInfoVerticalCodec extends AbstractColumnInfoCodec {
 
     public static void serialize(FileDataTypeEnum layoutType, FileDataTypeEnum dataType, FileConfig fileConfig,
                                  FileWriter writer, String method) {
+        checkRelationRowCodecMode(fileConfig);
         //按行写入column字段
         for (FileColumnMeta colMeta : getColumnMetas(fileConfig, dataType)) {
             writer.writeLine(getValue(colMeta, method));
@@ -32,6 +33,7 @@ public class ColumnInfoVerticalCodec extends AbstractColumnInfoCodec {
 
     public static <T> T deserialize(FileDataTypeEnum layoutType, FileDataTypeEnum dataType, FileConfig fileConfig,
                                     FileReader reader, String method) {
+        checkRelationRowCodecMode(fileConfig);
         for (FileColumnMeta colMeta : getColumnMetas(fileConfig, dataType)) {
             String columnName = RdfFileUtil.assertTrimNotBlank(reader.readLine());
             RdfFileUtil.assertNotBlank(columnName, "文件=" + fileConfig.getFilePath() + ", " + layoutType.name() + " 内容缺失");

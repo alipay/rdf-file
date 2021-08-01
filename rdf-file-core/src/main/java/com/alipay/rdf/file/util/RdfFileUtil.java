@@ -860,8 +860,12 @@ public class RdfFileUtil {
         return defaultValue;
     }
 
+    public static String getRelationCodecMode(FileConfig fileConfig) {
+        return fileConfig.getRowCodecMode();
+    }
+
     public static boolean  isRelationCodecMode(FileConfig fileConfig) {
-        return "relation".equals(fileConfig.getRowCodecMode());
+        return "relation".equals(getRelationCodecMode(fileConfig));
     }
 
     public static boolean isRelationReadRowCompatibility(FileConfig fileConfig) {
