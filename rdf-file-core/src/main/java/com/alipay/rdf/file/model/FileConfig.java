@@ -21,7 +21,7 @@ import com.alipay.rdf.file.util.RdfFileUtil;
 public class FileConfig implements Cloneable {
     /**文件读写合并校验组件类型  默认 type=protocol */
     private String              type             = "protocol";
-    private String              rowCodecMode     = "relation";
+    private String              rowCodecMode;
     /** 文件路径*/
     private String              filePath;
     /**文件数据类型*/

@@ -853,19 +853,20 @@ public class RdfFileUtil {
     }
 
     public static String getRowCodecMode(FileConfig fileConfig) {
-        return fileConfig.getRowCodecMode();
+        if (isNotBlank(fileConfig.getRowCodecMode())) {
+            return fileConfig.getRowCodecMode();
+        }
+
+        FileMeta fileMeta = TemplateLoader.load(fileConfig);
+        return fileMeta.getRowCodecMode();
     }
 
     public static <T> T getParam(FileConfig fileConfig, String key, T defaultValue) {
         return defaultValue;
     }
 
-    public static String getRelationCodecMode(FileConfig fileConfig) {
-        return fileConfig.getRowCodecMode();
-    }
-
     public static boolean  isRelationCodecMode(FileConfig fileConfig) {
-        return "relation".equals(getRelationCodecMode(fileConfig));
+        return "relation".equals(getRowCodecMode(fileConfig));
     }
 
     public static boolean isRelationReadRowCompatibility(FileConfig fileConfig) {

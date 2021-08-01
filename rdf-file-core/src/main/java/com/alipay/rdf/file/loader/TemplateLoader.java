@@ -205,6 +205,9 @@ public class TemplateLoader {
             fileMeta.setFileEncoding(templateConfig.getFileEncoding());
             fileMeta.setLineBreak(templateConfig.getLineBreak());
             fileMeta.setRelationReadRowCompatibility(templateConfig.getRelationReadRowCompatibility());
+            if (RdfFileUtil.isNotBlank(templateConfig.getRowCodecMode())) {
+                fileMeta.setRowCodecMode(templateConfig.getRowCodecMode());
+            }
 
             CACHE.put(templatePath, fileMeta);
 

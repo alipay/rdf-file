@@ -42,6 +42,8 @@ public class TemplateConfig {
     private List<String>          protocolDataType     = new ArrayList<String>();
     /**关系模式读行数据兼容模式*/
     private Boolean               relationReadRowCompatibility;
+    /**行序列化反序列化模式*/
+    private String                rowCodecMode;
 
     public String getProtocol() {
         return protocol;
@@ -161,5 +163,13 @@ public class TemplateConfig {
 
     public void setRelationReadRowCompatibility(Boolean relationReadRowCompatibility) {
         this.relationReadRowCompatibility = relationReadRowCompatibility;
+    }
+
+    public String getRowCodecMode() {
+        return rowCodecMode;
+    }
+
+    public void setRowCodecMode(String rowCodecMode) {
+        this.rowCodecMode = rowCodecMode;
     }
 }

@@ -57,6 +57,8 @@ public class FileMeta {
     private final List<FileColumnMeta>     protocolDataTypes     = new ArrayList<FileColumnMeta>();
     /**关系模式读行数据兼容模式*/
     private Boolean                        relationReadRowCompatibility;
+    /**行序列化反序列化模式: 默认关系模式*/
+    private String                         rowCodecMode = "relation";
 
     public boolean isStartWithSplit(FileDataTypeEnum rowType) {
         Boolean startSplit = startWithSplit.get(rowType);
@@ -404,6 +406,14 @@ public class FileMeta {
 
     public void setRelationReadRowCompatibility(Boolean relationReadRowCompatibility) {
         this.relationReadRowCompatibility = relationReadRowCompatibility;
+    }
+
+    public String getRowCodecMode() {
+        return rowCodecMode;
+    }
+
+    public void setRowCodecMode(String rowCodecMode) {
+        this.rowCodecMode = rowCodecMode;
     }
 
     @Override
