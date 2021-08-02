@@ -82,7 +82,7 @@ public class RowNosqlKVCodec extends AbstractRowCodec {
         for (String columnPair : columnValues) {
             int idx = columnPair.indexOf(kvSplit);
             String metaName = columnPair.substring(0, idx);
-            String value = columnPair.substring(idx);
+            String value = columnPair.substring(idx + kvSplit.length());
 
             RdfFileFunctionSpi.FuncContext ctx = new RdfFileFunctionSpi.FuncContext();
             FileColumnMeta columnMeta = getFileColumnMeta(metaName, columnMetas);
