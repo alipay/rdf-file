@@ -12,6 +12,16 @@ import com.alipay.rdf.file.util.RdfFileUtil;
 import java.util.List;
 
 /**
+ *
+ * 行字段内容以 k:v 存储
+ * k对应数据定义模板的name
+ * v对应的数据内容
+ *
+ * 特性：
+ * 写入是字段值为null，忽略，不序列化内容，
+ * 写入字段的顺序按照字段在数据定义模板中顺序
+ * 数据定义模板字段可以任意顺序扩充
+ *
  * @Author: hongwei.quhw 2021/6/27 3:48 下午
  */
 public class RowNosqlKVCodec extends AbstractRowCodec {
@@ -35,14 +45,13 @@ public class RowNosqlKVCodec extends AbstractRowCodec {
                 ctx.field = bmw.getProperty(columnMeta.getName());
                 // 对非空字段进行序列化
                 if (null != ctx.field) {
+                    if (line.length() > 0) {
+                        line.append(lineSplit);
+                    }
                     ctx.columnMeta = columnMeta;
                     ctx.fileConfig = rccCtx.fileConfig;
                     String value= (String) rccCtx.rd.getOutput().execute(ctx);
                     line.append(columnMeta.getName() + kvSplit + value);
-
-                    if (null != lineSplit && i < columnMetas.size() - 1) {
-                        line.append(lineSplit);
-                    }
                 }
             } catch (RdfFileException e) {
                 throw new RdfFileException(
