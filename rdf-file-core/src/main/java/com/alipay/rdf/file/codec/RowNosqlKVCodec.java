@@ -80,6 +80,10 @@ public class RowNosqlKVCodec extends AbstractRowCodec {
         String kvSplit = RdfFileUtil.getParam(fileConfig, KV_SPLIT_KEY, DEFAULT_KV_SPLIT);
 
         for (String columnPair : columnValues) {
+            if (RdfFileUtil.isBlank(columnPair)) {
+                // 完全为空忽略
+                continue;
+            }
             int idx = columnPair.indexOf(kvSplit);
             String metaName = columnPair.substring(0, idx);
             String value = columnPair.substring(idx + kvSplit.length());
