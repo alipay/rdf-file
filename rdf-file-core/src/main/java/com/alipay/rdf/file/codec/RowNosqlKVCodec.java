@@ -85,11 +85,20 @@ public class RowNosqlKVCodec extends AbstractRowCodec {
                 continue;
             }
             int idx = columnPair.indexOf(kvSplit);
+            if (idx == -1) {
+               throw new RdfFileException("rdf-file#rdf-file#RowNosqlKVCodec.deserialize fileConfig="
+                        + fileConfig + ", line=[" + line + "], columnContent = [" + columnPair + "], 不存在kv分隔符[" + kvSplit + "]", RdfErrorEnum.DESERIALIZE_ERROR);
+            }
+
             String metaName = columnPair.substring(0, idx);
             String value = columnPair.substring(idx + kvSplit.length());
 
             RdfFileFunctionSpi.FuncContext ctx = new RdfFileFunctionSpi.FuncContext();
             FileColumnMeta columnMeta = getFileColumnMeta(metaName, columnMetas);
+
+            RdfFileUtil.assertNotNull(columnMeta, "rdf-file#rdf-file#RowNosqlKVCodec.deserialize fileConfig="
+                    + fileConfig + ", 将数据反序列到对象出错. columnName=[" + metaName + "]在数据定义模板没有定义");
+
             try {
                 ctx.codecType = RdfFileFunctionSpi.CodecType.DESERIALIZE;
                 ctx.field = value;

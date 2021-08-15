@@ -112,7 +112,7 @@ public class RowNosqlKVCodecWriterTest {
 
         Date testDate = DateUtil.parse("2017-01-03 12:22:33", "yyyy-MM-dd HH:mm:ss");
 
-        body.put("seq", "seq12345");
+        body.put("seq", "");
         body.put("instSeq", "303");
         body.put("gmtApply", testDate);
         body.put("date", testDate);
@@ -121,8 +121,8 @@ public class RowNosqlKVCodecWriterTest {
         body.put("amount", new BigDecimal("1.22"));
         body.put("age", new Integer(33));
         body.put("longN", new Long(33));
-        body.put("bol", true);
-        body.put("memo", "memo1");
+        body.put("bol", null);
+        body.put("memo", "   ");
         fileWriter.writeRow(body);
 
         testDate = DateUtil.parse("2016-02-03 12:22:33", "yyyy-MM-dd HH:mm:ss");
@@ -175,7 +175,7 @@ public class RowNosqlKVCodecWriterTest {
                 new InputStreamReader(new FileInputStream(new File(config.getFilePath())), "UTF-8"));
         Assert.assertEquals("totalCount:2|totalAmount:23.22", reader.readLine());
         Assert.assertEquals(
-                "seq:seq12345|instSeq:303|gmtApply:2017-01-03 12:22:33|date:20170103|dateTime:20170103 12:22:33|applyNumber:12|amount:1.22|age:33|longN:33|bol:true|memo:memo1",
+                "seq:|instSeq:303|gmtApply:2017-01-03 12:22:33|date:20170103|dateTime:20170103 12:22:33|applyNumber:12|amount:1.22|age:33|longN:33|memo:",
                 reader.readLine());
         Assert.assertEquals(
                 "seq:seq234567|instSeq:505|gmtApply:2016-02-03 12:22:33|date:20160203|dateTime:20160203 12:22:33|applyNumber:12|amount:1.09|age:66|longN:125|bol:false|memo:memo2",

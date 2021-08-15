@@ -7,7 +7,6 @@
 	     "seq|流水号",
 	     "instSeq|基金公司订单号|Required",
 	     "gmtApply|订单申请时间|Date:yyyy-MM-dd HH:mm:ss",
-	     "date|普通日期|Date:yyyyMMdd",
 	     "dateTime|普通日期时间|Date:yyyyMMdd HH:mm:ss",
 	     "applyNumber|普通数字|Integer",
 		"addcolumn1|多余字段1",
