@@ -2,6 +2,7 @@ package com.alipay.rdf.file.codec;
 
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.interfaces.FileFactory;
+import com.alipay.rdf.file.interfaces.FileReader;
 import com.alipay.rdf.file.interfaces.FileWriter;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.StorageConfig;
@@ -291,8 +292,20 @@ public class RowNosqlKVCodecWriterTest {
         Assert.assertEquals("|fileEnd:OFDCFEND|",reader.readLine());
 
         Assert.assertNull(reader.readLine());
-
         reader.close();
+
+        FileReader fileReader = FileFactory.createReader(config);
+        head = fileReader.readHead(HashMap.class);
+        Assert.assertEquals(2L, head.get("totalCount"));
+
+        body = fileReader.readRow(HashMap.class);
+        Assert.assertNull(body.get("seq"));
+        Assert.assertEquals("303", body.get("instSeq"));
+        Assert.assertNull(body.get("memo"));
+
+        Map<String, Object> tail = fileReader.readTail(HashMap.class);
+        Assert.assertEquals("OFDCFEND", tail.get("fileEnd"));
+        fileReader.close();
     }
 
     @After
