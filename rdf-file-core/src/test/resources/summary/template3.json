@@ -1,0 +1,30 @@
+{
+ 	"head":[
+	     "totalCount|总笔数|Required|BigDecimal",
+	     "totalAmount|总金额|BigDecimal|Required",
+	     "successAmount|成功总金额|BigDecimal|Required",
+	     "successCount|成功笔数|Long"
+ 	],
+ 	"body":[
+	     "seq|流水号",
+	     "instSeq|基金公司订单号|Required",
+	     "amount|金额|BigDecimal",
+	     "age|年龄|Integer",
+		 "bol|是否|boolean"
+    ],
+    "tail": [
+    	"fileEnd|数据文件尾部字符",
+    	"date|普通日期|Date:yyyyMMdd",
+    	"failcount|失败数|Integer"
+    ],
+    "protocol":"DE_ext",
+    "summaryColumnPairs":[
+    	"totalAmount|amount",
+    	"successAmount|amount|bol=true|seq(0,4)=abcd|age=15"
+    ],
+    "statisticColumnPairs":[
+    	"successCount|bol=true|seq(0,4)=eabc|age=15",
+    	"failcount|match:seq(4,5)=d"
+    ],
+	"rowCodecMode":"kv"
+}

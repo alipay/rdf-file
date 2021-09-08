@@ -1,4 +1,4 @@
-<protocol name="de">
+<protocol name="de_ext">
 	<head>
 		<row>
 			<column>
@@ -7,7 +7,6 @@
 				<output>${column.value()}</output>
 			</column>
 		</row>
-		<row output="${columnInfo.horizontal(body,desc)}" />
 	</head>
 	<body>
 		<row>

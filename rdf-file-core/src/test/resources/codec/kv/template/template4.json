@@ -17,5 +17,5 @@
 	     "memo|备注"
     ],
 	"rowCodecMode":"kv",
-    "protocol":"DE"
+    "protocol":"DE_ext"
 }
