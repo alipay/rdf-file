@@ -389,6 +389,107 @@ public class RowNosqlKVCodecWriterTest {
         fileReader.close();
     }
 
+    // 多模板测试
+    @Test
+    public void testMultiTemlate() throws Exception {
+        String filePath = tf.getRoot().getAbsolutePath();
+        FileConfig config = new FileConfig(new File(filePath, "test.txt").getAbsolutePath(),
+                "/codec/kv/template/template7.json", new StorageConfig("nas"));
+
+        FileWriter fileWriter = FileFactory.createWriter(config);
+
+        Map<String, Object> head = new HashMap<String, Object>();
+        head.put("totalCount", 2L);
+        head.put("totalAmount", new BigDecimal("23.22"));
+        fileWriter.writeHead(head);
+
+        Map<String, Object> body = new HashMap<String, Object>();
+        body.put("seq", "seq12345");
+        body.put("instSeq", "303");
+        body.put("bol", true);
+        body.put("memo", "memo1");
+        fileWriter.writeRow(body);
+
+        body = new HashMap<String, Object>();
+        body.put("seq", "seq14345");
+        body.put("amount", new BigDecimal("1.09"));
+        body.put("age", 33);
+        body.put("longN", 125L);
+        body.put("bol", false);
+        body.put("memo", "memo2");
+        fileWriter.writeRow(body);
+
+        body = new HashMap<String, Object>();
+        body.put("seq", "seq4521");
+        body.put("instSeq", "505");
+        body.put("gmtApply", DateUtil.parse("2016-02-03 12:22:33", "yyyy-MM-dd HH:mm:ss"));
+        body.put("date", DateUtil.parse("20160203", "yyyyMMdd"));
+        body.put("dateTime", DateUtil.parse("20160203 12:22:33", "yyyyMMdd HH:mm:ss"));
+        body.put("applyNumber", 12);
+        body.put("amount", new BigDecimal("1.09"));
+        body.put("age", 33);
+        body.put("longN", 67L);
+        body.put("bol", false);
+        body.put("memo", "memo2");
+        fileWriter.writeRow(body);
+
+        fileWriter.close();
+
+        //校验文件
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(new FileInputStream(new File(config.getFilePath())), "UTF-8"));
+        Assert.assertEquals("totalCount:2|totalAmount:23.22", reader.readLine());
+        Assert.assertEquals("seq:seq12345|instSeq:303|bol:true|memo:memo1", reader.readLine());
+        Assert.assertEquals("seq:seq14345|amount:1.09|age:33|longN:125|bol:false|memo:memo2", reader.readLine());
+        Assert.assertEquals("seq:seq4521|instSeq:505|gmtApply:2016-02-03 12:22:33|date:20160203|dateTime:20160203 12:22:33|applyNumber:12|amount:1.09|age:33|longN:67|bol:false|memo:memo2", reader.readLine());
+        Assert.assertNull(reader.readLine());
+
+        try {
+
+            FileReader fileReader = FileFactory.createReader(config);
+
+            head = fileReader.readHead(HashMap.class);
+            Assert.assertEquals(new Long(2), head.get("totalCount"));
+            Assert.assertEquals(new BigDecimal("23.22"), head.get("totalAmount"));
+
+            Map<String, Object> row = fileReader.readRow(HashMap.class);
+            Assert.assertEquals("seq12345", row.get("seq"));
+            Assert.assertEquals("303", row.get("instSeq"));
+            Assert.assertEquals(true, row.get("bol"));
+            Assert.assertEquals("memo1", row.get("memo"));
+
+            row = fileReader.readRow(HashMap.class);
+            Assert.assertEquals("seq14345", row.get("seq"));
+            Assert.assertEquals(new BigDecimal("1.09"), row.get("amount"));
+            Assert.assertEquals(33, row.get("age"));
+            Assert.assertEquals(new Long(125), row.get("longN"));
+            Assert.assertEquals(false, row.get("bol"));
+            Assert.assertEquals("memo2", row.get("memo"));
+
+            row = fileReader.readRow(HashMap.class);
+            Assert.assertEquals("seq4521", row.get("seq"));
+            Assert.assertEquals("505", row.get("instSeq"));
+            Assert.assertEquals("2016-02-03 12:22:33",
+                    DateUtil.format((Date) row.get("gmtApply"), "yyyy-MM-dd HH:mm:ss"));
+            Assert.assertEquals("20160203", DateUtil.format((Date) row.get("date"), "yyyyMMdd"));
+            Assert.assertEquals("20160203 12:22:33",
+                    DateUtil.format((Date) row.get("dateTime"), "yyyyMMdd HH:mm:ss"));
+            Assert.assertEquals(12, row.get("applyNumber"));
+            Assert.assertEquals(new BigDecimal("1.09"), row.get("amount"));
+            Assert.assertEquals(33, row.get("age"));
+            Assert.assertEquals(new Long(67), row.get("longN"));
+            Assert.assertEquals(false, row.get("bol"));
+            Assert.assertEquals("memo2", row.get("memo"));
+
+            Assert.assertNull(fileReader.readRow(HashMap.class));
+
+            fileReader.close();
+            Assert.fail();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            // 多模板不应该使用nosql模型（kv）, 要支持也可以， RdfFileRowConditionSpi 行路由要自己实现， 目前内置MatchRowCondition， 不支持
+        }
+    }
+
     @After
     public void after() {
         tf.delete();

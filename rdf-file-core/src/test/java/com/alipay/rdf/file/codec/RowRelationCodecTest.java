@@ -285,6 +285,7 @@ public class RowRelationCodecTest {
 
     }
 
+    // 多模板
     @Test
     public void test7() throws Exception {
         String filePath = File.class.getResource("/codec/relation/data/data5.txt").getPath();
