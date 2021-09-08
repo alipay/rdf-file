@@ -59,6 +59,8 @@ public class FileMeta {
     private Boolean                        relationReadRowCompatibility;
     /**行序列化反序列化模式: 默认关系模式*/
     private String                         rowCodecMode = "relation";
+    /**非通用参数，用于传递给插件*/
+    private Map<String, String>            params = new HashMap<String, String>();
 
     public boolean isStartWithSplit(FileDataTypeEnum rowType) {
         Boolean startSplit = startWithSplit.get(rowType);
@@ -414,6 +416,14 @@ public class FileMeta {
 
     public void setRowCodecMode(String rowCodecMode) {
         this.rowCodecMode = rowCodecMode;
+    }
+
+    public Map<String, String> getParams() {
+        return params;
+    }
+
+    public void setParams(Map<String, String> params) {
+        this.params = params;
     }
 
     @Override

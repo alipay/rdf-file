@@ -19,7 +19,11 @@
     "protocol":"DE",
     "columnSplit":"|@|",
     "totalCountKey": "mycount",
-    "lineBreak": "r",
+    "lineBreak": "\r",
     "startWithSplit": "head|body|tail",
-    "endWithSplit": "head|body|tail"
+    "endWithSplit": "head|body|tail",
+    "params" : {
+        "k1": "v1",
+        "k2": "v2"
+    }
 }

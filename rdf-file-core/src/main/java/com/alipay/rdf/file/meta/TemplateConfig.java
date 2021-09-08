@@ -1,7 +1,9 @@
 package com.alipay.rdf.file.meta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
@@ -44,6 +46,8 @@ public class TemplateConfig {
     private Boolean               relationReadRowCompatibility;
     /**行序列化反序列化模式*/
     private String                rowCodecMode;
+    /**非通用参数，用于传递给插件*/
+    private Map<String, String>   params = new HashMap<String, String>();
 
     public String getProtocol() {
         return protocol;
@@ -171,5 +175,13 @@ public class TemplateConfig {
 
     public void setRowCodecMode(String rowCodecMode) {
         this.rowCodecMode = rowCodecMode;
+    }
+
+    public Map<String, String> getParams() {
+        return params;
+    }
+
+    public void setParams(Map<String, String> params) {
+        this.params = params;
     }
 }

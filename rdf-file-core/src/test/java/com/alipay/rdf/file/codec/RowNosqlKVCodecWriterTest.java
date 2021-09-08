@@ -308,6 +308,87 @@ public class RowNosqlKVCodecWriterTest {
         fileReader.close();
     }
 
+    @Test
+    public void testKVSplit() throws Exception{
+        String filePath = tf.getRoot().getAbsolutePath();
+        FileConfig config = new FileConfig(new File(filePath, "test.txt").getAbsolutePath(),
+                "/codec/kv/template/template6.json", new StorageConfig("nas"));
+
+        FileWriter fileWriter = FileFactory.createWriter(config);
+
+        Map<String, Object> head = new HashMap<String, Object>();
+        head.put("totalCount", 2);
+        head.put("totalAmount", new BigDecimal("23.22"));
+        fileWriter.writeHead(head);
+
+        Map<String, Object> body = new HashMap<String, Object>();
+
+        Date testDate = DateUtil.parse("2017-01-03 12:22:33", "yyyy-MM-dd HH:mm:ss");
+
+        body.put("seq", "");
+        body.put("instSeq", "303");
+        body.put("gmtApply", testDate);
+        body.put("date", testDate);
+        body.put("dateTime", testDate);
+        body.put("applyNumber", 12);
+        body.put("amount", new BigDecimal("1.22"));
+        body.put("age", new Integer(33));
+        body.put("longN", new Long(33));
+        body.put("bol", null);
+        body.put("memo", "   ");
+        fileWriter.writeRow(body);
+
+        testDate = DateUtil.parse("2016-02-03 12:22:33", "yyyy-MM-dd HH:mm:ss");
+
+        body = new HashMap<String, Object>();
+        body.put("seq", "seq234568");
+        body.put("instSeq", "505");
+        body.put("gmtApply", testDate);
+        //body.put("date", testDate);
+        body.put("dateTime", testDate);
+        //body.put("applyNumber", 12);
+        body.put("amount", new BigDecimal("1.09"));
+        body.put("age", 66);
+        body.put("longN", 125);
+        //body.put("bol", false);
+        //body.put("memo", "memo2");
+        fileWriter.writeRow(body);
+
+        fileWriter.writeTail(new HashMap<String, Object>());
+
+        fileWriter.close();
+
+        //校验文件
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(new FileInputStream(new File(config.getFilePath())), "UTF-8"));
+        Assert.assertEquals("|totalCount_@_2|totalAmount_@_23.22", reader.readLine());
+        Assert.assertEquals(
+                "|seq_@_|instSeq_@_303|gmtApply_@_2017-01-03 12:22:33|date_@_20170103|dateTime_@_20170103 12:22:33|applyNumber_@_12|amount_@_1.22|age_@_33|longN_@_33|memo_@_|",
+                reader.readLine());
+
+        Assert.assertEquals(
+                "|seq_@_seq234568|instSeq_@_505|gmtApply_@_2016-02-03 12:22:33|dateTime_@_20160203 12:22:33|amount_@_1.09|age_@_66|longN_@_125|",
+                reader.readLine());
+
+        Assert.assertEquals("|fileEnd_@_OFDCFEND|",reader.readLine());
+
+        Assert.assertNull(reader.readLine());
+        reader.close();
+
+        FileReader fileReader = FileFactory.createReader(config);
+        head = fileReader.readHead(HashMap.class);
+        Assert.assertEquals(2L, head.get("totalCount"));
+
+        body = fileReader.readRow(HashMap.class);
+        Assert.assertNull(body.get("seq"));
+        Assert.assertEquals("303", body.get("instSeq"));
+        Assert.assertNull(body.get("memo"));
+
+        Map<String, Object> tail = fileReader.readTail(HashMap.class);
+        Assert.assertEquals("OFDCFEND", tail.get("fileEnd"));
+        fileReader.close();
+    }
+
     @After
     public void after() {
         tf.delete();

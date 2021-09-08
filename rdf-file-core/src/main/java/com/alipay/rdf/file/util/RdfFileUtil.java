@@ -19,16 +19,16 @@ import java.util.Map;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- *
+ * <p>
  * 文件组件工具类
  *
  * @author hongwei.quhw
  * @version $Id: RdfUtil.java, v 0.1 2017年8月8日 上午11:29:42 hongwei.quhw Exp $
  */
 public class RdfFileUtil {
-    public static final String EMPTY    = "";
+    public static final String EMPTY = "";
 
-    private static final int    BUF_SIZE = 8192;
+    private static final int BUF_SIZE = 8192;
 
     private static final String AMPERSAND = "&";
 
@@ -101,12 +101,12 @@ public class RdfFileUtil {
     public static void assertEquals(String str1, String str2) {
         if (str1 == null && str2 != null) {
             throw new RdfFileException("rdf-file#字符串不相等 str1 == null, str2 == " + str2,
-                RdfErrorEnum.ILLEGAL_ARGUMENT);
+                    RdfErrorEnum.ILLEGAL_ARGUMENT);
         }
 
         if (!str1.equals(str2)) {
             throw new RdfFileException("rdf-file#字符串不相等 str1 == " + str1 + ", str2 == " + str2,
-                RdfErrorEnum.ILLEGAL_ARGUMENT);
+                    RdfErrorEnum.ILLEGAL_ARGUMENT);
         }
     }
 
@@ -203,10 +203,10 @@ public class RdfFileUtil {
             throw new RdfFileException("类" + clazz + "不存在", e, RdfErrorEnum.INSTANTIATION_ERROR);
         } catch (InstantiationException e) {
             throw new RdfFileException("类" + clazz + "实例化对象出错", e,
-                RdfErrorEnum.INSTANTIATION_ERROR);
+                    RdfErrorEnum.INSTANTIATION_ERROR);
         } catch (IllegalAccessException e) {
             throw new RdfFileException("类" + clazz + "实例化对象出错", e,
-                RdfErrorEnum.INSTANTIATION_ERROR);
+                    RdfErrorEnum.INSTANTIATION_ERROR);
         }
     }
 
@@ -237,8 +237,8 @@ public class RdfFileUtil {
 
         if (val.length() != size) {
             throw new RdfFileException(
-                "数值" + str + "补位后" + val + "长度" + val.length() + "模板定义长度" + size,
-                RdfErrorEnum.ILLEGAL_ARGUMENT);
+                    "数值" + str + "补位后" + val + "长度" + val.length() + "模板定义长度" + size,
+                    RdfErrorEnum.ILLEGAL_ARGUMENT);
         }
 
         return val;
@@ -279,7 +279,7 @@ public class RdfFileUtil {
 
     /**
      * 左对齐，填充空
-     *
+     * <p>
      * 中文字符按字节计算
      *
      * @param obj
@@ -296,9 +296,9 @@ public class RdfFileUtil {
 
     /**
      * 左对齐，填充空
-     *
+     * <p>
      * 中文字符按字节计算
-     *
+     * <p>
      * 拷贝之StringUtil
      *
      * @param str
@@ -315,7 +315,7 @@ public class RdfFileUtil {
 
             if (len > size) {
                 throw new RdfFileException("字符串[" + str + "]超过了模板定义的长度" + size + "无法补位",
-                    RdfErrorEnum.FORMAT_ERROR);
+                        RdfErrorEnum.FORMAT_ERROR);
             }
 
             int pads = size - len;
@@ -423,7 +423,7 @@ public class RdfFileUtil {
 
         if (isNotBlank(fileConfig.getTemplatePath())) {
             FileMeta fileMeta = TemplateLoader.load(fileConfig.getTemplatePath(),
-                fileConfig.getTemplateEncoding());
+                    fileConfig.getTemplateEncoding());
             if (isNotBlank(fileMeta.getFileEncoding())) {
                 return fileMeta.getFileEncoding();
             }
@@ -440,24 +440,24 @@ public class RdfFileUtil {
     public static String getLineBreak(FileConfig fileConfig) {
         // 用户指定
         if ("\r\n".equals(fileConfig.getLineBreak()) || "\n".equals(fileConfig.getLineBreak())
-            || "\r".equals(fileConfig.getLineBreak())) {
+                || "\r".equals(fileConfig.getLineBreak())) {
             return fileConfig.getLineBreak();
         } else if (isNotBlank(fileConfig.getLineBreak())) {
             throw new RdfFileException(
-                "rdf-file#fileConfig.getLineBreak() = " + fileConfig.getLineBreak() + " 不是有效的换行符",
-                RdfErrorEnum.UNSUPPORT_LINEBREAK);
+                    "rdf-file#fileConfig.getLineBreak() = " + fileConfig.getLineBreak() + " 不是有效的换行符",
+                    RdfErrorEnum.UNSUPPORT_LINEBREAK);
         }
         // 模板配置
         if (isNotBlank(fileConfig.getTemplatePath())) {
             FileMeta fileMeta = TemplateLoader.load(fileConfig.getTemplatePath(),
-                fileConfig.getTemplateEncoding());
+                    fileConfig.getTemplateEncoding());
             if ("\r\n".equals(fileMeta.getLineBreak()) || "\n".equals(fileMeta.getLineBreak())
-                || "\r".equals(fileMeta.getLineBreak())) {
+                    || "\r".equals(fileMeta.getLineBreak())) {
                 return fileMeta.getLineBreak();
             } else if (isNotBlank(fileMeta.getLineBreak())) {
                 throw new RdfFileException(
-                    "rdf-file#fileMeta.getLineBreak() = " + fileMeta.getLineBreak() + " 不是有效的换行符",
-                    RdfErrorEnum.UNSUPPORT_LINEBREAK);
+                        "rdf-file#fileMeta.getLineBreak() = " + fileMeta.getLineBreak() + " 不是有效的换行符",
+                        RdfErrorEnum.UNSUPPORT_LINEBREAK);
             }
 
         }
@@ -468,10 +468,10 @@ public class RdfFileUtil {
     public static void copyDirectoryToDirectory(File srcDir, File destDir) {
         assertNotNull(srcDir, "rdf-file#Source must not be null", RdfErrorEnum.ILLEGAL_ARGUMENT);
         assertNotNull(destDir, "rdf-file#Destination must not be null",
-            RdfErrorEnum.ILLEGAL_ARGUMENT);
+                RdfErrorEnum.ILLEGAL_ARGUMENT);
         if (destDir.exists() && destDir.isDirectory() == false) {
             throw new RdfFileException("rdf-file#Destination '" + destDir + "' is not a directory",
-                RdfErrorEnum.ILLEGAL_ARGUMENT);
+                    RdfErrorEnum.ILLEGAL_ARGUMENT);
         }
 
         copyDirectory(srcDir, new File(destDir, srcDir.getName()), true);
@@ -485,21 +485,21 @@ public class RdfFileUtil {
                                      boolean preserveFileDate) {
         assertNotNull(srcDir, "rdf-file#Source must not be null", RdfErrorEnum.ILLEGAL_ARGUMENT);
         assertNotNull(destDir, "rdf-file#Destination must not be null",
-            RdfErrorEnum.ILLEGAL_ARGUMENT);
+                RdfErrorEnum.ILLEGAL_ARGUMENT);
         if (srcDir.exists() == false) {
             throw new RdfFileException("rdf-file#Source '" + srcDir + "' does not exist",
-                RdfErrorEnum.IO_ERROR);
+                    RdfErrorEnum.IO_ERROR);
         }
         if (srcDir.isDirectory() == false) {
             throw new RdfFileException(
-                "rdf-file#Source '" + srcDir + "' exists but is not a directory",
-                RdfErrorEnum.IO_ERROR);
+                    "rdf-file#Source '" + srcDir + "' exists but is not a directory",
+                    RdfErrorEnum.IO_ERROR);
         }
         try {
             if (srcDir.getCanonicalPath().equals(destDir.getCanonicalPath())) {
                 throw new RdfFileException("rdf-file#Source '" + srcDir + "' and destination '"
-                                           + destDir + "' are the same",
-                    RdfErrorEnum.IO_ERROR);
+                        + destDir + "' are the same",
+                        RdfErrorEnum.IO_ERROR);
             }
 
             // Cater for destination being directory within the source directory (see IO-141)
@@ -517,8 +517,8 @@ public class RdfFileUtil {
             doCopyDirectory(srcDir, destDir, filter, preserveFileDate, exclusionList);
         } catch (IOException e) {
             throw new RdfFileException(
-                "rdf-file#Source '" + srcDir + "' and destination '" + destDir + "'", e,
-                RdfErrorEnum.IO_ERROR);
+                    "rdf-file#Source '" + srcDir + "' and destination '" + destDir + "'", e,
+                    RdfErrorEnum.IO_ERROR);
         }
     }
 
@@ -528,25 +528,25 @@ public class RdfFileUtil {
         File[] srcFiles = filter == null ? srcDir.listFiles() : srcDir.listFiles(filter);
         // null if abstract pathname does not denote a directory, or if an I/O error occurs
         assertNotNull(srcFiles, "rdf-fiel#Failed to list contents of " + srcDir,
-            RdfErrorEnum.IO_ERROR);
+                RdfErrorEnum.IO_ERROR);
 
         if (destDir.exists()) {
             if (destDir.isDirectory() == false) {
                 throw new RdfFileException(
-                    "rdf-fiel#Destination '" + destDir + "' exists but is not a directory",
-                    RdfErrorEnum.IO_ERROR);
+                        "rdf-fiel#Destination '" + destDir + "' exists but is not a directory",
+                        RdfErrorEnum.IO_ERROR);
             }
         } else {
             if (!destDir.mkdirs() && !destDir.isDirectory()) {
                 throw new RdfFileException(
-                    "rdf-file#Destination '" + destDir + "' directory cannot be created",
-                    RdfErrorEnum.IO_ERROR);
+                        "rdf-file#Destination '" + destDir + "' directory cannot be created",
+                        RdfErrorEnum.IO_ERROR);
             }
         }
         if (destDir.canWrite() == false) {
             throw new RdfFileException(
-                "rdf-file#Destination '" + destDir + "' cannot be written to",
-                RdfErrorEnum.IO_ERROR);
+                    "rdf-file#Destination '" + destDir + "' cannot be written to",
+                    RdfErrorEnum.IO_ERROR);
         }
         for (File srcFile : srcFiles) {
             File dstFile = new File(destDir, srcFile.getName());
@@ -560,8 +560,8 @@ public class RdfFileUtil {
                 }
             } catch (IOException e) {
                 throw new RdfFileException("rdf-file# srcFile=" + srcFile.getAbsolutePath()
-                                           + ", dstFile=" + dstFile.getAbsolutePath(),
-                    e, RdfErrorEnum.IO_ERROR);
+                        + ", dstFile=" + dstFile.getAbsolutePath(),
+                        e, RdfErrorEnum.IO_ERROR);
             }
         }
 
@@ -576,8 +576,8 @@ public class RdfFileUtil {
     private static void doCopyFile(File srcFile, File destFile, boolean preserveFileDate) {
         if (destFile.exists() && destFile.isDirectory()) {
             throw new RdfFileException(
-                "rdf-file#doCopyFile Destination '" + destFile + "' exists but is a directory",
-                RdfErrorEnum.IO_ERROR);
+                    "rdf-file#doCopyFile Destination '" + destFile + "' exists but is a directory",
+                    RdfErrorEnum.IO_ERROR);
         }
 
         FileInputStream fis = null;
@@ -598,12 +598,12 @@ public class RdfFileUtil {
             }
         } catch (FileNotFoundException e) {
             throw new RdfFileException("rdf-file# Failed to copy full contents from '" + srcFile
-                                       + "' to '" + destFile + "' 文件不存在",
-                e, RdfErrorEnum.IO_ERROR);
+                    + "' to '" + destFile + "' 文件不存在",
+                    e, RdfErrorEnum.IO_ERROR);
         } catch (IOException e) {
             throw new RdfFileException("rdf-file# Failed to copy full contents from '" + srcFile
-                                       + "' to '" + destFile + "' io error",
-                e, RdfErrorEnum.IO_ERROR);
+                    + "' to '" + destFile + "' io error",
+                    e, RdfErrorEnum.IO_ERROR);
         } finally {
             if (null != output) {
                 try {
@@ -611,9 +611,9 @@ public class RdfFileUtil {
                 } catch (IOException e) {
                     if (RdfFileLogUtil.common.isWarn()) {
                         RdfFileLogUtil.common
-                            .warn("rdf-file# Failed to copy full contents from '" + srcFile
-                                  + "' to '" + destFile + "' output.close() error",
-                                e);
+                                .warn("rdf-file# Failed to copy full contents from '" + srcFile
+                                                + "' to '" + destFile + "' output.close() error",
+                                        e);
                     }
                 }
             }
@@ -623,9 +623,9 @@ public class RdfFileUtil {
                 } catch (IOException e) {
                     if (RdfFileLogUtil.common.isWarn()) {
                         RdfFileLogUtil.common
-                            .warn("rdf-file# Failed to copy full contents from '" + srcFile
-                                  + "' to '" + destFile + "' fos.close() error",
-                                e);
+                                .warn("rdf-file# Failed to copy full contents from '" + srcFile
+                                                + "' to '" + destFile + "' fos.close() error",
+                                        e);
                     }
                 }
             }
@@ -635,9 +635,9 @@ public class RdfFileUtil {
                 } catch (IOException e) {
                     if (RdfFileLogUtil.common.isWarn()) {
                         RdfFileLogUtil.common
-                            .warn("rdf-file# Failed to copy full contents from '" + srcFile
-                                  + "' to '" + destFile + "' input.close() error",
-                                e);
+                                .warn("rdf-file# Failed to copy full contents from '" + srcFile
+                                                + "' to '" + destFile + "' input.close() error",
+                                        e);
                     }
                 }
             }
@@ -647,9 +647,9 @@ public class RdfFileUtil {
                 } catch (IOException e) {
                     if (RdfFileLogUtil.common.isWarn()) {
                         RdfFileLogUtil.common
-                            .warn("rdf-file# Failed to copy full contents from '" + srcFile
-                                  + "' to '" + destFile + "' fis.close() error",
-                                e);
+                                .warn("rdf-file# Failed to copy full contents from '" + srcFile
+                                                + "' to '" + destFile + "' fis.close() error",
+                                        e);
                     }
                 }
             }
@@ -657,8 +657,8 @@ public class RdfFileUtil {
 
         if (srcFile.length() != destFile.length()) {
             throw new RdfFileException("rdf-file# Failed to copy full contents from '" + srcFile
-                                       + "' to '" + destFile + "'",
-                RdfErrorEnum.IO_ERROR);
+                    + "' to '" + destFile + "'",
+                    RdfErrorEnum.IO_ERROR);
         }
         if (preserveFileDate) {
             destFile.setLastModified(srcFile.lastModified());
@@ -672,40 +672,40 @@ public class RdfFileUtil {
     public static void copyFile(File srcFile, File destFile, boolean preserveFileDate) {
         assertNotNull(srcFile, "rdf-file#Source must not be null", RdfErrorEnum.ILLEGAL_ARGUMENT);
         assertNotNull(destFile, "rdf-file#Destination must not be null",
-            RdfErrorEnum.ILLEGAL_ARGUMENT);
+                RdfErrorEnum.ILLEGAL_ARGUMENT);
 
         if (srcFile.exists() == false) {
             throw new RdfFileException("rdf-file#Source '" + srcFile + "' does not exist",
-                RdfErrorEnum.NOT_EXSIT);
+                    RdfErrorEnum.NOT_EXSIT);
         }
         if (srcFile.isDirectory()) {
             throw new RdfFileException(
-                "rdf-file#Source '" + srcFile + "' exists but is a directory",
-                RdfErrorEnum.ILLEGAL_ARGUMENT);
+                    "rdf-file#Source '" + srcFile + "' exists but is a directory",
+                    RdfErrorEnum.ILLEGAL_ARGUMENT);
         }
         try {
             if (srcFile.getCanonicalPath().equals(destFile.getCanonicalPath())) {
                 throw new RdfFileException("rdf-fiel#Source '" + srcFile + "' and destination '"
-                                           + destFile + "' are the same",
-                    RdfErrorEnum.ILLEGAL_ARGUMENT);
+                        + destFile + "' are the same",
+                        RdfErrorEnum.ILLEGAL_ARGUMENT);
             }
         } catch (IOException e) {
             throw new RdfFileException(
-                "rdf-file#Source '" + srcFile + "' and destination '" + destFile + "'", e,
-                RdfErrorEnum.IO_ERROR);
+                    "rdf-file#Source '" + srcFile + "' and destination '" + destFile + "'", e,
+                    RdfErrorEnum.IO_ERROR);
         }
         File parentFile = destFile.getParentFile();
         if (parentFile != null) {
             if (!parentFile.mkdirs() && !parentFile.isDirectory()) {
                 throw new RdfFileException(
-                    "rdf-file#Destination '" + parentFile + "' directory cannot be created",
-                    RdfErrorEnum.IO_ERROR);
+                        "rdf-file#Destination '" + parentFile + "' directory cannot be created",
+                        RdfErrorEnum.IO_ERROR);
             }
         }
         if (destFile.exists() && destFile.canWrite() == false) {
             throw new RdfFileException(
-                "rdf-file#Destination '" + destFile + "' exists but is read-only",
-                RdfErrorEnum.IO_ERROR);
+                    "rdf-file#Destination '" + destFile + "' exists but is read-only",
+                    RdfErrorEnum.IO_ERROR);
         }
 
         doCopyFile(srcFile, destFile, preserveFileDate);
@@ -742,10 +742,10 @@ public class RdfFileUtil {
      */
     public static String getRowSplit(FileConfig fileConfig) {
         return ProtocolLoader.loadProtocol(TemplateLoader.load(fileConfig).getProtocol())
-            .getRowSplit().getSplit(fileConfig);
+                .getRowSplit().getSplit(fileConfig);
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static boolean compare(Object left, Object right) {
         if (null == left) {
             if (null == right) {
@@ -784,6 +784,7 @@ public class RdfFileUtil {
     /**
      * 格式化字节
      * si true:based on 1000, false:based on 1024
+     *
      * @param bytes
      * @param si
      * @return
@@ -792,7 +793,7 @@ public class RdfFileUtil {
         int unit = si ? 1000 : 1024;
         if (bytes < unit) return bytes + " B";
         int exp = (int) (Math.log(bytes) / Math.log(unit));
-        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
@@ -824,6 +825,7 @@ public class RdfFileUtil {
 
     /**
      * 从输入流读取指定长度数据到byte[]
+     *
      * @param is
      * @return
      * @throws IOException
@@ -862,10 +864,15 @@ public class RdfFileUtil {
     }
 
     public static <T> T getParam(FileConfig fileConfig, String key, T defaultValue) {
+        FileMeta fileMeta = TemplateLoader.load(fileConfig);
+        String val = fileMeta.getParams().get(key);
+        if (isNotBlank(val)) {
+            return (T) val.trim();
+        }
         return defaultValue;
     }
 
-    public static boolean  isRelationCodecMode(FileConfig fileConfig) {
+    public static boolean isRelationCodecMode(FileConfig fileConfig) {
         return "relation".equals(getRowCodecMode(fileConfig));
     }
 

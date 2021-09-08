@@ -209,6 +209,9 @@ public class TemplateLoader {
                 fileMeta.setRowCodecMode(templateConfig.getRowCodecMode());
             }
 
+            // 参数
+            fileMeta.setParams(templateConfig.getParams());
+
             CACHE.put(templatePath, fileMeta);
 
             return fileMeta;
