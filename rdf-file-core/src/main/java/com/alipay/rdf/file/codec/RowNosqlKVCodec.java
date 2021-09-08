@@ -18,7 +18,7 @@ import java.util.List;
  * v对应的数据内容
  *
  * 特性：
- * 写入是字段值为null，忽略，不序列化内容，
+ * 写入是字段值为null，不存在默认值忽略，不序列化内容，
  * 写入字段的顺序按照字段在数据定义模板中顺序
  * 数据定义模板字段可以任意顺序扩充
  *
@@ -43,8 +43,8 @@ public class RowNosqlKVCodec extends AbstractRowCodec {
             try {
                 ctx.codecType = RdfFileFunctionSpi.CodecType.SERIALIZE;
                 ctx.field = bmw.getProperty(columnMeta.getName());
-                // 对非空字段进行序列化
-                if (null != ctx.field) {
+                // 对非空字段进行序列化 或者 模板配置存在默认值
+                if (null != ctx.field || RdfFileUtil.isNotBlank(columnMeta.getDefaultValue())) {
                     if (line.length() > 0) {
                         line.append(lineSplit);
                     }

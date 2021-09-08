@@ -193,6 +193,107 @@ public class RowNosqlKVCodecWriterTest {
         reader.close();
     }
 
+    @Test
+    public void test3() throws Exception {
+        String filePath = tf.getRoot().getAbsolutePath();
+        FileConfig config = new FileConfig(new File(filePath, "test.txt").getAbsolutePath(),
+                "/codec/kv/template/template5.json", new StorageConfig("nas"));
+
+        FileWriter fileWriter = FileFactory.createWriter(config);
+
+        Map<String, Object> head = new HashMap<String, Object>();
+        head.put("totalCount", 2);
+        head.put("totalAmount", new BigDecimal("23.22"));
+        fileWriter.writeHead(head);
+
+        Map<String, Object> body = new HashMap<String, Object>();
+
+        Date testDate = DateUtil.parse("2017-01-03 12:22:33", "yyyy-MM-dd HH:mm:ss");
+
+        body.put("seq", "");
+        body.put("instSeq", "303");
+        body.put("gmtApply", testDate);
+        body.put("date", testDate);
+        body.put("dateTime", testDate);
+        body.put("applyNumber", 12);
+        body.put("amount", new BigDecimal("1.22"));
+        body.put("age", new Integer(33));
+        body.put("longN", new Long(33));
+        body.put("bol", null);
+        body.put("memo", "   ");
+        fileWriter.writeRow(body);
+
+        testDate = DateUtil.parse("2016-02-03 12:22:33", "yyyy-MM-dd HH:mm:ss");
+
+        body.put("seq", "seq234567");
+        body.put("instSeq", "505");
+        body.put("gmtApply", testDate);
+        body.put("date", testDate);
+        body.put("dateTime", testDate);
+        body.put("applyNumber", 12);
+        body.put("amount", new BigDecimal("1.09"));
+        body.put("age", 66);
+        body.put("longN", 125);
+        body.put("bol", false);
+        body.put("memo", "memo2");
+        fileWriter.writeRow(body);
+
+        body = new HashMap<String, Object>();
+        body.put("seq", "seq234568");
+        body.put("instSeq", "505");
+        body.put("gmtApply", testDate);
+        //body.put("date", testDate);
+        body.put("dateTime", testDate);
+        //body.put("applyNumber", 12);
+        body.put("amount", new BigDecimal("1.09"));
+        body.put("age", 66);
+        body.put("longN", 125);
+        //body.put("bol", false);
+        //body.put("memo", "memo2");
+        fileWriter.writeRow(body);
+
+        body = new HashMap<String, Object>();
+        //body.put("seq", "seq234568");
+        body.put("instSeq", "999");
+        body.put("gmtApply", testDate);
+        //body.put("date", testDate);
+        body.put("dateTime", testDate);
+        //body.put("applyNumber", 12);
+        body.put("amount", new BigDecimal("1.09"));
+        body.put("age", 66);
+        body.put("longN", 125);
+        //body.put("bol", false);
+        //body.put("memo", "memo2");
+        fileWriter.writeRow(body);
+
+        fileWriter.writeTail(new HashMap<String, Object>());
+
+        fileWriter.close();
+
+        //校验文件
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(new FileInputStream(new File(config.getFilePath())), "UTF-8"));
+        Assert.assertEquals("|totalCount:2|totalAmount:23.22", reader.readLine());
+        Assert.assertEquals(
+                "|seq:|instSeq:303|gmtApply:2017-01-03 12:22:33|date:20170103|dateTime:20170103 12:22:33|applyNumber:12|amount:1.22|age:33|longN:33|memo:|",
+                reader.readLine());
+        Assert.assertEquals(
+                "|seq:seq234567|instSeq:505|gmtApply:2016-02-03 12:22:33|date:20160203|dateTime:20160203 12:22:33|applyNumber:12|amount:1.09|age:66|longN:125|bol:false|memo:memo2|",
+                reader.readLine());
+
+        Assert.assertEquals(
+                "|seq:seq234568|instSeq:505|gmtApply:2016-02-03 12:22:33|dateTime:20160203 12:22:33|amount:1.09|age:66|longN:125|",
+                reader.readLine());
+        Assert.assertEquals(
+                "|instSeq:999|gmtApply:2016-02-03 12:22:33|dateTime:20160203 12:22:33|amount:1.09|age:66|longN:125|",
+                reader.readLine());
+
+        Assert.assertEquals("|fileEnd:OFDCFEND|",reader.readLine());
+
+        Assert.assertNull(reader.readLine());
+
+        reader.close();
+    }
 
     @After
     public void after() {

@@ -312,6 +312,7 @@ public class RowNosqlKVCodecReaderTest {
         Assert.assertNull(fileReader.readRow(HashMap.class));
     }
 
+
     @After
     public void after() {
         tf.delete();
