@@ -32,7 +32,6 @@ public class SummaryKVCodecTest {
     @Test
     public void test1() {
         String filePath = tf.getRoot().getAbsolutePath();
-        filePath = "/var/folders/67/_2h9s51d17b9vddthhjbh2p80000gp/T/4430911874749143438";
         FileConfig config = new FileConfig(new File(filePath, "test.txt").getAbsolutePath(), "/summary/template3.json", new StorageConfig("nas"));
         config.setSummaryEnable(true);
         FileWriter fileWriter = FileFactory.createWriter(config);
@@ -97,9 +96,6 @@ public class SummaryKVCodecTest {
         ValidateResult validate = fileValidator.validate();
         System.out.println(validate.getErrorMsg());
         Assert.assertTrue(validate.isSuccess());
-
-
-
     }
 
     @After
