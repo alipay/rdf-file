@@ -54,11 +54,4 @@ public abstract class AbstractColumnInfoCodec {
                         RdfErrorEnum.UNSUPPORTED_OPERATION);
         }
     }
-
-    protected static void checkRelationRowCodecMode(FileConfig fileConfig) {
-        if (!RdfFileUtil.isRelationCodecMode(fileConfig)) {
-            throw new RdfFileException("rdf-file#ColumnInfoCodec.checkRelationRowCodecMode protocol=" + TemplateLoader.load(fileConfig).getProtocol() +" unsupported rowCodecMode="
-                    + RdfFileUtil.getRowCodecMode(fileConfig), RdfErrorEnum.UNSUPPORTED_OPERATION);
-        }
-    }
 }

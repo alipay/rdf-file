@@ -30,18 +30,6 @@ public class RowNosqlKVCodecReaderTest {
         tf.create();
     }
 
-    // 文件有body column描述 失败
-    @Test(expected = RdfFileException.class)
-    public void test1() throws Exception {
-        String filePath = File.class.getResource("/codec/kv/data/data1.txt").getPath();
-
-        FileConfig config = new FileConfig(filePath, "/codec/kv/template/template1.json", new StorageConfig("nas"));
-
-        FileReader fileReader = FileFactory.createReader(config);
-
-        fileReader.readHead(HashMap.class);
-    }
-
     // 模板有多余字段
     @Test
     public void test2() throws Exception {
