@@ -21,7 +21,7 @@ import java.util.List;
  * @Author: hongwei.quhw 2021/6/27 3:48 下午
  */
 public class RowNosqlIndexCodec extends AbstractRowCodec {
-    private static final String INDEX_PLACE_KEY = "rowCodecIndex";
+    private static final String INDEX_PLACE_KEY = "rowCodecIndexPlace";
     // (start|end) 代表在 (第一个字段|最后一个字段)
     private static final String INDEX_START = "start";
     private static final String INDEX_END = "end";
@@ -44,8 +44,8 @@ public class RowNosqlIndexCodec extends AbstractRowCodec {
             try {
                 ctx.codecType = RdfFileFunctionSpi.CodecType.SERIALIZE;
                 ctx.field = bmw.getProperty(columnMeta.getName());
-                // 对非空字段进行序列化
-                if (null != ctx.field) {
+                // 对非空字段进行序列化 或者 模板配置存在默认值
+                if (null != ctx.field || RdfFileUtil.isNotBlank(columnMeta.getDefaultValue())) {
                     ctx.columnMeta = columnMeta;
                     ctx.fileConfig = rccCtx.fileConfig;
                     String value = (String) rccCtx.rd.getOutput().execute(ctx);
@@ -92,11 +92,11 @@ public class RowNosqlIndexCodec extends AbstractRowCodec {
         String split = RdfFileUtil.getRowSplit(rccCtx.fileConfig);
         String colMeta;
         if (RdfFileUtil.isBlank(indexPlace) || INDEX_END.equalsIgnoreCase(indexPlace)) {
-            int endIdx = line.indexOf(split);
+            int endIdx = line.lastIndexOf(split);
             colMeta = line.substring(endIdx + split.length());
             line = line.substring(0, endIdx);
         } else if (INDEX_START.equalsIgnoreCase(indexPlace)) {
-            int startIdx = line.lastIndexOf(split);
+            int startIdx = line.indexOf(split);
             colMeta = line.substring(0, startIdx);
             line = line.substring(startIdx + split.length());
         } else {
@@ -127,12 +127,12 @@ public class RowNosqlIndexCodec extends AbstractRowCodec {
         String[] columnValues = rccCtx.columnValues;
 
         // 反序列化索引字段
-        String idxArray[] = (String[]) rccCtx.ext;
+        Integer idxArray[] = (Integer[]) rccCtx.ext;
 
         List<FileColumnMeta> columnMetas = new ArrayList<FileColumnMeta>(idxArray.length);
-        for (String index : idxArray) {
+        for (Integer index : idxArray) {
             for (FileColumnMeta columnMeta : rccCtx.columnMetas) {
-                if (index.equals(String.valueOf(columnMeta.getColIndex()))) {
+                if (index.equals(columnMeta.getColIndex())) {
                     columnMetas.add(columnMeta);
                 }
             }
