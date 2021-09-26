@@ -1,0 +1,14 @@
+{
+ 	"head":[
+	     "totalCount|总笔数|Required|Integer"
+ 	],
+ 	"body":[
+	     "seq|seq"
+    ],
+	"tail":[
+		"totalCount|总笔数|Required|Integer"
+	],
+    "protocol":"DE",
+    "lineBreak":"\r\n"
+}
+    

@@ -53,6 +53,8 @@ public class FileMeta {
     private Map<FileDataTypeEnum, Boolean> endWithSplit          = new HashMap<FileDataTypeEnum, Boolean>();
     /**body是否是多模板配置*/
     private boolean                        multiBody             = false;
+    /**文件尾是否需要换行*/
+    private boolean                        isAppendLinebreakAtLast = true;
 
     public boolean isStartWithSplit(FileDataTypeEnum rowType) {
         Boolean startSplit = startWithSplit.get(rowType);
@@ -393,5 +395,13 @@ public class FileMeta {
         sb.append(",templatePath=" + templatePath);
         sb.append("]");
         return sb.toString();
+    }
+
+    public boolean isAppendLinebreakAtLast() {
+        return isAppendLinebreakAtLast;
+    }
+
+    public void setAppendLinebreakAtLast(boolean appendLinebreakAtLast) {
+        isAppendLinebreakAtLast = appendLinebreakAtLast;
     }
 }

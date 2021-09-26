@@ -24,6 +24,8 @@ public class RawFileWriter implements RdfFileWriterSpi {
     private RdfBufferedWriter                                 writer = null;
     private FileConfig                                        fileConfig;
     private Map<ProcessorTypeEnum, List<RdfFileProcessorSpi>> processors;
+    // 该writer是否已经写过数据
+    private boolean                                           hasWritten = false;
 
     @Override
     public void init(FileConfig fileConfig) {
@@ -52,7 +54,12 @@ public class RawFileWriter implements RdfFileWriterSpi {
     @Override
     public void writeLine(String line) {
         ensureOpen();
-        writer.write(line + RdfFileUtil.getLineBreak(fileConfig));
+        String lineWithLB = RdfFileUtil.processLineBreak(line
+                , RdfFileUtil.getLineBreak(fileConfig)
+                , fileConfig.isAppendLinebreakAtLast()
+                , !hasWritten);
+        writer.write(lineWithLB);
+        hasWritten = true;
     }
 
     @Override

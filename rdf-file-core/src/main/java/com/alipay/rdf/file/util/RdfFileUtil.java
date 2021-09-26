@@ -821,4 +821,22 @@ public class RdfFileUtil {
 
         return params;
     }
+
+    /**
+     * 为originalLine处理LineBreak的逻辑
+     * @param originalLine  写入的数据的原始版本
+     * @param linebreak  换行符
+     * @param isAppendLBAtLast  是否要在文件末尾写入LineBreak
+     * @param isFirstLine  当前要写入的行是否是该文件的第一行
+     * @return
+     */
+    public static String processLineBreak(String originalLine, String linebreak, boolean isAppendLBAtLast, boolean isFirstLine){
+        if(isAppendLBAtLast){
+            // 如果需要在文件末尾添加LB则始终将LB追加在要写入的行后
+            return originalLine + linebreak;
+        }else {
+            // 否则将LB追加在要写入的行前，除了文件的第一行
+            return isFirstLine ? originalLine : linebreak + originalLine;
+        }
+    }
 }

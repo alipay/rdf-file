@@ -198,6 +198,7 @@ public class TemplateLoader {
             fileMeta.setColumnSplit(templateConfig.getColumnSplit());
             fileMeta.setFileEncoding(templateConfig.getFileEncoding());
             fileMeta.setLineBreak(templateConfig.getLineBreak());
+            fileMeta.setAppendLinebreakAtLast(Boolean.valueOf(templateConfig.getIsAppendLinebreakAtLast()));
 
             CACHE.put(templatePath, fileMeta);
 
