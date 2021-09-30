@@ -118,7 +118,7 @@ public class MultiTemplateWriteTest {
 
     /**
      * de不支持多模板
-     * 
+     *
      * @throws Exception
      */
     @Test
@@ -138,6 +138,7 @@ public class MultiTemplateWriteTest {
             fileWriter.writeHead(head);
             Assert.fail();
         } catch (RdfFileException e) {
+            e.printStackTrace();
             Assert.assertEquals(RdfErrorEnum.FUNCTION_ERROR, e.getErrorEnum());
         }
     }

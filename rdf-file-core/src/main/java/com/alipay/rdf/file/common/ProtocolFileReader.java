@@ -34,7 +34,7 @@ import com.alipay.rdf.file.util.RdfFileUtil;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * @author hongwei.quhw
  * @version $Id: CommonFileReader.java, v 0.1 2017年4月7日 下午2:04:21 hongwei.quhw Exp $
  */
@@ -66,7 +66,7 @@ public class ProtocolFileReader implements RdfFileReaderSpi {
             ProcessorTypeEnum.BEFORE_READ_ROW, ProcessorTypeEnum.AFTER_READ_ROW,
             ProcessorTypeEnum.AFTER_READ_TAIL, ProcessorTypeEnum.AFTER_CLOSE_READER,
             ProcessorTypeEnum.AFTER_READ_BYTES, ProcessorTypeEnum.AFTER_DESERIALIZE_ROW,
-            ProcessorTypeEnum.BEFORE_DESERIALIZE_ROW);
+            ProcessorTypeEnum.BEFORE_DESERIALIZE_ROW, ProcessorTypeEnum.BEFORE_CREATE_READER);
 
         if (RdfFileLogUtil.common.isInfo()) {
             RdfFileLogUtil.common.info("rdf-file#ProtocolFileReader(fileConfig=" + fileConfig

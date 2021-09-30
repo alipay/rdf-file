@@ -35,7 +35,7 @@ public class TailCodec implements FileCodec {
 
         if (columnMetas.size() == 0) {
             throw new RdfFileException("rdf-file#TailCodec.serialize 数据模板templatePath="
-                                       + fileConfig.getTemplatePath() + " 中没有配置文件体，不支持此操作",
+                                       + fileConfig.getTemplatePath() + " 中没有配置文件尾，不支持此操作",
                 RdfErrorEnum.TAIL_NOT_DEFINED);
         }
 
@@ -44,7 +44,7 @@ public class TailCodec implements FileCodec {
 
         if (rds.size() == 0) {
             throw new RdfFileException(
-                "rdf-file#TailCodec.serialize 协议模板protocol=" + pd.getName() + " 中没有配置文件体，不支持此操作",
+                "rdf-file#TailCodec.serialize 协议模板protocol=" + pd.getName() + " 中没有配置文件尾，不支持此操作",
                 RdfErrorEnum.TAIL_NOT_DEFINED);
         }
 

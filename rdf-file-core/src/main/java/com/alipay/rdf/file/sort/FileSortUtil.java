@@ -10,9 +10,9 @@ import com.alipay.rdf.file.util.RdfFileUtil;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * 排序工具类
- * 
+ *
  * @author hongwei.quhw
  * @version $Id: FileSortUtil.java, v 0.1 2017年8月22日 下午9:27:05 hongwei.quhw Exp $
  */
@@ -25,8 +25,7 @@ public class FileSortUtil {
 
     /**
      * 构建头文件目录
-     * 
-     * @param fileConfig
+     *
      * @param sortConfig
      * @return
      */
@@ -41,8 +40,7 @@ public class FileSortUtil {
 
     /**
      * 构建头文件尾目录
-     * 
-     * @param fileConfig
+     *
      * @param sortConfig
      * @return
      */
@@ -57,8 +55,7 @@ public class FileSortUtil {
 
     /**
      * 构建分片文件路径
-     * 
-     * @param fileConfig
+     *
      * @param slice
      * @param sortConfig
      * @return
@@ -80,8 +77,7 @@ public class FileSortUtil {
 
     /**
      * 构建分片文件路径
-     * 
-     * @param fileConfig
+     *
      * @param slice
      * @param sortConfig
      * @return

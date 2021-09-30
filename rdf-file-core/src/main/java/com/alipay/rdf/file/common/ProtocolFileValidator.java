@@ -19,7 +19,7 @@ import com.alipay.rdf.file.util.RdfFileUtil;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * 协议文件通用校验
  * <li>根据文件模板校验文件格式，包括非空字段 </li>
  * <li>根据文件模板配置的RowValidator校验每行数据</li>
@@ -88,8 +88,8 @@ public class ProtocolFileValidator implements RdfFileValidatorSpi {
 
             if (null != totalCount
                 && !RdfFileUtil.compare(totalCount, summary.getTotalCountWithoutNull())) {
-                result.fail(String.format("文件笔数错误, 文件头中的总笔数为%d, 实际检测到的行数是%d", totalCount,
-                    summary.getTotalCount()));
+                result.fail(String.format("文件笔数错误, 文件头中的总笔数为%s, 实际检测到的行数是%s", totalCount.toString(),
+                    summary.getTotalCount().toString()));
             }
 
             //校验汇总字段

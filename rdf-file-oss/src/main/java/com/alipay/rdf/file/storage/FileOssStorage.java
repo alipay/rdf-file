@@ -46,7 +46,7 @@ import com.aliyun.oss.model.UploadPartCopyResult;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * oss 存储操作
  * @author hongwei.quhw
  * @version $Id: FileOssStorage.java, v 0.1 2017年4月7日 下午3:56:04 hongwei.quhw Exp $
@@ -80,7 +80,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
         }
     }
 
-    /** 
+    /**
      * @see com.alipay.rdf.file.storage.FileInnterStorage#getInputStream(java.lang.String)
      */
     @Override
@@ -100,12 +100,17 @@ public class FileOssStorage implements RdfFileStorageSpi {
         }
     }
 
-    /** 
+    /**
      * @see com.alipay.rdf.file.storage.FileInnterStorage#getInputStream(java.lang.String, long, long)
      */
     @Override
     public InputStream getInputStream(String filePath, long start, long length) {
         if (length <= 0) {
+            if (ossConfig.isEmptyLeZero()) {
+                // 跟nas（本地磁盘）读取保持一致行为， 需要用户通过参数强制指定开启
+                return new OssInputStream(null);
+            }
+
             throw new RdfFileException("rdf-file#FileOssStorage.getInputStream(filePath=" + filePath
                                        + ", start=" + start + ", length=" + length + "获取数据长度必须大于零",
                 RdfErrorEnum.ILLEGAL_ARGUMENT);
@@ -131,7 +136,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
         }
     }
 
-    /** 
+    /**
      * @see com.alipay.rdf.file.storage.FileInnterStorage#getTailInputStream(com.alipay.rdf.file.model.FileConfig)
      */
     @Override
@@ -146,7 +151,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
             fileSlice.getLength());
     }
 
-    /** 
+    /**
      * @see com.alipay.rdf.file.interfaces.FileStorage#createNewFile(java.lang.String)
      */
     @Override
@@ -177,7 +182,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
         }
     }
 
-    /** 
+    /**
      * @see com.alipay.rdf.file.interfaces.FileStorage#getFileInfo(java.lang.String)
      */
     @Override
@@ -207,7 +212,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
         return fileInfo;
     }
 
-    /** 
+    /**
      * @see com.alipay.rdf.file.interfaces.FileStorage#listFiles(java.lang.String, java.lang.String[])
      */
     @Override
@@ -215,7 +220,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
         return listFilesWithRegex(folderName, regexs, false);
     }
 
-    /** 
+    /**
      * @see com.alipay.rdf.file.interfaces.FileStorage#listFiles(java.lang.String, com.alipay.rdf.file.interfaces.FileStorage.FilePathFilter[])
      */
     @Override
@@ -225,8 +230,8 @@ public class FileOssStorage implements RdfFileStorageSpi {
 
     /**
      * helper method for adding FilePathFilter check when listing files
-     * 
-     * @param filePaths
+     *
+     * @param folderName
      * @param fileFilters
      * @return
      */
@@ -248,7 +253,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
         return result;
     }
 
-    /** 
+    /**
      * @see com.alipay.rdf.file.interfaces.FileStorage#listAllFiles(java.lang.String, java.lang.String[])
      */
     @Override
@@ -256,7 +261,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
         return listFilesWithRegex(folderName, regexs, true);
     }
 
-    /** 
+    /**
      * @see com.alipay.rdf.file.interfaces.FileStorage#listAllFiles(java.lang.String, com.alipay.rdf.file.interfaces.FileStorage.FilePathFilter[])
      */
     @Override
@@ -264,7 +269,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
         return listFilesWithFilter(folderName, true, fileFilters);
     }
 
-    /** 
+    /**
      * @see com.alipay.rdf.file.interfaces.FileStorage#download(java.lang.String, java.lang.String)
      */
     @Override
@@ -297,7 +302,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
         }
     }
 
-    /** 
+    /**
      * @see com.alipay.rdf.file.interfaces.FileStorage#upload(java.lang.String, java.lang.String, boolean)
      */
     @Override
@@ -333,7 +338,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
         }
     }
 
-    /** 
+    /**
      * @see com.alipay.rdf.file.interfaces.FileStorage#rename(java.lang.String, java.lang.String)
      */
     @Override
@@ -350,7 +355,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
         delete(srcFile);
     }
 
-    /** 
+    /**
      * @see com.alipay.rdf.file.interfaces.FileStorage#copy(java.lang.String, java.lang.String)
      */
     @Override
@@ -358,7 +363,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
         copy(ossConfig.getBucketName(), srcFile, ossConfig.getBucketName(), toFile);
     }
 
-    /** 
+    /**
      * @see com.alipay.rdf.file.interfaces.FileStorage#delete(java.lang.String)
      */
     @Override
@@ -380,7 +385,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
 
     /**
      * 拷贝到另一个bucket
-     * 
+     *
      * @param srcFile
      * @param toBucketName
      * @param toFile
@@ -491,7 +496,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
 
     /**
      * 上传一个文件至指定路径
-     * 
+     *
      * @param file
      * @param ossFilePath
      * @param override
@@ -543,7 +548,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
 
     /**
      * 上传一个大文件至oss指定路径
-     * 
+     *
      * @param srcPath
      * @param ossFilePath
      * @param override
@@ -583,7 +588,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
 
     /**
      * download one file
-     * 
+     *
      * @param client
      * @param bucketName
      * @param filename
@@ -606,7 +611,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
 
     /**
      * helper method for adding regex check when listing files
-     * 
+     *
      * @param folderName
      * @param regexs
      * @param all
@@ -640,11 +645,10 @@ public class FileOssStorage implements RdfFileStorageSpi {
 
     /**
      * handler method for listing files
-     * 
+     *
      * @param folderName
      * @param marker
      * @param all
-     * @param fileFilters
      * @return
      */
     private List<String> listFilesHandler(String folderName, String marker, boolean all) {
@@ -689,7 +693,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
 
     /**
      * 判断oss某路径下是否存在文件
-     * 
+     *
      * @param ossFilePath
      * @return
      */
@@ -708,7 +712,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
 
     /**
      * oss 存储路径不能以/开始
-     * 
+     *
      * @param filePath
      * @return
      */

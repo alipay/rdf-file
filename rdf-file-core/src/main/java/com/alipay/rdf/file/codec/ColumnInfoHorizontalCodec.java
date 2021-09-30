@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- *
+ * <p>
  * 字段信息水平编码解码
  *
  * @author hongwei.quhw
@@ -53,6 +53,11 @@ public class ColumnInfoHorizontalCodec extends AbstractColumnInfoCodec {
         String line = reader.readLine();
         RdfFileUtil.assertNotBlank(line, "文件=" + config.getFilePath() + ", " + layoutType.name() + " 内容缺失");
 
+        // 非关系的编码模式不校验
+        if (!RdfFileUtil.isRelationCodecMode(config)) {
+            return null;
+        }
+
         FileMeta fileMeta = TemplateLoader.load(config);
         String[] columns = ProtocolLoader.loadProtocol(fileMeta.getProtocol()).getRowSplit().split(
                 new SplitContext(line, config, FileDataTypeEnum.BODY));
@@ -62,18 +67,21 @@ public class ColumnInfoHorizontalCodec extends AbstractColumnInfoCodec {
         splitLength = fileMeta.isEndWithSplit(layoutType) ? splitLength + 1 : splitLength;
 
         if (splitLength != columns.length) {
-            throw new RdfFileException("文件=" + config.getFilePath() + "， " + layoutType.name() + " line=" + line,
-                    RdfErrorEnum.DESERIALIZE_ERROR);
+            if (RdfFileUtil.isRelationReadRowCompatibility(config)) {
+                splitLength = Math.min(splitLength, columns.length);
+            } else {
+                throw new RdfFileException("rdf-file#ColumnInfoHorizontalCodec.deserialize 文件=" + config.getFilePath() + "， " + layoutType.name() + " line=" + line, RdfErrorEnum.DESERIALIZE_ERROR);
+            }
         }
 
         int statIndex = fileMeta.isStartWithSplit(layoutType) ? 1 : 0;
-        int endIndex = fileMeta.isEndWithSplit(layoutType) ? columns.length - 1 : columns.length;
+        int endIndex = fileMeta.isEndWithSplit(layoutType) ? splitLength - 1 : splitLength;
 
         for (int i = statIndex; i < endIndex; i++) {
             FileColumnMeta colMeta = colMetas.get(i - statIndex);
             if (!getValue(colMeta, method).equals(columns[i])) {
                 throw new RdfFileException(
-                        "文件" + layoutType.name() + "字段校验：文件模板定义的第" + i + "个column为[" + colMetas.get(i).getDesc() + "], 实际文件中为["
+                        "rdf-file#ColumnInfoHorizontalCodec.deserialize 文件" + layoutType.name() + "字段校验：文件模板定义的第" + i + "个column为[" + colMetas.get(i).getDesc() + "], 实际文件中为["
                                 + columns[i] + "]", RdfErrorEnum.DESERIALIZE_ERROR);
             }
         }

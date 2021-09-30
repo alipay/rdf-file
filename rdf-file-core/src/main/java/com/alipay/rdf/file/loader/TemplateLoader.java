@@ -25,9 +25,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * 模板加载, 解析
- * 
+ *
  * @author hongwei.quhw
  * @version $Id: TemplateLoader.java, v 0.1 2016-12-20 下午5:21:48 hongwei.quhw Exp $
  */
@@ -40,7 +40,7 @@ public class TemplateLoader {
 
     /**
      * 计算行总长度
-     * 
+     *
      * @param fileConfig
      * @return
      */
@@ -61,7 +61,7 @@ public class TemplateLoader {
 
     /**
      * 加载模板
-     * 
+     *
      * @param fileConfig
      * @return
      */
@@ -71,7 +71,7 @@ public class TemplateLoader {
 
     /**
      * 加载模板
-     * 
+     *
      * @param templatePath
      * @param templateEncoding
      * @param templateEncoding
@@ -165,6 +165,12 @@ public class TemplateLoader {
                 fileMeta.addTailColumn(parseFileColumn(templatePath, tail, colIndex++, fileMeta, FileDataTypeEnum.TAIL));
             }
 
+            colIndex = 0;
+            // protocolDataType
+            for (String dataType : templateConfig.getProtocolDataType()) {
+                fileMeta.addProtocolDataType(parseFileColumn(templatePath, dataType, colIndex++, fileMeta, FileDataTypeEnum.UNKOWN));
+            }
+
             //解析汇总字段
             for (String summaryColumnPair : templateConfig.getSummaryColumnPairs()) {
                 fileMeta.addSummaryColumnPair(
@@ -199,6 +205,13 @@ public class TemplateLoader {
             fileMeta.setFileEncoding(templateConfig.getFileEncoding());
             fileMeta.setLineBreak(templateConfig.getLineBreak());
             fileMeta.setAppendLinebreakAtLast(Boolean.valueOf(templateConfig.getIsAppendLinebreakAtLast()));
+            fileMeta.setRelationReadRowCompatibility(templateConfig.getRelationReadRowCompatibility());
+            if (RdfFileUtil.isNotBlank(templateConfig.getRowCodecMode())) {
+                fileMeta.setRowCodecMode(templateConfig.getRowCodecMode());
+            }
+
+            // 参数
+            fileMeta.setParams(templateConfig.getParams());
 
             CACHE.put(templatePath, fileMeta);
 
