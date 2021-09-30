@@ -22,6 +22,8 @@ public class TemplateConfig {
     private String                columnSplit          = "|";
     /** 换行符*/
     private String                lineBreak            = "\r\n";
+    /** 文件尾是否需要换行 */
+    private String                isAppendLinebreakAtLast      = "true";
     /** 文件以分隔符开始   head|body|tail*/
     private String                startWithSplit;
     /** 文件以分隔符结束   head|body|tail*/
@@ -153,6 +155,14 @@ public class TemplateConfig {
         this.statisticColumnPairs = statisticColumnPairs;
     }
 
+    public String getIsAppendLinebreakAtLast() {
+        return isAppendLinebreakAtLast;
+    }
+
+    public void setIsAppendLinebreakAtLast(String isAppendLinebreakAtLast) {
+        this.isAppendLinebreakAtLast = isAppendLinebreakAtLast;
+    }
+  
     public List<String> getProtocolDataType() {
         return protocolDataType;
     }

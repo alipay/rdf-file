@@ -38,6 +38,8 @@ public class ProtocolFileWriter implements RdfFileWriterSpi {
     private Map<ProcessorTypeEnum, List<RdfFileProcessorSpi>> processors;
     private RdfBufferedWriter                                 writer = null;
     private Summary                                           summary;
+    // 该writer是否已经写过数据
+    private boolean                                           hasWritten = false;
 
     @Override
     public void init(FileConfig fileConfig) {
@@ -129,7 +131,11 @@ public class ProtocolFileWriter implements RdfFileWriterSpi {
         RdfFileUtil.assertNotNull(line, "ProtocolFileWriter.writeLine(line == null)",
             RdfErrorEnum.ILLEGAL_ARGUMENT);
         ensureOpen();
-        writer.write(line + RdfFileUtil.getLineBreak(fileConfig));
+        String lineWithLB = RdfFileUtil.processLineBreak(line, RdfFileUtil.getLineBreak(fileConfig)
+                , fileConfig.isAppendLinebreakAtLast() && fileMeta.isAppendLinebreakAtLast()
+                , !hasWritten);
+        writer.write(lineWithLB);
+        hasWritten = true;
     }
 
     @Override

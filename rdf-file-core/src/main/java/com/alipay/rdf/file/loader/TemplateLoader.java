@@ -204,6 +204,7 @@ public class TemplateLoader {
             fileMeta.setColumnSplit(templateConfig.getColumnSplit());
             fileMeta.setFileEncoding(templateConfig.getFileEncoding());
             fileMeta.setLineBreak(templateConfig.getLineBreak());
+            fileMeta.setAppendLinebreakAtLast(Boolean.valueOf(templateConfig.getIsAppendLinebreakAtLast()));
             fileMeta.setRelationReadRowCompatibility(templateConfig.getRelationReadRowCompatibility());
             if (RdfFileUtil.isNotBlank(templateConfig.getRowCodecMode())) {
                 fileMeta.setRowCodecMode(templateConfig.getRowCodecMode());

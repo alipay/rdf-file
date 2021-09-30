@@ -1,0 +1,15 @@
+{
+ 	"head":[
+	     "totalCount|totalCount|Required|Integer"
+ 	],
+ 	"body":[
+	     "seq|seq"
+    ],
+	"tail":[
+		 "totalCount|totalCount|Required|Integer"
+	],
+    "protocol":"DE",
+    "lineBreak":"\r\n",
+	"isAppendLinebreakAtLast":"false"
+}
+    

@@ -62,6 +62,8 @@ public class FileConfig implements Cloneable {
     private Boolean             relationReadRowCompatibility;
     /** 写文件的时候是否在文件尾部追加*/
     private boolean             isAppend         = false;
+    /**文件尾是否需要换行*/
+    private boolean             isAppendLinebreakAtLast = true;
     /** 外部构建的输入流*/
     private InputStream         is;
     /** 透传给插件的参数*/
@@ -86,7 +88,6 @@ public class FileConfig implements Cloneable {
 
     /**
      * 构造方法
-     *
      * @param templatePath
      * @param storageConfig
      */
@@ -99,7 +100,6 @@ public class FileConfig implements Cloneable {
 
     /**
      * 读数据时， 输入流由外界构造
-     *
      * @param is
      * @param templatePath
      */
@@ -325,6 +325,14 @@ public class FileConfig implements Cloneable {
         this.createEmptyFile = createEmptyFile;
     }
 
+    public boolean isAppendLinebreakAtLast() {
+        return isAppendLinebreakAtLast;
+    }
+
+    public void setAppendLinebreakAtLast(boolean appendLinebreakAtLast) {
+        isAppendLinebreakAtLast = appendLinebreakAtLast;
+    }
+  
     public boolean isReadAll() {
         return isReadAll;
     }
@@ -376,6 +384,7 @@ public class FileConfig implements Cloneable {
         config.setRowValidators(rowValidators);
         config.setInputStream(is);
         config.setColumnSplit(columnSplit);
+        config.setAppendLinebreakAtLast(isAppendLinebreakAtLast);
         config.params = params;
         for(String processKey : processorKeys){
             config.addProcessorKey(processKey);
@@ -428,6 +437,7 @@ public class FileConfig implements Cloneable {
             sb.append(",length=").append(length);
         }
         sb.append(",isAppend=").append(isAppend);
+        sb.append(",isAppendLinebreakAtLast=").append(isAppendLinebreakAtLast);
         sb.append(",isReadAll=").append(isReadAll);
         if (null != relationReadRowCompatibility) {
             sb.append(",relationReadRowCompatibility=").append(relationReadRowCompatibility);
