@@ -1,0 +1,3 @@
+relation=com.alipay.rdf.file.codec.RowRelationCodec
+kv=com.alipay.rdf.file.codec.RowNosqlKVCodec
+index=com.alipay.rdf.file.codec.RowNosqlIndexCodec

@@ -1,13 +1,15 @@
 package com.alipay.rdf.file.meta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * 接受配置参数
- * 
+ *
  * @author hongwei.quhw
  * @version $Id: TemplateConfig.java, v 0.1 2017年5月9日 上午10:26:52 hongwei.quhw Exp $
  */
@@ -40,6 +42,14 @@ public class TemplateConfig {
     private List<String>          statisticColumnPairs = new ArrayList<String>();
     /** 行校验器*/
     private List<String>          rowValidators        = new ArrayList<String>();
+    /**定义或者覆盖协议文件的字段类型*/
+    private List<String>          protocolDataType     = new ArrayList<String>();
+    /**关系模式读行数据兼容模式*/
+    private Boolean               relationReadRowCompatibility;
+    /**行序列化反序列化模式*/
+    private String                rowCodecMode;
+    /**非通用参数，用于传递给插件*/
+    private Map<String, String>   params = new HashMap<String, String>();
 
     public String getProtocol() {
         return protocol;
@@ -151,5 +161,37 @@ public class TemplateConfig {
 
     public void setIsAppendLinebreakAtLast(String isAppendLinebreakAtLast) {
         this.isAppendLinebreakAtLast = isAppendLinebreakAtLast;
+    }
+  
+    public List<String> getProtocolDataType() {
+        return protocolDataType;
+    }
+
+    public void setProtocolDataType(List<String> protocolDataType) {
+        this.protocolDataType = protocolDataType;
+    }
+
+    public Boolean getRelationReadRowCompatibility() {
+        return relationReadRowCompatibility;
+    }
+
+    public void setRelationReadRowCompatibility(Boolean relationReadRowCompatibility) {
+        this.relationReadRowCompatibility = relationReadRowCompatibility;
+    }
+
+    public String getRowCodecMode() {
+        return rowCodecMode;
+    }
+
+    public void setRowCodecMode(String rowCodecMode) {
+        this.rowCodecMode = rowCodecMode;
+    }
+
+    public Map<String, String> getParams() {
+        return params;
+    }
+
+    public void setParams(Map<String, String> params) {
+        this.params = params;
     }
 }

@@ -15,7 +15,7 @@ import com.alipay.rdf.file.util.TestLog;
 
 /**
  * 模板加载测试
- * 
+ *
  * @author hongwei.quhw
  * @version $Id: TemplateLoaderTest.java, v 0.1 2016-12-22 下午2:01:39 hongwei.quhw Exp $
  */
@@ -186,4 +186,13 @@ public class TemplateLoaderTest {
 
         TemplateLoader.load("/meta/template9.json", "UTF-8");
     }
+
+    @Test
+    public void testParam() {
+        FileMeta fileMeta = TemplateLoader.load("/meta/template10.json", "UTF-8");
+        Assert.assertEquals(2, fileMeta.getParams().size());
+        Assert.assertEquals("v1", fileMeta.getParams().get("k1"));
+        Assert.assertEquals("v2", fileMeta.getParams().get("k2"));
+    }
+
 }

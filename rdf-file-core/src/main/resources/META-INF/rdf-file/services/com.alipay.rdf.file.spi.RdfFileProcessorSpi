@@ -3,3 +3,4 @@ lengthWriteValidator=com.alipay.rdf.file.validate.LengthWriteValidator
 summary=com.alipay.rdf.file.summary.SummaryProcessor
 fixLengthLineValidator=com.alipay.rdf.file.validate.FixLengthLineValidator
 bodyRowValidtor=com.alipay.rdf.file.validate.BodyRowValidator
+readAll=com.alipay.rdf.file.processor.ReadAllProcessor

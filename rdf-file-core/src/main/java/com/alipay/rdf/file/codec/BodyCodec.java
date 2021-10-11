@@ -1,10 +1,5 @@
 package com.alipay.rdf.file.codec;
 
-import java.util.List;
-import java.util.Map;
-
-import com.alipay.rdf.file.common.ProtocolFileReader;
-import com.alipay.rdf.file.common.ProtocolFileWriter;
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.interfaces.FileReader;
@@ -20,9 +15,12 @@ import com.alipay.rdf.file.protocol.ProtocolDefinition;
 import com.alipay.rdf.file.protocol.RowDefinition;
 import com.alipay.rdf.file.spi.RdfFileProcessorSpi;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- *  
+ *
  * @author hongwei.quhw
  * @version $Id: BodyCodec.java, v 0.1 2017年4月10日 下午7:27:45 hongwei.quhw Exp $
  */

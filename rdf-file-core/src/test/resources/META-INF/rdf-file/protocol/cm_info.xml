@@ -1,0 +1,27 @@
+<protocol name="cm_ext">
+    <head>
+        <row>
+            <column>
+                <output>${column.desc()}</output>
+                <output>:</output>
+                <output>${column.value()}</output>
+            </column>
+        </row>
+        <row output="${columnInfo.vertical(body,desc)}" />
+    </head>
+    <body>
+        <row>
+            <column>
+                <output>${column.value()}</output>
+            </column>
+        </row>
+    </body>
+    <tail>
+        <row output="${columnInfo.vertical(tail,desc)}" />
+        <row columnLayout="vertical">
+            <column>
+                <output>${column.value()}</output>
+            </column>
+        </row>
+    </tail>
+</protocol>
