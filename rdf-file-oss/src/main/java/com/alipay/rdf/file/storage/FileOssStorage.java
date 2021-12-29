@@ -1,15 +1,5 @@
 package com.alipay.rdf.file.storage;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.interfaces.FileFactory;
@@ -25,24 +15,12 @@ import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSErrorCode;
 import com.aliyun.oss.OSSException;
-import com.aliyun.oss.model.AppendObjectRequest;
-import com.aliyun.oss.model.AppendObjectResult;
-import com.aliyun.oss.model.CompleteMultipartUploadRequest;
-import com.aliyun.oss.model.CompleteMultipartUploadResult;
-import com.aliyun.oss.model.CopyObjectResult;
-import com.aliyun.oss.model.GetObjectRequest;
-import com.aliyun.oss.model.InitiateMultipartUploadRequest;
-import com.aliyun.oss.model.InitiateMultipartUploadResult;
-import com.aliyun.oss.model.ListObjectsRequest;
-import com.aliyun.oss.model.OSSObject;
-import com.aliyun.oss.model.OSSObjectSummary;
-import com.aliyun.oss.model.ObjectListing;
-import com.aliyun.oss.model.ObjectMetadata;
-import com.aliyun.oss.model.PartETag;
-import com.aliyun.oss.model.PutObjectResult;
-import com.aliyun.oss.model.UploadFileRequest;
-import com.aliyun.oss.model.UploadPartCopyRequest;
-import com.aliyun.oss.model.UploadPartCopyResult;
+import com.aliyun.oss.model.*;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
@@ -232,6 +210,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
      * helper method for adding FilePathFilter check when listing files
      *
      * @param folderName
+     * @param all
      * @param fileFilters
      * @return
      */
@@ -276,11 +255,15 @@ public class FileOssStorage implements RdfFileStorageSpi {
     public void download(String srcOSSPath, String toFile) {
         srcOSSPath = toOSSPath(srcOSSPath);
         List<String> fileNames = listAllFiles(srcOSSPath);
-        if (isExist(srcOSSPath)) {
+        if(fileNames.isEmpty()){
+            // 以下两种情况需要抛出异常：
+            // 1.单个文件场景且文件未找到
+            // 2.文件夹场景但文件夹下没有任何文件(可能是文件夹名称错误也可能是事实上该文件夹下就没有文件，因为oss无法区分这两种情况)
+            if(!isExist(srcOSSPath)){
+                throw new RdfFileException("rdf-file# oss donwLoad srcOSSPath=" + srcOSSPath + " 不存在",
+                        RdfErrorEnum.NOT_EXSIT);
+            }
             fileNames.add(srcOSSPath);
-        } else {
-            throw new RdfFileException("rdf-file# oss donwLoad srcOSSPath=" + srcOSSPath + " 不存在",
-                RdfErrorEnum.NOT_EXSIT);
         }
         String temp = "";
         for (String name : fileNames) {
