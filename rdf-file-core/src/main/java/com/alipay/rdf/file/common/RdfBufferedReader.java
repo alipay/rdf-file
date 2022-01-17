@@ -1,20 +1,21 @@
 package com.alipay.rdf.file.common;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
 import com.alipay.rdf.file.model.FileConfig;
+import com.alipay.rdf.file.processor.ProcessCotnext;
 import com.alipay.rdf.file.processor.ProcessExecutor;
 import com.alipay.rdf.file.processor.ProcessExecutor.BizData;
 import com.alipay.rdf.file.processor.ProcessorTypeEnum;
 import com.alipay.rdf.file.spi.RdfFileProcessorSpi;
+import com.alipay.rdf.file.util.RdfFileConstants;
+import com.alipay.rdf.file.util.RdfFileUtil;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * @author hongwei.quhw
  * @version $Id: RdfBufferedReader.java, v 0.1 2017年7月22日 下午11:32:53 hongwei.quhw Exp $
  */
@@ -33,24 +34,22 @@ class RdfBufferedReader extends Reader {
     private static final int                                        defaultCharBufferSize     = 8192;
     private static final int                                        defaultExpectedLineLength = 80;
 
-    /** 已读数据大小 */
-    private Long                                                    readedSize;
-
-    /** 文件是否读取完成 */
-    private boolean                                                 isReadEnd                 = false;
-
     private final Map<ProcessorTypeEnum, List<RdfFileProcessorSpi>> processors;
 
     private final FileConfig                                        fileConfig;
 
     /**
-     * @param in
-     * @param validateType
+     * @param
+     * @param fileConfig
+     * @param processors
      */
-    public RdfBufferedReader(InputStreamReader in, FileConfig fileConfig,
-                             Map<ProcessorTypeEnum, List<RdfFileProcessorSpi>> processors) {
-        super(in);
-        this.in = in;
+    public RdfBufferedReader(InputStream is, FileConfig fileConfig,
+                             Map<ProcessorTypeEnum, List<RdfFileProcessorSpi>> processors) throws UnsupportedEncodingException {
+        FileConfig readConfig = fileConfig.clone();
+        ProcessCotnext ctx = new ProcessCotnext(readConfig, ProcessorTypeEnum.BEFORE_CREATE_READER);
+        ctx.putBizData(RdfFileConstants.INPUT_STREAM, is);
+        ProcessExecutor.execute(ctx, processors);
+        this.in = new InputStreamReader((InputStream) ctx.getBizData(RdfFileConstants.INPUT_STREAM), RdfFileUtil.getFileEncoding(fileConfig));
         cb = new char[defaultCharBufferSize];
         nextChar = nChars = 0;
         this.processors = processors;
@@ -63,12 +62,10 @@ class RdfBufferedReader extends Reader {
      * of a line feed ('\n'), a carriage return ('\r'), or a carriage return
      * followed immediately by a linefeed.
      *
-     * @param      ignoreLF  If true, the next '\n' will be skipped
-     *
      * @return     A String containing the contents of the line, not including
      *             any line-termination characters, or null if the end of the
      *             stream has been reached
-     * 
+     *
      * @see        java.io.LineNumberReader#readLine()
      *
      * @exception  IOException  If an I/O error occurs
@@ -91,7 +88,6 @@ class RdfBufferedReader extends Reader {
                         validate(str.getBytes(in.getEncoding()));
                         return str;
                     } else {
-                        isReadEnd = true;
                         return null;
                     }
                 }
@@ -154,7 +150,7 @@ class RdfBufferedReader extends Reader {
 
     /**
      * 计算校验数据
-     * 
+     *
      * @param bytes
      */
     private void validate(byte[] bytes) {
@@ -173,7 +169,7 @@ class RdfBufferedReader extends Reader {
         }
     }
 
-    /** 
+    /**
      * @see java.io.Reader#read(char[], int, int)
      */
     @Override
@@ -181,7 +177,7 @@ class RdfBufferedReader extends Reader {
         throw new IOException("没有实现，请检查代码！");
     }
 
-    /** 
+    /**
      * @see java.io.Reader#close()
      */
     @Override
@@ -194,23 +190,5 @@ class RdfBufferedReader extends Reader {
             in = null;
             cb = null;
         }
-    }
-
-    /**
-     * Getter method for property <tt>readedSize</tt>.
-     * 
-     * @return property value of readedSize
-     */
-    public Long getReadedSize() {
-        return readedSize;
-    }
-
-    /**
-     * Getter method for property <tt>isReadEnd</tt>.
-     * 
-     * @return property value of isReadEnd
-     */
-    public boolean isReadEnd() {
-        return isReadEnd;
     }
 }

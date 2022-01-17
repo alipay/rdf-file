@@ -9,7 +9,7 @@
         "mfundAccountNo|货币基金份额账户|BigDecimal",
         "date|日期类型|Date:yyyy-MM-dd HH:mm:ss",
         "count|金额|BigDecimal|[10,2]",
-        "name|姓名|REQUIRED|DEFAULT:jack"
+        "name|姓名|REQUIRED|DEFAULT:jack",
         "test|所有|REQUIRED:false|DEFAULT:jack|String|[20,23]"
     ],
     "totalCountKey": "totalCountKeyTest",

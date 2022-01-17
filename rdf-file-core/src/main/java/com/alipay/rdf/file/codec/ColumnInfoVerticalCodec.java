@@ -14,6 +14,8 @@ import com.alipay.rdf.file.util.RdfFileUtil;
  *
  * 字段信息纵向编码解码
  *
+ * 不涉及字段分隔符
+ *
  * @author hongwei.quhw
  * @version $Id: ColumnInfoVerticalCodec.java, v 0.1 2017-1-3 下午5:50:00 hongwei.quhw Exp $
  */
@@ -31,13 +33,13 @@ public class ColumnInfoVerticalCodec extends AbstractColumnInfoCodec {
     public static <T> T deserialize(FileDataTypeEnum layoutType, FileDataTypeEnum dataType, FileConfig fileConfig,
                                     FileReader reader, String method) {
         for (FileColumnMeta colMeta : getColumnMetas(fileConfig, dataType)) {
-            String columName = RdfFileUtil.assertTrimNotBlank(reader.readLine());
-            RdfFileUtil.assertNotBlank(columName, "文件=" + fileConfig.getFilePath() + ", " + layoutType.name() + " 内容缺失");
+            String columnName = RdfFileUtil.assertTrimNotBlank(reader.readLine());
+            RdfFileUtil.assertNotBlank(columnName, "文件=" + fileConfig.getFilePath() + ", " + layoutType.name() + " 内容缺失");
 
             String tempalteValue = getValue(colMeta, method);
-            if (!tempalteValue.equals(columName)) {
+            if (!tempalteValue.equals(columnName)) {
                 throw new RdfFileException(
-                        "rdf-file#" + layoutType.name() + "模板中定义的column为" + tempalteValue + ", 文件中读取的column为" + columName + " 不一致",
+                        "rdf-file#" + layoutType.name() + "模板中定义的column为[" + tempalteValue + "], 文件中读取的column为[" + columnName + "]不一致",
                         RdfErrorEnum.VALIDATE_ERROR);
 
             }

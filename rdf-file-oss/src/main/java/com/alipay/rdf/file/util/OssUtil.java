@@ -8,10 +8,11 @@ import com.alipay.rdf.file.exception.RdfFileException;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * @author hongwei.quhw
  * @version $Id: OssUtil.java, v 0.1 2017年7月24日 下午7:07:41 hongwei.quhw Exp $
  */
+
 public class OssUtil {
     /**读取行尾默认buffer*/
     public static int OSS_READ_HEAD_BUFFER = 256;
@@ -23,13 +24,17 @@ public class OssUtil {
     public static int OSS_READ_LINE_BUEER  = 32;
 
     /**
+     * 用核心包的方法替换
+     * @see com.alipay.rdf.file.util.RdfFileUtil#read(java.io.InputStream)
+     *
      * 从输入流读取指定长度数据到byte[]
-     * 
+     *
      * @param is
      * @param length
      * @return
      * @throws IOException
      */
+    @Deprecated
     public static byte[] read(InputStream is, int length) {
         try {
             byte[] bs = new byte[length];

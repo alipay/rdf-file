@@ -11,11 +11,14 @@ import com.alipay.rdf.file.meta.FileColumnMeta;
 import com.alipay.rdf.file.meta.FileMeta;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.FileDataTypeEnum;
+import com.alipay.rdf.file.util.RdfFileUtil;
 
 import java.util.List;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
+ *
+ * 主要用于对字段信息用于头尾输出，针对nosql特性文件不能使用
  *
  * @author quhongwei
  * @version : AbstractColumnInfoCodec.java, v 0.1 2019年11月29日 12:55 quhongwei Exp $
@@ -51,5 +54,4 @@ public abstract class AbstractColumnInfoCodec {
                         RdfErrorEnum.UNSUPPORTED_OPERATION);
         }
     }
-
 }

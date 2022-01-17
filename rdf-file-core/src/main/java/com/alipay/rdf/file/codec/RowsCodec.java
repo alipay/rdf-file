@@ -22,9 +22,9 @@ import com.alipay.rdf.file.util.RdfFileUtil;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * 对文件记录进行逐行编码解码
- * 
+ *
  * @author hongwei.quhw
  * @version $Id: RowsCodec.java, v 0.1 2017年8月3日 下午2:55:06 hongwei.quhw Exp $
  */
@@ -139,8 +139,18 @@ public class RowsCodec {
             return null;
         }
 
+        // 数据模板定义中没有定义数据所属类型
+        FileDataTypeEnum dataType = colMeta.getDataType();
+
+        // 用数据模板定义的类型覆盖协议模板中的
+        for (FileColumnMeta templateColMeta : fileMeta.getProtocolDataTypes()) {
+            if (RdfFileUtil.equals(colMeta.getName(), templateColMeta.getName())) {
+                colMeta = templateColMeta;
+            }
+        }
+
         return new FileColumnMeta(colMeta.getColIndex(), colMeta.getName(), colMeta.getDesc(),
             colMeta.getType(), colMeta.isRequired(), colMeta.getRange(), colMeta.getDefaultValue(),
-            fileMeta, colMeta.getDataType());
+            fileMeta, dataType);
     }
 }
