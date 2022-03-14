@@ -34,6 +34,6 @@ Contact
 
 简历投递到hongwei.quhw@antfin.com
 
-![image](https://user-images.githubusercontent.com/3232378/157007913-7d06e1c5-4f70-42f9-9442-5b9bac08810d.png)
+![image](https://user-images.githubusercontent.com/3232378/158089804-f894c263-853b-49d1-8b3e-4fd50f0d4024.png)
 
 
