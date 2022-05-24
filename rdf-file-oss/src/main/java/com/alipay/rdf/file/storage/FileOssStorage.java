@@ -3,6 +3,7 @@ package com.alipay.rdf.file.storage;
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.interfaces.FileFactory;
+import com.alipay.rdf.file.loader.OssClientFactoryLoader;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.FileInfo;
 import com.alipay.rdf.file.model.FileSlice;
@@ -39,8 +40,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
         RdfFileUtil.assertNotNull(config, "rdf-file#StorageConfig中没有传递key="
                                           + OssConfig.OSS_STORAGE_CONFIG_KEY + " 的OssConfig对象参数",
             RdfErrorEnum.ILLEGAL_ARGUMENT);
-        this.client = new OSSClient(config.getEndpoint(), config.getAccessKeyId(),
-            config.getAccessKeySecret(), config.getClientConfiguration());
+        this.client = OssClientFactoryLoader.getOssClientFactory(config).create();
         if (!client.doesBucketExist(config.getBucketName())) {
             client.createBucket(config.getBucketName());
         }

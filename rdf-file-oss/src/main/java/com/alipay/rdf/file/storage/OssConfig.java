@@ -31,11 +31,26 @@ public class OssConfig {
     /**追加上传的次数没有限制，文件大小上限为5GB*/
     private static final long         OSS_APPEND_SIZE_LIMIT             = 5 * 1024L * 1024L * 1024L;
 
-    private final String              bucketName;
-    private final String              endpoint;
-    private final String              accessKeyId;
-    private final String              accessKeySecret;
-    private final ClientConfiguration clientConfiguration;
+    private String              bucketName;
+
+
+    private String              endpoint;
+    private String              accessKeyId;
+    private String              accessKeySecret;
+    private ClientConfiguration clientConfiguration;
+
+    /**
+     * 用于业务自定义想要初始化ossclient的信息
+     * 比如: ddsoss://datasourceName@version
+     * */
+    private String connectionURL = "";
+
+    /**
+     * 默认使用com.alipay.rdf.file.storage.DefaultOssClientFactory进行创建
+     */
+    private String ossClientFactoryType = "default";
+
+
     /**
      * 写文件时OSS本地文件根目录
      * <li>写文件时会先写在本地再上传到OSS
@@ -57,6 +72,19 @@ public class OssConfig {
     public OssConfig(String bucketName, String endpoint, String accessKeyId,
                      String accessKeySecret) {
         this(bucketName, endpoint, accessKeyId, accessKeySecret, null);
+    }
+
+    public OssConfig(String bucketName, String connectionURL, String ossClientFactoryType) {
+        this.connectionURL = connectionURL;
+        this.bucketName = bucketName;
+        this.ossClientFactoryType = ossClientFactoryType;
+    }
+
+    public OssConfig(String bucketName, String connectionURL, String ossClientFactoryType, ClientConfiguration clientConfiguration) {
+        this.connectionURL = connectionURL;
+        this.bucketName = bucketName;
+        this.ossClientFactoryType = ossClientFactoryType;
+        this.clientConfiguration = clientConfiguration;
     }
 
     public OssConfig(String bucketName, String endpoint, String accessKeyId, String accessKeySecret,
@@ -150,46 +178,48 @@ public class OssConfig {
         this.emptyLeZero = emptyLeZero;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((accessKeyId == null) ? 0 : accessKeyId.hashCode());
-        result = prime * result + ((accessKeySecret == null) ? 0 : accessKeySecret.hashCode());
-        result = prime * result + ((bucketName == null) ? 0 : bucketName.hashCode());
-        result = prime * result + ((endpoint == null) ? 0 : endpoint.hashCode());
-        return result;
+    public String getConnectionURL() {
+        return connectionURL;
+    }
+
+    public void setConnectionURL(String connectionURL) {
+        this.connectionURL = connectionURL;
+    }
+
+    public String getOssClientFactoryType() {
+        return ossClientFactoryType;
+    }
+
+    public void setOssClientFactoryType(String ossClientFactoryType) {
+        this.ossClientFactoryType = ossClientFactoryType;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OssConfig ossConfig = (OssConfig) o;
+
+        if (bucketName != null ? !bucketName.equals(ossConfig.bucketName) : ossConfig.bucketName != null) return false;
+        if (endpoint != null ? !endpoint.equals(ossConfig.endpoint) : ossConfig.endpoint != null) return false;
+        if (accessKeyId != null ? !accessKeyId.equals(ossConfig.accessKeyId) : ossConfig.accessKeyId != null)
             return false;
-        if (getClass() != obj.getClass())
+        if (accessKeySecret != null ? !accessKeySecret.equals(ossConfig.accessKeySecret) : ossConfig.accessKeySecret != null)
             return false;
-        OssConfig other = (OssConfig) obj;
-        if (accessKeyId == null) {
-            if (other.accessKeyId != null)
-                return false;
-        } else if (!accessKeyId.equals(other.accessKeyId))
+        if (connectionURL != null ? !connectionURL.equals(ossConfig.connectionURL) : ossConfig.connectionURL != null)
             return false;
-        if (accessKeySecret == null) {
-            if (other.accessKeySecret != null)
-                return false;
-        } else if (!accessKeySecret.equals(other.accessKeySecret))
-            return false;
-        if (bucketName == null) {
-            if (other.bucketName != null)
-                return false;
-        } else if (!bucketName.equals(other.bucketName))
-            return false;
-        if (endpoint == null) {
-            if (other.endpoint != null)
-                return false;
-        } else if (!endpoint.equals(other.endpoint))
-            return false;
-        return true;
+        return ossClientFactoryType != null ? ossClientFactoryType.equals(ossConfig.ossClientFactoryType) : ossConfig.ossClientFactoryType == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = bucketName != null ? bucketName.hashCode() : 0;
+        result = 31 * result + (endpoint != null ? endpoint.hashCode() : 0);
+        result = 31 * result + (accessKeyId != null ? accessKeyId.hashCode() : 0);
+        result = 31 * result + (accessKeySecret != null ? accessKeySecret.hashCode() : 0);
+        result = 31 * result + (connectionURL != null ? connectionURL.hashCode() : 0);
+        result = 31 * result + (ossClientFactoryType != null ? ossClientFactoryType.hashCode() : 0);
+        return result;
     }
 }
