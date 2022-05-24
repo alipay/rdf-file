@@ -3,11 +3,12 @@ package com.alipay.rdf.file.storage;
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.interfaces.FileFactory;
-import com.alipay.rdf.file.loader.OssClientFactoryLoader;
+import com.alipay.rdf.file.loader.ExtensionLoader;
 import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.FileInfo;
 import com.alipay.rdf.file.model.FileSlice;
 import com.alipay.rdf.file.model.StorageConfig;
+import com.alipay.rdf.file.spi.RdfFileOssClientFactorySpi;
 import com.alipay.rdf.file.spi.RdfFileSplitterSpi;
 import com.alipay.rdf.file.spi.RdfFileStorageSpi;
 import com.alipay.rdf.file.util.RdfFileLogUtil;
@@ -40,7 +41,12 @@ public class FileOssStorage implements RdfFileStorageSpi {
         RdfFileUtil.assertNotNull(config, "rdf-file#StorageConfig中没有传递key="
                                           + OssConfig.OSS_STORAGE_CONFIG_KEY + " 的OssConfig对象参数",
             RdfErrorEnum.ILLEGAL_ARGUMENT);
-        this.client = OssClientFactoryLoader.getOssClientFactory(config).create();
+        RdfFileOssClientFactorySpi factory = ExtensionLoader.getExtensionLoader(RdfFileOssClientFactorySpi.class)
+                .getNewExtension(config.getOssClientFactoryType());
+        RdfFileUtil.assertNotNull(factory, "rdf-file#FileOssStorage.init OssClientFactoryType未定义" +
+                        ",OssClientFactoryType=" + config.getOssClientFactoryType(),
+                RdfErrorEnum.ILLEGAL_ARGUMENT);
+        this.client = factory.create(config);
         if (!client.doesBucketExist(config.getBucketName())) {
             client.createBucket(config.getBucketName());
         }

@@ -16,15 +16,8 @@ import com.aliyun.oss.OSSClient;
  */
 public class DefaultOssClientFactory implements RdfFileOssClientFactorySpi {
 
-    private OssConfig ossConfig;
-
     @Override
-    public void init(OssConfig ossConfig) {
-        this.ossConfig = ossConfig;
-    }
-
-    @Override
-    public OSSClient create() {
+    public OSSClient create(OssConfig ossConfig) {
         if (RdfFileLogUtil.common.isInfo()) {
             RdfFileLogUtil.common.info("rdf-file#DefaultOssClientFactory.create(endpoint=" + ossConfig.getEndpoint() +
                     ",bucket=" + ossConfig.getBucketName() +

@@ -13,15 +13,8 @@ import com.aliyun.oss.OSSClient;
  */
 public class TestURLOssClientFactory implements RdfFileOssClientFactorySpi {
 
-    private OssConfig ossConfig;
-
     @Override
-    public void init(OssConfig ossConfig) {
-        this.ossConfig = ossConfig;
-    }
-
-    @Override
-    public OSSClient create() {
+    public OSSClient create(OssConfig ossConfig) {
         String connectionURL = ossConfig.getConnectionURL();
 
         String[] infoArray = connectionURL.split("@");
