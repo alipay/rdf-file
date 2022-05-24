@@ -42,7 +42,7 @@ public class FileOssStorage implements RdfFileStorageSpi {
                                           + OssConfig.OSS_STORAGE_CONFIG_KEY + " 的OssConfig对象参数",
             RdfErrorEnum.ILLEGAL_ARGUMENT);
         RdfFileOssClientFactorySpi factory = ExtensionLoader.getExtensionLoader(RdfFileOssClientFactorySpi.class)
-                .getNewExtension(config.getOssClientFactoryType());
+                .getExtension(config.getOssClientFactoryType());
         RdfFileUtil.assertNotNull(factory, "rdf-file#FileOssStorage.init OssClientFactoryType未定义" +
                         ",OssClientFactoryType=" + config.getOssClientFactoryType(),
                 RdfErrorEnum.ILLEGAL_ARGUMENT);
