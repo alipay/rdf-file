@@ -40,12 +40,6 @@ public class OssConfig {
     private ClientConfiguration clientConfiguration;
 
     /**
-     * 用于业务自定义想要初始化ossclient的信息
-     * 比如: ddsoss://datasourceName@version
-     * */
-    private String connectionURL = "";
-
-    /**
      * 默认使用com.alipay.rdf.file.storage.DefaultOssClientFactory进行创建
      */
     private String ossClientFactoryType = "default";
@@ -69,22 +63,20 @@ public class OssConfig {
      */
     private boolean                   emptyLeZero = false;
 
-    public OssConfig(String bucketName, String endpoint, String accessKeyId,
-                     String accessKeySecret) {
-        this(bucketName, endpoint, accessKeyId, accessKeySecret, null);
-    }
-
-    public OssConfig(String bucketName, String connectionURL, String ossClientFactoryType) {
-        this.connectionURL = connectionURL;
+    public OssConfig(String bucketName, String ossClientFactoryType) {
         this.bucketName = bucketName;
         this.ossClientFactoryType = ossClientFactoryType;
     }
 
-    public OssConfig(String bucketName, String connectionURL, String ossClientFactoryType, ClientConfiguration clientConfiguration) {
-        this.connectionURL = connectionURL;
+    public OssConfig(String bucketName, String ossClientFactoryType, ClientConfiguration clientConfiguration) {
         this.bucketName = bucketName;
         this.ossClientFactoryType = ossClientFactoryType;
         this.clientConfiguration = clientConfiguration;
+    }
+
+    public OssConfig(String bucketName, String endpoint, String accessKeyId,
+                     String accessKeySecret) {
+        this(bucketName, endpoint, accessKeyId, accessKeySecret, null);
     }
 
     public OssConfig(String bucketName, String endpoint, String accessKeyId, String accessKeySecret,
@@ -178,14 +170,6 @@ public class OssConfig {
         this.emptyLeZero = emptyLeZero;
     }
 
-    public String getConnectionURL() {
-        return connectionURL;
-    }
-
-    public void setConnectionURL(String connectionURL) {
-        this.connectionURL = connectionURL;
-    }
-
     public String getOssClientFactoryType() {
         return ossClientFactoryType;
     }
@@ -207,8 +191,6 @@ public class OssConfig {
             return false;
         if (accessKeySecret != null ? !accessKeySecret.equals(ossConfig.accessKeySecret) : ossConfig.accessKeySecret != null)
             return false;
-        if (connectionURL != null ? !connectionURL.equals(ossConfig.connectionURL) : ossConfig.connectionURL != null)
-            return false;
         return ossClientFactoryType != null ? ossClientFactoryType.equals(ossConfig.ossClientFactoryType) : ossConfig.ossClientFactoryType == null;
     }
 
@@ -218,7 +200,6 @@ public class OssConfig {
         result = 31 * result + (endpoint != null ? endpoint.hashCode() : 0);
         result = 31 * result + (accessKeyId != null ? accessKeyId.hashCode() : 0);
         result = 31 * result + (accessKeySecret != null ? accessKeySecret.hashCode() : 0);
-        result = 31 * result + (connectionURL != null ? connectionURL.hashCode() : 0);
         result = 31 * result + (ossClientFactoryType != null ? ossClientFactoryType.hashCode() : 0);
         return result;
     }

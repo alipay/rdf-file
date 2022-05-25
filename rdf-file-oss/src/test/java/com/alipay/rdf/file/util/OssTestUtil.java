@@ -5,6 +5,7 @@ import com.alipay.rdf.file.exception.RdfFileException;
 import com.alipay.rdf.file.interfaces.FileOssStorageContants;
 import com.alipay.rdf.file.loader.ResourceLoader;
 import com.alipay.rdf.file.model.StorageConfig;
+import com.alipay.rdf.file.ossclientfactory.TestOssConfig;
 import com.alipay.rdf.file.storage.OssConfig;
 
 import java.io.IOException;
@@ -55,7 +56,7 @@ public class OssTestUtil {
                         RdfErrorEnum.ILLEGAL_ARGUMENT);
             }
 
-            OssConfig ossConfig = new OssConfig(bucketName, connectionURL, "url");
+            OssConfig ossConfig = new TestOssConfig(bucketName, connectionURL, "url");
 
             StorageConfig storageConfig = new StorageConfig(FileOssStorageContants.STORAGE_OSS);
             storageConfig.addParam(OssConfig.OSS_STORAGE_CONFIG_KEY, ossConfig);

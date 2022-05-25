@@ -49,4 +49,8 @@ public class FileStorageLoader {
 
         return fileStorage;
     }
+
+    public static Map<StorageConfig, FileStorage> getStorageCache(){
+        return STORAGE_CACHE;
+    }
 }

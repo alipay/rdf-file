@@ -4,6 +4,7 @@
  */
 package com.alipay.rdf.file.storage;
 
+import com.alipay.rdf.file.ossclientfactory.TestOssConfig;
 import com.alipay.rdf.file.spi.RdfFileOssClientFactorySpi;
 import com.aliyun.oss.OSSClient;
 
@@ -15,7 +16,7 @@ public class TestURLOssClientFactory implements RdfFileOssClientFactorySpi {
 
     @Override
     public OSSClient create(OssConfig ossConfig) {
-        String connectionURL = ossConfig.getConnectionURL();
+        String connectionURL = ((TestOssConfig)ossConfig).getConnectionURL();
 
         String[] infoArray = connectionURL.split("@");
         String endpoint = infoArray[0];
