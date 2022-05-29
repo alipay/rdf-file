@@ -87,10 +87,4 @@ public class CacheManager {
         ProtocolLoader.PD_CACHE.remove(protocol.toLowerCase());
     }
 
-    /**
-     * 清空storage的缓存
-     */
-    public static void removeStorageCache() {
-        FileStorageLoader.getStorageCache().clear();
-    }
 }
