@@ -4,10 +4,11 @@ import com.alipay.rdf.file.common.CacheManager;
 import com.alipay.rdf.file.function.ColumnFunctionWrapper;
 import com.alipay.rdf.file.interfaces.FileFactory;
 import com.alipay.rdf.file.interfaces.FileReader;
-import com.alipay.rdf.file.interfaces.FileStorage;
-import com.alipay.rdf.file.loader.*;
+import com.alipay.rdf.file.loader.FormatLoader;
+import com.alipay.rdf.file.loader.ProcessorLoader;
+import com.alipay.rdf.file.loader.ProtocolLoader;
+import com.alipay.rdf.file.loader.TemplateLoader;
 import com.alipay.rdf.file.model.FileConfig;
-import com.alipay.rdf.file.model.FileInfo;
 import com.alipay.rdf.file.model.StorageConfig;
 import com.alipay.rdf.file.util.DateUtil;
 import org.junit.Assert;
@@ -17,7 +18,6 @@ import org.junit.Test;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CacheManagerTest {
@@ -118,70 +118,4 @@ public class CacheManagerTest {
         Assert.assertNull(FormatLoader.TYPEFORMATHOLDER_CACHE.get("FUND"));
     }
 
-    @Test
-    public void testRemoveStorageCache() {
-        StorageConfig storageConfig = new StorageConfig("oss");
-        FileStorage mockFileStorage = new FileStorage() {
-            @Override
-            public void createNewFile(String filePath) {
-
-            }
-
-            @Override
-            public FileInfo getFileInfo(String filePath) {
-                return null;
-            }
-
-            @Override
-            public List<String> listFiles(String folderName, String[] regexs) {
-                return null;
-            }
-
-            @Override
-            public List<String> listFiles(String folderName, FilePathFilter... fileFilters) {
-                return null;
-            }
-
-            @Override
-            public List<String> listAllFiles(String folderName, String[] regexs) {
-                return null;
-            }
-
-            @Override
-            public List<String> listAllFiles(String folderName, FilePathFilter... fileFilters) {
-                return null;
-            }
-
-            @Override
-            public void download(String srcFile, String toFile) {
-
-            }
-
-            @Override
-            public void upload(String srcFile, String toFile, boolean override) {
-
-            }
-
-            @Override
-            public void rename(String srcFile, String toFile) {
-
-            }
-
-            @Override
-            public void copy(String srcFile, String toFile) {
-
-            }
-
-            @Override
-            public void delete(String fullPath) {
-
-            }
-        };
-        FileStorageLoader.getStorageCache().put(storageConfig, mockFileStorage);
-        Assert.assertNotNull(FileStorageLoader.getStorageCache().get(storageConfig));
-
-
-        CacheManager.removeStorageCache();
-        Assert.assertNull(FileStorageLoader.getStorageCache().get(storageConfig));
-    }
 }
