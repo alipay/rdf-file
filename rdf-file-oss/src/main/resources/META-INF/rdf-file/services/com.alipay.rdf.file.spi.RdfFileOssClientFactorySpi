@@ -1,0 +1,1 @@
+default=com.alipay.rdf.file.storage.DefaultOssClientFactory

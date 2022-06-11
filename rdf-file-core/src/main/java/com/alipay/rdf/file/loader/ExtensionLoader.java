@@ -63,10 +63,6 @@ public class ExtensionLoader<T> {
         Class<?> clazz = getExtensionClasses().get(RdfFileUtil.assertTrimNotBlank(name,
             "rdf-file#Extension name == null", RdfErrorEnum.ILLEGAL_ARGUMENT));
 
-        if (clazz == null) {
-            System.out.println(cachedClasses);
-        }
-
         RdfFileUtil.assertNotNull(clazz,
             "rdf-file#Extension type=" + type.getName() + ", name =" + name + ", class == null",
             RdfErrorEnum.EXTENSION_ERROR);

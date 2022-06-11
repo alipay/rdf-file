@@ -29,7 +29,6 @@ public class StorageConfig {
             "rdf-file#StorageConfig.addParam value 必须实现Object对象中的equals方法",
             RdfErrorEnum.ILLEGAL_ARGUMENT);
         param.put(key, value);
-        param.put(key, value);
     }
 
     public Object getParam(String key) {

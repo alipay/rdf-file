@@ -1,14 +1,14 @@
 package com.alipay.rdf.file.loader;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import com.alipay.rdf.file.init.RdfInit;
 import com.alipay.rdf.file.interfaces.FileStorage;
 import com.alipay.rdf.file.model.StorageConfig;
 import com.alipay.rdf.file.spi.RdfFileStorageSpi;
 import com.alipay.rdf.file.util.RdfFileUtil;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
@@ -49,4 +49,5 @@ public class FileStorageLoader {
 
         return fileStorage;
     }
+
 }

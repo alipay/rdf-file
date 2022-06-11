@@ -1,15 +1,11 @@
 package com.alipay.rdf.file.common;
 
-import java.util.Iterator;
-
 import com.alipay.rdf.file.function.ColumnFunctionWrapper;
-import com.alipay.rdf.file.loader.FormatLoader;
-import com.alipay.rdf.file.loader.ProcessorLoader;
-import com.alipay.rdf.file.loader.ProtocolLoader;
-import com.alipay.rdf.file.loader.ResourceLoader;
-import com.alipay.rdf.file.loader.TemplateLoader;
+import com.alipay.rdf.file.loader.*;
 import com.alipay.rdf.file.model.FileDefaultConfig;
 import com.alipay.rdf.file.util.RdfFileUtil;
+
+import java.util.Iterator;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
@@ -90,4 +86,5 @@ public class CacheManager {
         ProtocolLoader.PROTOCOL_PROCESSOR_CACHE.remove(protocol.toLowerCase());
         ProtocolLoader.PD_CACHE.remove(protocol.toLowerCase());
     }
+
 }

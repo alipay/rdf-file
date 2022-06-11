@@ -117,4 +117,5 @@ public class CacheManagerTest {
         Assert.assertNull(FormatLoader.TYPEFORMATHOLDER_CACHE.get("fund"));
         Assert.assertNull(FormatLoader.TYPEFORMATHOLDER_CACHE.get("FUND"));
     }
+
 }
