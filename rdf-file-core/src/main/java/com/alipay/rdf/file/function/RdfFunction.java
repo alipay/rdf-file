@@ -16,7 +16,7 @@ import com.alipay.rdf.file.util.RdfFileUtil;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * @author hongwei.quhw
  * @version $Id: RdfFunction.java, v 0.1 2017年4月5日 下午7:27:32 hongwei.quhw Exp $
  */
@@ -52,14 +52,14 @@ public abstract class RdfFunction implements RdfFileFunctionSpi {
             Method method = getClass().getDeclaredMethod(expression, FuncContext.class);
             return method.invoke(this, ctx);
         } catch (Exception e) {
-            throw new RdfFileException("执行[" + getClass().getName() + "." + expression + "]方法是出错",
+            throw new RdfFileException("执行[" + getClass().getName() + "." + expression + "]方法时出错",
                 e, RdfErrorEnum.FUNCTION_ERROR);
         }
     }
 
     /**
      *  此函数涉及数据行数, 默认影响一行
-     * 
+     *
      * @return
      */
     public int rowsAffected(RowDefinition rd, FileMeta fileMeta) {
