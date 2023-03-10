@@ -60,7 +60,7 @@ public class ColumnFunctionWrapper extends RdfFunction {
     @Override
     public Object execute(FuncContext ctx) {
         if (CodecType.SERIALIZE.equals(ctx.codecType)) {
-            return serialize(ctx.field, ctx.columnMeta, ctx.fileConfig);
+            return serialize(ctx.field, ctx.columnMeta, ctx.fileConfig, ctx.rowBean);
         } else if (CodecType.DESERIALIZE.equals(ctx.codecType)) {
             return deserialize((String) ctx.field, ctx.columnMeta, ctx.fileConfig);
         }
@@ -102,7 +102,7 @@ public class ColumnFunctionWrapper extends RdfFunction {
         return columnTypeCodec.deserialize(field, columnMeta);
     }
 
-    private String serialize(Object field, FileColumnMeta columnMeta, FileConfig fileConfig) {
+    private String serialize(Object field, FileColumnMeta columnMeta, FileConfig fileConfig, Object rowBean) {
         RdfFileColumnTypeSpi columnTypeCodec = ExtensionLoader
             .getExtensionLoader(RdfFileColumnTypeSpi.class)
             .getExtension(columnMeta.getType().getName());
@@ -117,6 +117,7 @@ public class ColumnFunctionWrapper extends RdfFunction {
             ctx.field = value;
             ctx.columnMeta = columnMeta;
             ctx.codecType = CodecType.SERIALIZE;
+            ctx.rowBean = rowBean;
             sb.append(rf.execute(ctx));
         }
         value = sb.toString();

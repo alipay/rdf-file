@@ -151,6 +151,6 @@ public class RowsCodec {
 
         return new FileColumnMeta(colMeta.getColIndex(), colMeta.getName(), colMeta.getDesc(),
             colMeta.getType(), colMeta.isRequired(), colMeta.getRange(), colMeta.getDefaultValue(),
-            fileMeta, dataType);
+            fileMeta, dataType, colMeta.getGenerateRule());
     }
 }

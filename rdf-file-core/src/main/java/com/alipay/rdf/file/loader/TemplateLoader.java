@@ -17,7 +17,14 @@ import com.alipay.rdf.file.model.FileConfig;
 import com.alipay.rdf.file.model.FileDataTypeEnum;
 import com.alipay.rdf.file.model.FileDefaultConfig;
 import com.alipay.rdf.file.model.RowCondition;
+import com.alipay.rdf.file.mysql.MySqlLexer;
+import com.alipay.rdf.file.mysql.MySqlParser;
 import com.alipay.rdf.file.util.RdfFileUtil;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -260,6 +267,7 @@ public class TemplateLoader {
         boolean required = false;
         FileColumnRangeMeta range = null;
         String defaultValue = null;
+        ParseTree generateRule = null;
 
         if (fields.length > 2) {
             for (int i = 2; i < fields.length; i++) {
@@ -307,6 +315,15 @@ public class TemplateLoader {
                     continue;
                 }
 
+                if (StringUtils.equals("generate", field) && StringUtils.isNotBlank(extra)) {
+                    CharStream cs = CharStreams.fromString(extra);
+                    MySqlLexer lexer = new MySqlLexer(cs);
+                    CommonTokenStream tokens = new CommonTokenStream(lexer);
+                    MySqlParser parser = new MySqlParser(tokens);
+                    generateRule = parser.root();
+                    continue;
+                }
+
                 throw new RdfFileException("请检查模板配置, 无法匹配属性！ 字段=" + field + ", index=" + colIndex,
                     RdfErrorEnum.TEMPLATE_ERROR);
             }
@@ -318,7 +335,7 @@ public class TemplateLoader {
         }
 
         FileColumnMeta column = new FileColumnMeta(colIndex, key, name, type, required, range,
-            defaultValue, fileMeta, dataType);
+            defaultValue, fileMeta, dataType, generateRule);
 
         return column;
     }

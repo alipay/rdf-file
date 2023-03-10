@@ -33,6 +33,7 @@ public class RowRelationCodec extends AbstractRowCodec {
                 ctx.field = bmw.getProperty(columnMeta.getName());
                 ctx.columnMeta = columnMeta;
                 ctx.fileConfig = fileConfig;
+                ctx.rowBean = bmw.getBean();
                 line.append(rd.getOutput().execute(ctx));
 
                 if (null != split && i < columnMetas.size() - 1) {

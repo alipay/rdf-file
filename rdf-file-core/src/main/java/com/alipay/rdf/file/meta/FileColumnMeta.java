@@ -1,6 +1,7 @@
 package com.alipay.rdf.file.meta;
 
 import com.alipay.rdf.file.model.FileDataTypeEnum;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
@@ -29,9 +30,11 @@ public class FileColumnMeta {
     /**数据字段在文件中部位*/
     private final FileDataTypeEnum    dataType;
 
+    private final ParseTree           generateRule;
+
     public FileColumnMeta(int colIndex, String name, String desc, FileColumnTypeMeta type,
                           boolean required, FileColumnRangeMeta range, String defaultValue,
-                          FileMeta fileMeta, FileDataTypeEnum    dataType) {
+                          FileMeta fileMeta, FileDataTypeEnum    dataType, ParseTree generateRule) {
         this.colIndex = colIndex;
         this.desc = desc;
         this.name = name;
@@ -41,6 +44,7 @@ public class FileColumnMeta {
         this.defaultValue = defaultValue;
         this.fileMeta = fileMeta;
         this.dataType = dataType;
+        this.generateRule = generateRule;
     }
 
     /**
@@ -119,6 +123,8 @@ public class FileColumnMeta {
         return dataType;
     }
 
+    public ParseTree getGenerateRule() {return generateRule; }
+
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer("FileColumnMeta[");
@@ -129,6 +135,7 @@ public class FileColumnMeta {
         sb.append(",range=").append(range);
         sb.append(",required=").append(required);
         sb.append(",dataType=").append(dataType.name());
+        sb.append(",generateType=").append(generateRule);
         sb.append("]");
         return sb.toString();
     }

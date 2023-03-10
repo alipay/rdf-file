@@ -1,0 +1,8 @@
+{
+  "body": [
+    "seq|流水号",
+    "customVal1|流|generate:SUBSTR(seq from 1 for 1)",
+    "customVal2|水|generate:SUBSTR(memo from 0 for 2)"
+  ],
+  "protocol": "SP"
+}
