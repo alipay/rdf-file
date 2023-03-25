@@ -33,7 +33,8 @@ public class FileWriterWrapper implements RdfFileWriterSpi {
         } catch (RuntimeException e) {
             hasError = true;
             throw e;
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            hasError = true;
             throw new RdfFileException("rdf-file#FileWriterWrapper writeHead error filePath=["
                                        + getFileConfig().getFilePath() + "], head=[" + headBean
                                        + "]",
@@ -48,7 +49,8 @@ public class FileWriterWrapper implements RdfFileWriterSpi {
         } catch (RuntimeException e) {
             hasError = true;
             throw e;
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            hasError = true;
             throw new RdfFileException("rdf-file#FileWriterWrapper writeRow error filePath=["
                                        + getFileConfig().getFilePath() + "], row=[" + rowBean + "]",
                 e, RdfErrorEnum.UNKOWN);
@@ -62,7 +64,8 @@ public class FileWriterWrapper implements RdfFileWriterSpi {
         } catch (RuntimeException e) {
             hasError = true;
             throw e;
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            hasError = true;
             throw new RdfFileException("rdf-file#FileWriterWrapper writeTail error filePath=["
                                        + getFileConfig().getFilePath() + "], tail=[" + tailBean
                                        + "]",
@@ -77,7 +80,8 @@ public class FileWriterWrapper implements RdfFileWriterSpi {
         } catch (RuntimeException e) {
             hasError = true;
             throw e;
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            hasError = true;
             throw new RdfFileException("rdf-file#FileWriterWrapper writeLine error filePath=["
                                        + getFileConfig().getFilePath() + "], line=[" + line + "]",
                 e, RdfErrorEnum.UNKOWN);
@@ -111,7 +115,8 @@ public class FileWriterWrapper implements RdfFileWriterSpi {
         } catch (RuntimeException e) {
             hasError = true;
             throw e;
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            hasError = true;
             throw new RdfFileException("rdf-file#FileWriterWrapper append error filePath=["
                                        + getFileConfig().getFilePath() + "]",
                 e, RdfErrorEnum.UNKOWN);
@@ -125,7 +130,8 @@ public class FileWriterWrapper implements RdfFileWriterSpi {
         } catch (RuntimeException e) {
             hasError = true;
             throw e;
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            hasError = true;
             throw new RdfFileException("rdf-file#FileWriterWrapper ensureOpen error filePath=["
                                        + getFileConfig().getFilePath() + "]",
                 e, RdfErrorEnum.UNKOWN);
@@ -137,4 +143,7 @@ public class FileWriterWrapper implements RdfFileWriterSpi {
         return writer.getFileConfig();
     }
 
+    public void setHasError(boolean hasError) {
+        this.hasError = hasError;
+    }
 }

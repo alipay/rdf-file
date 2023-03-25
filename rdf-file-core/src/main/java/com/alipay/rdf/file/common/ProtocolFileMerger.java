@@ -36,9 +36,9 @@ import com.alipay.rdf.file.util.RdfProfiler;
 
 /**
  * Copyright (C) 2013-2018 Ant Financial Services Group
- * 
+ *
  * 协议文件合并
- * 
+ *
  * @author hongwei.quhw
  * @version $Id: ProtocolFileMerger.java, v 0.1 2017年8月10日 下午8:01:11 hongwei.quhw Exp $
  */
@@ -85,6 +85,9 @@ public class ProtocolFileMerger implements RdfFileMergerSpi {
             RdfProfiler.enter("rdf-file#merge tail start...");
             mergeTail(config);
             RdfProfiler.release("rdf-file#merge tail end");
+        } catch (Throwable e) {
+            RdfFileUtil.setWriteError(fileWriter);
+            throw new RuntimeException("rdf-file#ProtocolFileMerger error.", e);
         } finally {
             if (null != fileWriter) {
                 fileWriter.close();

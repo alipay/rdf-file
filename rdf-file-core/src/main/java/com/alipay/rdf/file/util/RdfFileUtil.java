@@ -1,7 +1,9 @@
 package com.alipay.rdf.file.util;
 
+import com.alipay.rdf.file.common.FileWriterWrapper;
 import com.alipay.rdf.file.exception.RdfErrorEnum;
 import com.alipay.rdf.file.exception.RdfFileException;
+import com.alipay.rdf.file.interfaces.FileWriter;
 import com.alipay.rdf.file.loader.ProtocolLoader;
 import com.alipay.rdf.file.loader.TemplateLoader;
 import com.alipay.rdf.file.meta.FileMeta;
@@ -905,5 +907,11 @@ public class RdfFileUtil {
         }
 
         return false;
+    }
+
+    public static void setWriteError(FileWriter fileWriter) {
+        if (fileWriter instanceof FileWriterWrapper) {
+            ((FileWriterWrapper) fileWriter).setHasError(true);
+        }
     }
 }
