@@ -12,7 +12,7 @@
 
 	<properties>
 		<rdf.file.core.version>2.2.11</rdf.file.core.version>
-		<rdf.file.oss.version>2.2.11</rdf.file.oss.version>
+		<rdf.file.oss.version>2.2.11.x</rdf.file.oss.version>
 		<rdf.file.sftp.version>2.2.11</rdf.file.sftp.version>
 	</properties>
 
