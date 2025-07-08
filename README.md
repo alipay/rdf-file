@@ -17,11 +17,6 @@ Features
 
 Documentation
 -------------
-https://github.com/alipay/rdf-file/wiki
-
-Contact
--------------
-斩秋 hongwei.quhw@antfin.com   
-重扬 haofan.whf@alibaba-inc.com  
+https://github.com/alipay/rdf-file/wiki 
 
 
